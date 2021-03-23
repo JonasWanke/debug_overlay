@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
@@ -31,6 +33,7 @@ class DebugOverlay extends StatefulWidget {
   }
 
   static void show() => DebugOverlayState.key.currentState!.show();
+  static void hide() => DebugOverlayState.key.currentState!.hide();
 
   final Widget? child;
 
@@ -97,22 +100,37 @@ class DebugOverlayState extends State<DebugOverlay> {
     );
   }
 
+  double _extent = 0;
   Widget _buildBottomSheet() {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.4,
-      builder: (context, scrollController) => HeroControllerScope.none(
-        child: Navigator(
-          onGenerateRoute: (settings) => MaterialPageRoute<void>(
-            settings: settings,
-            builder: (context) => Drawer(
-              elevation: 16,
-              child: DebugOverlayContent(
-                scrollController: scrollController,
-                onClose: hide,
+    return NotificationListener<DraggableScrollableNotification>(
+      onNotification: (notification) {
+        setState(() => _extent = notification.extent);
+        return true;
+      },
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.4,
+        builder: (context, scrollController) {
+          final drawer = Material(
+            elevation: 16,
+            child: DebugOverlayContent(
+              scrollController: scrollController,
+              onClose: hide,
+            ),
+          );
+
+          final navigator = Navigator(
+            // We need a [Navigator] for inner overlays.
+            onGenerateRoute: (settings) => MaterialPageRoute<void>(
+              settings: settings,
+              builder: (context) => _ScaledTopViewPadding(
+                progress:
+                    Interval(0.8, 1, curve: Curves.easeIn).transform(_extent),
+                child: drawer,
               ),
             ),
-          ),
-        ),
+          );
+          return HeroControllerScope.none(child: navigator);
+        },
       ),
     );
   }
@@ -131,7 +149,7 @@ class DebugOverlayContent extends StatelessWidget {
       builder: (context, helpers, _) => ListView.separated(
         primary: false,
         controller: scrollController,
-        padding: EdgeInsets.only(bottom: 0),
+        padding: context.mediaQuery.viewPadding + EdgeInsets.only(bottom: 16),
         itemCount: helpers.length + 1,
         itemBuilder: (context, index) =>
             index == 0 ? _buildAppBar(context) : helpers[index - 1],
@@ -151,6 +169,26 @@ class DebugOverlayContent extends StatelessWidget {
           context.theme.scaffoldBackgroundColor.highEmphasisOnColor,
       title: Text('🐛 Debug Overlay'),
       actions: [if (onClose != null) CloseButton(onPressed: onClose!)],
+    );
+  }
+}
+
+class _ScaledTopViewPadding extends StatelessWidget {
+  const _ScaledTopViewPadding({required this.progress, required this.child});
+
+  final double progress;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = context.mediaQuery;
+    return MediaQuery(
+      data: data.copyWith(
+        viewPadding: data.viewPadding.copyWith(
+          top: lerpDouble(0, data.viewPadding.top, progress)!,
+        ),
+      ),
+      child: child,
     );
   }
 }
