@@ -17,24 +17,27 @@ class DebugHelper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: DefaultTextStyle(
-                style: context.textTheme.subtitle1!,
-                child: title,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: DefaultTextStyle(
+                  style: context.textTheme.subtitle1!,
+                  child: title,
+                ),
               ),
-            ),
-            ...actions,
-          ],
-        ),
-        SizedBox(height: 8),
-        child,
-      ],
+              ...actions,
+            ],
+          ),
+          SizedBox(height: 8),
+          child,
+        ],
+      ),
     );
   }
 }

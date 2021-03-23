@@ -1,6 +1,6 @@
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
@@ -10,7 +10,6 @@ class DebugOverlay extends StatefulWidget {
   DebugOverlay({
     required this.child,
     this.showOnShake = true,
-    this.enableOpenDragGesture = false,
   }) : super(key: DebugOverlayState.key);
 
   static final helpers = ValueNotifier<List<Widget>>([
@@ -25,14 +24,9 @@ class DebugOverlay extends StatefulWidget {
 
   static TransitionBuilder builder({
     bool showOnShake = true,
-    bool enableOpenDragGesture = false,
   }) {
     return (context, child) {
-      return DebugOverlay(
-        child: child,
-        showOnShake: showOnShake,
-        enableOpenDragGesture: enableOpenDragGesture,
-      );
+      return DebugOverlay(child: child, showOnShake: showOnShake);
     };
   }
 
@@ -41,7 +35,6 @@ class DebugOverlay extends StatefulWidget {
   final Widget? child;
 
   final bool showOnShake;
-  final bool enableOpenDragGesture;
 
   @override
   DebugOverlayState createState() => DebugOverlayState();
@@ -49,9 +42,9 @@ class DebugOverlay extends StatefulWidget {
 
 class DebugOverlayState extends State<DebugOverlay> {
   static final key = GlobalKey<DebugOverlayState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   ShakeDetector? _shakeDetector;
+  bool _isVisible = false;
 
   @override
   void initState() {
@@ -85,39 +78,79 @@ class DebugOverlayState extends State<DebugOverlay> {
     super.dispose();
   }
 
-  void show() => _scaffoldKey.currentState!.openEndDrawer();
+  void show() => setState(() => _isVisible = true);
+  void hide() => setState(() => _isVisible = false);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: widget.child,
-      endDrawer: Drawer(
-        child: HeroControllerScope.none(
-          child: Navigator(
-            onGenerateRoute: (settings) => MaterialPageRoute<void>(
-              settings: settings,
-              builder: (context) => DebugOverlayContent(),
+    Widget? bottomSheet;
+    assert(() {
+      if (!_isVisible) return true;
+      bottomSheet = _buildBottomSheet();
+      return true;
+    }());
+    return Stack(
+      children: [
+        if (widget.child != null) widget.child!,
+        if (bottomSheet != null) Positioned.fill(child: bottomSheet!),
+      ],
+    );
+  }
+
+  Widget _buildBottomSheet() {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.4,
+      builder: (context, scrollController) => HeroControllerScope.none(
+        child: Navigator(
+          onGenerateRoute: (settings) => MaterialPageRoute<void>(
+            settings: settings,
+            builder: (context) => Drawer(
+              elevation: 16,
+              child: DebugOverlayContent(
+                scrollController: scrollController,
+                onClose: hide,
+              ),
             ),
           ),
         ),
       ),
-      endDrawerEnableOpenDragGesture: widget.enableOpenDragGesture,
     );
   }
 }
 
 class DebugOverlayContent extends StatelessWidget {
+  const DebugOverlayContent({this.scrollController, this.onClose});
+
+  final ScrollController? scrollController;
+  final VoidCallback? onClose;
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<Widget>>(
       valueListenable: DebugOverlay.helpers,
       builder: (context, helpers, _) => ListView.separated(
-        padding: context.mediaQuery.viewPadding + EdgeInsets.all(16),
-        itemCount: helpers.length,
-        itemBuilder: (context, index) => helpers[index],
-        separatorBuilder: (context, index) => SizedBox(height: 16),
+        primary: false,
+        controller: scrollController,
+        padding: EdgeInsets.only(bottom: 0),
+        itemCount: helpers.length + 1,
+        itemBuilder: (context, index) =>
+            index == 0 ? _buildAppBar(context) : helpers[index - 1],
+        separatorBuilder: (context, index) =>
+            SizedBox(height: index == 0 ? 0 : 16),
       ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return AppBar(
+      backwardsCompatibility: false,
+      primary: false,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      foregroundColor:
+          context.theme.scaffoldBackgroundColor.highEmphasisOnColor,
+      title: Text('🐛 Debug Overlay'),
+      actions: [if (onClose != null) CloseButton(onPressed: onClose!)],
     );
   }
 }
