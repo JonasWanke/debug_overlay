@@ -2,6 +2,8 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'utils/level_selector.dart';
+
 class DebugHelper extends StatelessWidget {
   const DebugHelper({
     required this.title,
@@ -60,19 +62,9 @@ class _DiagnosticsBasedDebugHelperState
     return DebugHelper(
       title: widget.title,
       actions: [
-        PopupMenuButton<DiagnosticLevel>(
-          onSelected: (level) {
-            setState(() => _minLevel = level);
-          },
-          initialValue: _minLevel,
-          child: Icon(_levelToIcon(_minLevel)),
-          itemBuilder: (context) => [
-            for (final level in DiagnosticLevel.values)
-              PopupMenuItem(
-                value: level,
-                child: Text(describeEnum(level)),
-              ),
-          ],
+        DiagnosticLevelSelector(
+          value: _minLevel,
+          onSelected: (level) => setState(() => _minLevel = level),
         ),
       ],
       child: StreamBuilder<List<DiagnosticsNode>>(
@@ -103,28 +95,5 @@ class _DiagnosticsBasedDebugHelperState
         },
       ),
     );
-  }
-
-  IconData _levelToIcon(DiagnosticLevel level) {
-    switch (level) {
-      case DiagnosticLevel.hidden:
-        return Icons.all_inclusive_outlined;
-      case DiagnosticLevel.fine:
-        return Icons.bubble_chart_outlined;
-      case DiagnosticLevel.debug:
-        return Icons.bug_report_outlined;
-      case DiagnosticLevel.info:
-        return Icons.info_outline;
-      case DiagnosticLevel.warning:
-        return Icons.warning_outlined;
-      case DiagnosticLevel.hint:
-        return Icons.privacy_tip_outlined;
-      case DiagnosticLevel.summary:
-        return Icons.subject;
-      case DiagnosticLevel.error:
-        return Icons.error_outlined;
-      case DiagnosticLevel.off:
-        return Icons.not_interested_outlined;
-    }
   }
 }
