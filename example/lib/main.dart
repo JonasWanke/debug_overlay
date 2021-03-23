@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '🐛 debug_overlay example',
-      builder: DebugOverlay.builder,
+      builder: DebugOverlay.builder(showOnShake: false),
       home: HomePage(),
     );
   }
@@ -19,6 +19,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('🐛 debug_overlay example')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: DebugOverlay.show,
+          child: Text('Show Debug Overlay'),
+        ),
+      ),
     );
   }
 }
