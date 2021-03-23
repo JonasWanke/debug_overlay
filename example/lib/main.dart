@@ -1,3 +1,4 @@
+import 'package:debug_overlay/debug_overlay.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -17,7 +18,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('🐛 debug_overlay example')),
-      body: Container(),
+      body: Center(
+        child: DebugOverlay(
+          modules: [
+            DeviceInfoModule(),
+            PackageInfoModule(),
+          ],
+        ),
+      ),
     );
   }
 }
