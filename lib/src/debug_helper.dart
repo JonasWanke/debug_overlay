@@ -1,11 +1,16 @@
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 class DebugHelper extends StatelessWidget {
-  const DebugHelper({required this.title, required this.child});
+  const DebugHelper({
+    required this.title,
+    this.actions = const [],
+    required this.child,
+  });
 
   final Widget title;
+  final List<Widget> actions;
   final Widget child;
 
   @override
@@ -14,9 +19,16 @@ class DebugHelper extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DefaultTextStyle(
-          style: context.textTheme.subtitle1!,
-          child: title,
+        Row(
+          children: [
+            Expanded(
+              child: DefaultTextStyle(
+                style: context.textTheme.subtitle1!,
+                child: title,
+              ),
+            ),
+            ...actions,
+          ],
         ),
         SizedBox(height: 8),
         child,
@@ -25,7 +37,7 @@ class DebugHelper extends StatelessWidget {
   }
 }
 
-class DiagnosticsBasedDebugHelper extends StatelessWidget {
+class DiagnosticsBasedDebugHelper extends StatefulWidget {
   const DiagnosticsBasedDebugHelper({
     required this.title,
     required this.diagnosticsStream,
@@ -35,11 +47,36 @@ class DiagnosticsBasedDebugHelper extends StatelessWidget {
   final Stream<List<DiagnosticsNode>> diagnosticsStream;
 
   @override
+  _DiagnosticsBasedDebugHelperState createState() =>
+      _DiagnosticsBasedDebugHelperState();
+}
+
+class _DiagnosticsBasedDebugHelperState
+    extends State<DiagnosticsBasedDebugHelper> {
+  var _minLevel = DiagnosticLevel.debug;
+
+  @override
   Widget build(BuildContext context) {
     return DebugHelper(
-      title: title,
+      title: widget.title,
+      actions: [
+        PopupMenuButton<DiagnosticLevel>(
+          onSelected: (level) {
+            setState(() => _minLevel = level);
+          },
+          initialValue: _minLevel,
+          child: Icon(_levelToIcon(_minLevel)),
+          itemBuilder: (context) => [
+            for (final level in DiagnosticLevel.values)
+              PopupMenuItem(
+                value: level,
+                child: Text(describeEnum(level)),
+              ),
+          ],
+        ),
+      ],
       child: StreamBuilder<List<DiagnosticsNode>>(
-        stream: diagnosticsStream,
+        stream: widget.diagnosticsStream,
         builder: (context, snapshot) {
           final error = snapshot.error;
           if (error != null) {
@@ -57,11 +94,37 @@ class DiagnosticsBasedDebugHelper extends StatelessWidget {
           final nodes = snapshot.data;
           if (nodes == null) return Center(child: CircularProgressIndicator());
 
-          return Text(nodes
-              .map((it) => it.toStringDeep(minLevel: DiagnosticLevel.fine))
-              .join('\n'));
+          return Text(
+            nodes
+                .where((it) => it.level.index >= _minLevel.index)
+                .map((it) => it.toStringDeep(minLevel: _minLevel))
+                .join('\n'),
+          );
         },
       ),
     );
+  }
+
+  IconData _levelToIcon(DiagnosticLevel level) {
+    switch (level) {
+      case DiagnosticLevel.hidden:
+        return Icons.all_inclusive_outlined;
+      case DiagnosticLevel.fine:
+        return Icons.bubble_chart_outlined;
+      case DiagnosticLevel.debug:
+        return Icons.bug_report_outlined;
+      case DiagnosticLevel.info:
+        return Icons.info_outline;
+      case DiagnosticLevel.warning:
+        return Icons.warning_outlined;
+      case DiagnosticLevel.hint:
+        return Icons.privacy_tip_outlined;
+      case DiagnosticLevel.summary:
+        return Icons.subject;
+      case DiagnosticLevel.error:
+        return Icons.error_outlined;
+      case DiagnosticLevel.off:
+        return Icons.not_interested_outlined;
+    }
   }
 }
