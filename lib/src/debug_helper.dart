@@ -9,21 +9,24 @@ class DebugHelper extends StatelessWidget {
     required this.title,
     this.actions = const [],
     required this.child,
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16),
   });
 
   final Widget title;
   final List<Widget> actions;
+
   final Widget child;
+  final EdgeInsetsGeometry contentPadding;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
             children: [
               Expanded(
                 child: DefaultTextStyle(
@@ -34,10 +37,10 @@ class DebugHelper extends StatelessWidget {
               ...actions,
             ],
           ),
-          SizedBox(height: 8),
-          child,
-        ],
-      ),
+        ),
+        SizedBox(height: 8),
+        Padding(padding: contentPadding, child: child),
+      ],
     );
   }
 }

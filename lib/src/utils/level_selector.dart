@@ -14,7 +14,7 @@ class DiagnosticLevelSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<DiagnosticLevel>(
       initialValue: value,
-      child: Icon(_levelToIcon(value)),
+      child: Icon(levelToIcon(value)),
       onSelected: onSelected,
       itemBuilder: (context) => [
         for (final level in DiagnosticLevel.values)
@@ -26,7 +26,7 @@ class DiagnosticLevelSelector extends StatelessWidget {
     );
   }
 
-  IconData _levelToIcon(DiagnosticLevel level) {
+  static IconData levelToIcon(DiagnosticLevel level) {
     switch (level) {
       case DiagnosticLevel.hidden:
         return Icons.all_inclusive_outlined;

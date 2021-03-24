@@ -124,7 +124,7 @@ class DebugOverlayState extends State<DebugOverlay> {
               settings: settings,
               builder: (context) => _ScaledTopViewPadding(
                 progress:
-                    Interval(0.8, 1, curve: Curves.easeIn).transform(_extent),
+                    Interval(0.7, 1, curve: Curves.easeIn).transform(_extent),
                 child: drawer,
               ),
             ),
