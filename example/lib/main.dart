@@ -1,13 +1,29 @@
 import 'dart:math';
 
 import 'package:debug_overlay/debug_overlay.dart';
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final logs = LogCollection();
+final mediaOverrideState = ValueNotifier(MediaOverrideState());
+
+final supportedLocales = kMaterialSupportedLanguages
+    .sortedBy((it) => it)
+    .map((it) => Locale(it))
+    .toList();
 
 void main() {
   if (kDebugMode) {
+    DebugOverlay.prependHelper(MediaOverrideDebugHelper(
+      mediaOverrideState,
+      // To support overriding locales, this value must be set and should
+      // contain the same locales as passed to [WidgetsApp.supportedLocales],
+      // [MaterialApp.supportedLocales] or [CupertinoApp.supportedLocales].
+      supportedLocales: supportedLocales,
+    ));
     DebugOverlay.appendHelper(LogsDebugHelper(logs));
   }
 
@@ -17,13 +33,19 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '🐛 debug_overlay example',
-      themeMode: ThemeMode.light,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      builder: DebugOverlay.builder(showOnShake: false),
-      home: HomePage(),
+    return ValueListenableBuilder<MediaOverrideState>(
+      valueListenable: mediaOverrideState,
+      builder: (context, overrideState, child) => MaterialApp(
+        title: '🐛 debug_overlay example',
+        themeMode: overrideState.themeMode,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        locale: overrideState.locale,
+        builder: DebugOverlay.builder(showOnShake: false),
+        supportedLocales: supportedLocales,
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        home: HomePage(),
+      ),
     );
   }
 }
@@ -39,6 +61,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('Current brightness: ${context.theme.brightness}'),
+            Text('Current locale: ${context.locale}'),
+            SizedBox(height: 16),
             TextButton(
               onPressed: _createLog,
               child: Text('Add log'),
