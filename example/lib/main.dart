@@ -8,7 +8,7 @@ final logs = LogCollection();
 
 void main() {
   if (kDebugMode) {
-    DebugOverlay.addHelper(LogsDebugHelper(logs));
+    DebugOverlay.appendHelper(LogsDebugHelper(logs));
   }
 
   runApp(MyApp());
