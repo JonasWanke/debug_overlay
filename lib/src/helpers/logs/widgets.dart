@@ -12,7 +12,7 @@ import '../../debug_helper.dart';
 import '../../utils/level_selector.dart';
 import 'data.dart';
 
-class LogsDebugHelper extends StatelessWidget {
+class LogsDebugHelper extends StatefulWidget {
   const LogsDebugHelper(
     this.logs, {
     this.title = const Text('Logs'),
@@ -23,12 +23,24 @@ class LogsDebugHelper extends StatelessWidget {
   final Widget title;
 
   @override
+  _LogsDebugHelperState createState() => _LogsDebugHelperState();
+}
+
+class _LogsDebugHelperState extends State<LogsDebugHelper> {
+  var _minLevel = DiagnosticLevel.debug;
+  @override
   Widget build(BuildContext context) {
     return DebugHelper(
-      title: title,
+      title: widget.title,
+      actions: [
+        DiagnosticLevelSelector(
+          value: _minLevel,
+          onSelected: (level) => setState(() => _minLevel = level),
+        ),
+      ],
       contentPadding: EdgeInsets.zero,
       child: ValueListenableBuilder<List<Log>>(
-        valueListenable: logs.listenable,
+        valueListenable: widget.logs.listenable,
         builder: (context, logs, _) {
           if (logs.isEmpty) {
             return Center(
@@ -41,10 +53,13 @@ class LogsDebugHelper extends StatelessWidget {
               ),
             );
           }
+
+          final filteredLogs =
+              logs.where((it) => it.level.index >= _minLevel.index).toList();
           return ImplicitlyAnimatedList<Log>(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemData: logs,
+            itemData: filteredLogs,
             itemBuilder: (context, data) => LogEntryWidget(data),
           );
         },
