@@ -8,7 +8,6 @@ class Log {
     this.level = DiagnosticLevel.info,
     DateTime? timestamp,
     required this.message,
-    this.tags = const {},
     this.error,
     this.stackTrace,
   })  : assert(
@@ -22,13 +21,11 @@ class Log {
   final DiagnosticLevel level;
   final DateTime timestamp;
   final String message;
-  final Set<String> tags;
   final dynamic? error;
   final StackTrace? stackTrace;
 
   @override
-  int get hashCode =>
-      hashValues(level, timestamp, message, tags, error, stackTrace);
+  int get hashCode => hashValues(level, timestamp, message, error, stackTrace);
 
   @override
   bool operator ==(Object other) {
@@ -36,7 +33,6 @@ class Log {
         level == other.level &&
         timestamp == other.timestamp &&
         message == other.message &&
-        tags == other.tags &&
         error == other.error &&
         stackTrace == other.stackTrace;
   }
