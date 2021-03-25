@@ -92,12 +92,16 @@ class _DiagnosticsBasedDebugHelperState
           final nodes = snapshot.data;
           if (nodes == null) return Center(child: CircularProgressIndicator());
 
-          return Text(
-            nodes
-                .where((it) => it.level.index >= _minLevel.index)
-                .map((it) => it.toStringDeep(minLevel: _minLevel))
-                .join('\n'),
-          );
+          final text = nodes
+              .where((it) => it.level.index >= _minLevel.index)
+              .map((it) => it.toStringDeep(minLevel: _minLevel))
+              .join('\n');
+          if (text.isEmpty) {
+            return Center(
+              child: Text('Empty', style: context.textTheme.caption),
+            );
+          }
+          return Text(text);
         },
       ),
     );
