@@ -144,17 +144,19 @@ class DebugOverlayContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<Widget>>(
-      valueListenable: DebugOverlay.helpers,
-      builder: (context, helpers, _) => ListView.separated(
-        primary: false,
-        controller: scrollController,
-        padding: context.mediaQuery.viewPadding + EdgeInsets.only(bottom: 16),
-        itemCount: helpers.length + 1,
-        itemBuilder: (context, index) =>
-            index == 0 ? _buildAppBar(context) : helpers[index - 1],
-        separatorBuilder: (context, index) =>
-            SizedBox(height: index == 0 ? 0 : 16),
+    return Scaffold(
+      body: ValueListenableBuilder<List<Widget>>(
+        valueListenable: DebugOverlay.helpers,
+        builder: (context, helpers, _) => ListView.separated(
+          primary: false,
+          controller: scrollController,
+          padding: context.mediaQuery.viewPadding + EdgeInsets.only(bottom: 16),
+          itemCount: helpers.length + 1,
+          itemBuilder: (context, index) =>
+              index == 0 ? _buildAppBar(context) : helpers[index - 1],
+          separatorBuilder: (context, index) =>
+              SizedBox(height: index == 0 ? 0 : 16),
+        ),
       ),
     );
   }

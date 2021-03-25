@@ -88,7 +88,7 @@ class LogEntryWidget extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: _copyToClipboard,
+      onLongPress: () => _copyToClipboard(context),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
@@ -150,7 +150,7 @@ class LogEntryWidget extends StatelessWidget {
     }
   }
 
-  Future<void> _copyToClipboard() async {
+  Future<void> _copyToClipboard(BuildContext context) async {
     final error = _stringify(log.error);
     final stackTrace = _stringify(log.stackTrace);
     final text = [
@@ -159,6 +159,7 @@ class LogEntryWidget extends StatelessWidget {
       if (stackTrace != null) 'Stack Trace: $stackTrace',
     ].join('\n');
     await Clipboard.setData(ClipboardData(text: text));
+    context.scaffoldMessenger.showSnackBar(SnackBar(content: Text('Copied!')));
   }
 
   String? _stringify(dynamic object) {
