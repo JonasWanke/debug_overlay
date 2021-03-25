@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shake/shake.dart';
 
 import 'helpers/device_info.dart';
@@ -28,12 +29,34 @@ class DebugOverlay extends StatefulWidget {
     helpers.value = [...helpers.value, debugHelper];
   }
 
-  static TransitionBuilder builder({
-    bool showOnShake = true,
-  }) {
-    return (context, child) {
-      return DebugOverlay(child: child, showOnShake: showOnShake);
-    };
+  /// In debug mode, this returns a builder to add a [DebugOverlay] to your app.
+  ///
+  /// In profile and release builds, the returned builder doesn't add any
+  /// widgets.
+  ///
+  /// This is usually used as the [WidgetsApp.builder]/[MaterialApp.builder]/
+  /// [CupertinoApp.builder]:
+  ///
+  /// ```dart
+  /// MaterialApp(
+  ///   title: 'My Fancy App',
+  ///   builder: DebugOverlay.builder(),
+  ///   home: MyHomePage(),
+  /// )
+  /// ```
+  ///
+  /// You can open the overlay by shaking your phone (if [showOnShake] is
+  /// `true`) or by calling [show] or [hide].
+  static TransitionBuilder builder({bool showOnShake = true}) {
+    // ignore: omit_local_variable_types
+    TransitionBuilder builder = (context, child) => child ?? SizedBox();
+    assert(() {
+      builder = (context, child) {
+        return DebugOverlay(child: child, showOnShake: showOnShake);
+      };
+      return true;
+    }());
+    return builder;
   }
 
   static void show() => DebugOverlayState.key.currentState!.show();

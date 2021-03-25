@@ -39,11 +39,13 @@ class Log {
 }
 
 class LogCollection {
+  LogCollection({int? maximumSize = 50}) : _maximumSize = maximumSize;
+
   final _logs = ValueNotifier<List<Log>>([]);
   ValueListenable<List<Log>> get listenable => _logs;
   List<Log> get logs => listenable.value;
 
-  int? _maximumSize = 50;
+  int? _maximumSize;
 
   /// The maximum number of logs to store or `null` for unlimited storage.
   ///
@@ -58,7 +60,15 @@ class LogCollection {
     }
   }
 
+// In debug builds, this adds the given log to the collection.
   void add(Log log) {
+    assert(() {
+      _doAdd(log);
+      return true;
+    }());
+  }
+
+  void _doAdd(Log log) {
     int index;
     if (logs.isEmpty || !log.timestamp.isBefore(logs.last.timestamp)) {
       // Quick path as new logs are usually more recent.
