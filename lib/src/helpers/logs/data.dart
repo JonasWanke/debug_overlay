@@ -47,6 +47,21 @@ class LogCollection {
   ValueListenable<List<Log>> get listenable => _logs;
   List<Log> get logs => listenable.value;
 
+  int? _maximumSize = 50;
+
+  /// The maximum number of logs to store or `null` for unlimited storage.
+  ///
+  /// If more logs arrive, the oldest ones (based on their [Log.timestamp]) will
+  /// be removed.
+  int? get maximumSize => _maximumSize;
+  set maximumSize(int? value) {
+    _maximumSize = maximumSize;
+
+    if (value != null && logs.length > value) {
+      _logs.value = logs.sublist(logs.length - value, logs.length);
+    }
+  }
+
   void add(Log log) {
     int index;
     if (logs.isEmpty || !log.timestamp.isBefore(logs.last.timestamp)) {
@@ -69,10 +84,17 @@ class LogCollection {
       index = min;
     }
 
+    var startIndex = 0;
+    if (maximumSize != null && logs.length >= maximumSize!) {
+      if (index == 0) return;
+      startIndex = logs.length - maximumSize! + 1;
+    }
     _logs.value = [
-      ...logs.sublist(0, index),
+      ...logs.sublist(startIndex, index),
       log,
       ...logs.sublist(index, logs.length),
     ];
   }
+
+  void clear() => _logs.value = [];
 }
