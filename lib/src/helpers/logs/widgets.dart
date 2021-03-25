@@ -187,7 +187,7 @@ class LogEntryWidget extends StatelessWidget {
     } catch (_) {}
 
     try {
-      return '$object';
+      return '$object'.trim();
     } catch (_) {
       return describeIdentity(object);
     }
