@@ -14,8 +14,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
-## [Unreleased](https://github.com/JonasWanke/debug_overlay/compare/v0.1.0...master)
+## v0.1.1 · 2020-03-29
 
+### 🎉 New Features
+* support `device_info_plus_platform_interface ^1.0.1`
 
 ## 0.1.0 · 2021-03-25
 
