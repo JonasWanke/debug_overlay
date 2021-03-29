@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:data_size/data_size.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:device_info_plus_platform_interface/device_info_plus_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:supercharged/supercharged.dart';
@@ -20,13 +20,7 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
 }
 
 Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
-  AndroidDeviceInfo info;
-  try {
-    info = await DeviceInfoPlugin().androidInfo;
-  } catch (_) {
-    // Workaround for https://github.com/fluttercommunity/plus_plugins/issues/184
-    return [StringProperty('OS', 'Android')];
-  }
+  final info = await DeviceInfoPlugin().androidInfo;
   return [
     DiagnosticsBlock(
       name: 'OS: Android',
@@ -47,19 +41,19 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
         ),
         FlagsSummary(
           'Supported 32-Bit ABIs',
-          info.supported32BitAbis.associateWith((it) => true),
+          info.supported32BitAbis.whereNotNull().associateWith((it) => true),
         ),
         FlagsSummary(
           'Supported 64-Bit ABIs',
-          info.supported64BitAbis.associateWith((it) => true),
+          info.supported64BitAbis.whereNotNull().associateWith((it) => true),
         ),
         FlagsSummary(
           'Supported ABIs',
-          info.supportedAbis.associateWith((it) => true),
+          info.supportedAbis.whereNotNull().associateWith((it) => true),
         ),
         FlagsSummary(
           'System Features',
-          info.systemFeatures.associateWith((it) => true),
+          info.systemFeatures.whereNotNull().associateWith((it) => true),
           level: DiagnosticLevel.fine,
         ),
       ],
