@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
 
           // This creates the actual [DebugOverlay] (only in debug mode; not in
           // profile oder release mode).
-          builder: DebugOverlay.builder(showOnShake: false),
+          builder: DebugOverlay.builder(showOnShake: true),
 
           // And the usual customization:
           supportedLocales: supportedLocales,
