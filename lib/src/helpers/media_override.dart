@@ -1,6 +1,6 @@
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:black_hole_flutter/black_hole_flutter.dart';
 
 import '../debug_helper.dart';
 
@@ -46,13 +46,11 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
       builder: (context, currentState, _) => DebugHelper(
         title: Text('Media Overrides'),
         contentPadding: EdgeInsets.zero,
-        child: Column(
-          children: [
-            _buildThemeModeOverride(currentState),
-            if (widget.supportedLocales != null)
-              _buildLocaleOverride(currentState),
-          ],
-        ),
+        child: Column(children: [
+          _buildThemeModeOverride(currentState),
+          if (widget.supportedLocales != null)
+            _buildLocaleOverride(currentState),
+        ]),
       ),
     );
   }

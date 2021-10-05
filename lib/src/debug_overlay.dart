@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 
 import 'helpers/device_info.dart';
@@ -119,12 +119,10 @@ class DebugOverlayState extends State<DebugOverlay> {
       bottomSheet = _buildBottomSheet();
       return true;
     }());
-    return Stack(
-      children: [
-        if (widget.child != null) widget.child!,
-        if (bottomSheet != null) Positioned.fill(child: bottomSheet!),
-      ],
-    );
+    return Stack(children: [
+      if (widget.child != null) widget.child!,
+      if (bottomSheet != null) Positioned.fill(child: bottomSheet!),
+    ]);
   }
 
   double _extent = 0;
@@ -190,7 +188,6 @@ class DebugOverlayContent extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context) {
     return AppBar(
-      backwardsCompatibility: false,
       primary: false,
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -213,9 +210,8 @@ class _ScaledTopViewPadding extends StatelessWidget {
     final data = context.mediaQuery;
     return MediaQuery(
       data: data.copyWith(
-        viewPadding: data.viewPadding.copyWith(
-          top: lerpDouble(0, data.viewPadding.top, progress)!,
-        ),
+        viewPadding: data.viewPadding
+            .copyWith(top: lerpDouble(0, data.viewPadding.top, progress)!),
       ),
       child: child,
     );
