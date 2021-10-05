@@ -25,8 +25,6 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
     DiagnosticsBlock(
       name: 'OS: Android',
       properties: [
-        // StringProperty('Name', info.systemName),
-        // StringProperty('Version', info.systemVersion),
         StringProperty('Build Type', info.type),
         StringProperty('Build Tags', info.tags),
         StringProperty(
@@ -58,7 +56,6 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
         ),
       ],
       children: [
-        // StringProperty('Version', info.version),
         DiagnosticsBlock(
           name: 'Version',
           properties: [

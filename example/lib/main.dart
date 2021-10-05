@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:debug_overlay/debug_overlay.dart';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:collection/collection.dart';
+import 'package:debug_overlay/debug_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 // By default, this only stores the last 50 logs. You can customize this via the
@@ -80,10 +80,7 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 4),
             Text('Locale: ${context.locale}'),
             SizedBox(height: 16),
-            TextButton(
-              onPressed: () => _createLog(),
-              child: Text('Add log'),
-            ),
+            TextButton(onPressed: () => _createLog(), child: Text('Add log')),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => DebugOverlay.show(),
