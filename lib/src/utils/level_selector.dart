@@ -14,7 +14,6 @@ class DiagnosticLevelSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<DiagnosticLevel>(
       initialValue: value,
-      child: Icon(levelToIcon(value)),
       tooltip: 'Select the minimum diagnostics level to show',
       onSelected: onSelected,
       itemBuilder: (context) => [
@@ -24,6 +23,7 @@ class DiagnosticLevelSelector extends StatelessWidget {
             child: Text(describeEnum(level)),
           ),
       ],
+      child: Icon(levelToIcon(value)),
     );
   }
 

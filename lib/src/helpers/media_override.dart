@@ -77,16 +77,16 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
             widget.state.value = currentState.copyWith(themeMode: themeMode!);
           });
         },
+        isSelected: [
+          for (final themeMode in ThemeMode.values)
+            themeMode == (currentState.themeMode ?? this.themeMode!),
+        ],
         children: [
           for (final themeMode in ThemeMode.values)
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Text(_themeModeToString(themeMode)),
             ),
-        ],
-        isSelected: [
-          for (final themeMode in ThemeMode.values)
-            themeMode == (currentState.themeMode ?? this.themeMode!),
         ],
       ),
     );

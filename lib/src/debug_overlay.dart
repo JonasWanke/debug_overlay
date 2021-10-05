@@ -51,9 +51,8 @@ class DebugOverlay extends StatefulWidget {
     // ignore: omit_local_variable_types
     TransitionBuilder builder = (context, child) => child ?? SizedBox();
     assert(() {
-      builder = (context, child) {
-        return DebugOverlay(child: child, showOnShake: showOnShake);
-      };
+      builder = (context, child) =>
+          DebugOverlay(showOnShake: showOnShake, child: child);
       return true;
     }());
     return builder;
@@ -97,9 +96,7 @@ class DebugOverlayState extends State<DebugOverlay> {
     assert(widget.showOnShake);
     assert(_shakeDetector == null);
 
-    _shakeDetector = ShakeDetector.autoStart(onPhoneShake: () {
-      show();
-    });
+    _shakeDetector = ShakeDetector.autoStart(onPhoneShake: show);
   }
 
   @override

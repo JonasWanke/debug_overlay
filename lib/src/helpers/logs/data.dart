@@ -21,7 +21,7 @@ class Log {
   final DiagnosticLevel level;
   final DateTime timestamp;
   final String message;
-  final dynamic? error;
+  final dynamic error;
   final StackTrace? stackTrace;
 
   @override
