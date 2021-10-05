@@ -21,7 +21,7 @@ There are two ways to open the debug overlay:
   (You can disable the shake detection by passing `showOnShake: false` to `DebugOverlay.builder`.)
 * Call `DebugOverlay.show()`.
 
-By default, this overlay includes `MediaQueryDebugHelper`, `PackageInfoDebugHelper`, `DeviceInfoDebugHelper`.
+By default, this overlay includes `MediaQueryDebugHelper`, `PackageInfoDebugHelper`, and `DeviceInfoDebugHelper`.
 
 ## Debug Helpers
 
