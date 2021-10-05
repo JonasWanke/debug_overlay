@@ -5,12 +5,12 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+  debug_overlay:
+    path: ../
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  debug_overlay:
-    path: ../
 
 flutter:
   uses-material-design: true
