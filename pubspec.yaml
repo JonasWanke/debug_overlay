@@ -16,7 +16,7 @@ dependencies:
   implicitly_animated_list: ^2.0.0
   meta: ^1.3.0
   package_info_plus: ^1.0.0
-  shake: ^1.0.0
+  shake: ^2.0.0
   supercharged: ^2.0.0
 
 dev_dependencies:
