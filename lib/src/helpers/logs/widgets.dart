@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:implicitly_animated_list/implicitly_animated_list.dart';
-import 'package:supercharged/supercharged.dart';
 
 import '../../debug_helper.dart';
 import '../../utils/level_selector.dart';
@@ -76,7 +75,9 @@ class LogEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // We don't show the date to save space.
-    final formattedTimestamp = log.timestamp.toString().allAfter(' ');
+    final rawTimestamp = log.timestamp.toString();
+    final timeStartIndex = rawTimestamp.indexOf(' ') + 1;
+    final formattedTimestamp = rawTimestamp.substring(timeStartIndex);
 
     final color = _getTextColor(context);
     final content = Text.rich(

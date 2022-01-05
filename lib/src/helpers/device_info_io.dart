@@ -5,7 +5,6 @@ import 'package:data_size/data_size.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:supercharged/supercharged.dart';
 
 Future<List<DiagnosticsNode>> getDiagnostics() async {
   assert(!kIsWeb);
@@ -37,21 +36,21 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
           info.androidId,
           level: DiagnosticLevel.fine,
         ),
-        FlagsSummary(
+        StringProperty(
           'Supported 32-Bit ABIs',
-          info.supported32BitAbis.whereNotNull().associateWith((it) => true),
+          info.supported32BitAbis.whereNotNull().join(', '),
         ),
-        FlagsSummary(
+        StringProperty(
           'Supported 64-Bit ABIs',
-          info.supported64BitAbis.whereNotNull().associateWith((it) => true),
+          info.supported64BitAbis.whereNotNull().join(', '),
         ),
-        FlagsSummary(
+        StringProperty(
           'Supported ABIs',
-          info.supportedAbis.whereNotNull().associateWith((it) => true),
+          info.supportedAbis.whereNotNull().join(', '),
         ),
-        FlagsSummary(
+        StringProperty(
           'System Features',
-          info.systemFeatures.whereNotNull().associateWith((it) => true),
+          info.systemFeatures.whereNotNull().join(', '),
           level: DiagnosticLevel.fine,
         ),
       ],
