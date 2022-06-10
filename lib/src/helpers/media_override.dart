@@ -33,7 +33,7 @@ class MediaOverrideDebugHelper extends StatefulWidget {
   final List<Locale>? supportedLocales;
 
   @override
-  _MediaOverrideDebugHelperState createState() =>
+  State<MediaOverrideDebugHelper> createState() =>
       _MediaOverrideDebugHelperState();
 }
 

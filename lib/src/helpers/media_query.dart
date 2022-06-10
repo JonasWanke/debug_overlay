@@ -15,7 +15,7 @@ class MediaQueryDebugHelper extends StatelessWidget {
   Future<List<DiagnosticsNode>> _getDiagnostics(BuildContext context) async {
     var data = MediaQuery.maybeOf(context);
     if (data == null) {
-      data = MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
+      data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
       if (!kReleaseMode) {
         data = data.copyWith(platformBrightness: debugBrightnessOverride);
       }

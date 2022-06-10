@@ -54,7 +54,7 @@ class DiagnosticsBasedDebugHelper extends StatefulWidget {
   final Stream<List<DiagnosticsNode>> diagnosticsStream;
 
   @override
-  _DiagnosticsBasedDebugHelperState createState() =>
+  State<DiagnosticsBasedDebugHelper> createState() =>
       _DiagnosticsBasedDebugHelperState();
 }
 

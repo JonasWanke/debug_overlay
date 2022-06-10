@@ -22,7 +22,7 @@ class LogsDebugHelper extends StatefulWidget {
   final Widget title;
 
   @override
-  _LogsDebugHelperState createState() => _LogsDebugHelperState();
+  State<LogsDebugHelper> createState() => _LogsDebugHelperState();
 }
 
 class _LogsDebugHelperState extends State<LogsDebugHelper> {
