@@ -1,0 +1,19 @@
+version: 2
+enable-beta-ecosystems: true
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    reviewers: ['JonasWanke']
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'pub'
+    directory: '/common'
+    reviewers: ['JonasWanke']
+    schedule:
+      interval: 'weekly'
+  - package-ecosystem: 'pub'
+    directory: '/example'
+    reviewers: ['JonasWanke']
+    schedule:
+      interval: 'weekly'
