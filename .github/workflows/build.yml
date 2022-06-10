@@ -40,7 +40,7 @@ jobs:
           bundle install --without documentation
         if: github.event_name == 'pull_request'
       - name: Run danger on generated report
-        uses: MeilCli/danger-action@v5.4.10
+        uses: MeilCli/danger-action@v5.5.6
         if: github.event_name == 'pull_request'
         with:
           danger_file: Dangerfile
