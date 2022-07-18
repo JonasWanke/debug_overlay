@@ -60,15 +60,7 @@ class LogCollection {
     }
   }
 
-// In debug builds, this adds the given log to the collection.
   void add(Log log) {
-    assert(() {
-      _doAdd(log);
-      return true;
-    }());
-  }
-
-  void _doAdd(Log log) {
     int index;
     if (logs.isEmpty || !log.timestamp.isBefore(logs.last.timestamp)) {
       // Quick path as new logs are usually more recent.
