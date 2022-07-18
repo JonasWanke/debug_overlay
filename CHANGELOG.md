@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 <!-- Template:
 ## NEW · 2022-xx-xx
+### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
 ### ⚡ Changes
 ### 🐛 Bug Fixes
@@ -13,6 +14,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.1.5 · 2022-07-18
+
+### 🎉 New Features
+* add `debugOverlay.enableOnlyInDebugMode` and a corresponding parameter in `DebugOverlay.builder` (both default to `false`) to optionally enable the overlay in release or profile builds ([`f662e57`](https://github.com/JonasWanke/debug_overlay/commit/f662e57289537e002598cbe9872ce6ee3c27b685))
 
 ## 0.1.4 · 2022-06-10
 
