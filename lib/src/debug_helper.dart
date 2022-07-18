@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'utils/level_selector.dart';
@@ -25,17 +26,15 @@ class DebugHelper extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: DefaultTextStyle(
-                  style: context.textTheme.subtitle1!,
-                  child: title,
-                ),
+          child: Row(children: [
+            Expanded(
+              child: DefaultTextStyle(
+                style: context.textTheme.subtitle1!,
+                child: title,
               ),
-              ...actions,
-            ],
-          ),
+            ),
+            ...actions,
+          ]),
         ),
         SizedBox(height: 8),
         Padding(padding: contentPadding, child: child),
@@ -44,6 +43,11 @@ class DebugHelper extends StatelessWidget {
   }
 }
 
+/// A [DebugHelper] that displays a [Stream] of [DiagnosticsNode]s and allows
+/// the user to filter them.
+///
+/// Unfortunately, this widget only works in debug mode because stringifying of
+/// [DiagnosticsNode]s only works in debug mode.
 class DiagnosticsBasedDebugHelper extends StatefulWidget {
   const DiagnosticsBasedDebugHelper({
     required this.title,
@@ -83,9 +87,7 @@ class _DiagnosticsBasedDebugHelperState
               return true;
             }());
 
-            return Center(
-              child: Text('$error\n${snapshot.stackTrace!}'),
-            );
+            return Center(child: Text('$error\n${snapshot.stackTrace!}'));
           }
 
           final nodes = snapshot.data;
