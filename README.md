@@ -13,7 +13,7 @@ MaterialApp(
 )
 ```
 
-> The debug overlay only works in debug mode and is not included in your widget tree in profile or release mode.
+> The debug overlay only works in debug mode and is not included in your widget tree in profile or release mode unless you pass `enableOnlyInDebugMode: false`.
 
 There are two ways to open the debug overlay:
 

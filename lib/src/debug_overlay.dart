@@ -12,6 +12,7 @@ class DebugOverlay extends StatefulWidget {
   DebugOverlay({
     required this.child,
     this.showOnShake = true,
+    this.enableOnlyInDebugMode = true,
   }) : super(key: DebugOverlayState.key);
 
   static final helpers = ValueNotifier<List<Widget>>([
@@ -31,7 +32,7 @@ class DebugOverlay extends StatefulWidget {
   /// In debug mode, this returns a builder to add a [DebugOverlay] to your app.
   ///
   /// In profile and release builds, the returned builder doesn't add any
-  /// widgets.
+  /// widgets unless [enableOnlyInDebugMode] is set to `false`.
   ///
   /// This is usually used as the [WidgetsApp.builder]/[MaterialApp.builder]/
   /// [CupertinoApp.builder]:
@@ -46,15 +47,17 @@ class DebugOverlay extends StatefulWidget {
   ///
   /// You can open the overlay by shaking your phone (if [showOnShake] is
   /// `true`) or by calling [show] or [hide].
-  static TransitionBuilder builder({bool showOnShake = true}) {
-    // ignore: omit_local_variable_types
-    TransitionBuilder builder = (context, child) => child ?? SizedBox();
-    assert(() {
-      builder = (context, child) =>
-          DebugOverlay(showOnShake: showOnShake, child: child);
-      return true;
-    }());
-    return builder;
+  static TransitionBuilder builder({
+    bool showOnShake = true,
+    bool enableOnlyInDebugMode = true,
+  }) {
+    return _isInDebugMode || !enableOnlyInDebugMode
+        ? (context, child) => DebugOverlay(
+              showOnShake: showOnShake,
+              enableOnlyInDebugMode: enableOnlyInDebugMode,
+              child: child,
+            )
+        : (context, child) => child ?? SizedBox();
   }
 
   static void show() => DebugOverlayState.key.currentState!.show();
@@ -63,6 +66,7 @@ class DebugOverlay extends StatefulWidget {
   final Widget? child;
 
   final bool showOnShake;
+  final bool enableOnlyInDebugMode;
 
   @override
   DebugOverlayState createState() => DebugOverlayState();
@@ -109,15 +113,13 @@ class DebugOverlayState extends State<DebugOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    Widget? bottomSheet;
-    assert(() {
-      if (!_isVisible) return true;
-      bottomSheet = _buildBottomSheet();
-      return true;
-    }());
+    final bottomSheet =
+        _isVisible && (_isInDebugMode || !widget.enableOnlyInDebugMode)
+            ? _buildBottomSheet()
+            : null;
     return Stack(children: [
       if (widget.child != null) widget.child!,
-      if (bottomSheet != null) Positioned.fill(child: bottomSheet!),
+      if (bottomSheet != null) Positioned.fill(child: bottomSheet),
     ]);
   }
 
@@ -155,6 +157,15 @@ class DebugOverlayState extends State<DebugOverlay> {
       ),
     );
   }
+}
+
+bool get _isInDebugMode {
+  var isInDebugMode = false;
+  assert(() {
+    isInDebugMode = true;
+    return true;
+  }());
+  return isInDebugMode;
 }
 
 class DebugOverlayContent extends StatelessWidget {
