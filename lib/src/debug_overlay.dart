@@ -16,9 +16,13 @@ class DebugOverlay extends StatefulWidget {
   }) : super(key: DebugOverlayState.key);
 
   static final helpers = ValueNotifier<List<Widget>>([
-    MediaQueryDebugHelper(),
-    PackageInfoDebugHelper(),
-    DeviceInfoDebugHelper(),
+    if (_isInDebugMode) ...[
+      // These only work in debug mode; see the documentation of
+      // [DiagnosticsBasedDebugHelper] for the explanation.
+      MediaQueryDebugHelper(),
+      PackageInfoDebugHelper(),
+      DeviceInfoDebugHelper(),
+    ],
   ]);
 
   static void prependHelper(Widget debugHelper) {
