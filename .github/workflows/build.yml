@@ -2,6 +2,7 @@ name: Build & Lint
 
 on:
   pull_request:
+  push:
   schedule:
     - cron: '0 4 * * *'
 
@@ -28,7 +29,7 @@ jobs:
 
       - name: Run linter
         run: flutter analyze > flutter_analyze_report.txt
-        continue-on-error: true
+        continue-on-error: github.event_name == 'pull_request'
 
       - uses: actions/setup-ruby@v1
         if: github.event_name == 'pull_request'
