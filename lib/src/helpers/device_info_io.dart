@@ -31,11 +31,6 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
           level: DiagnosticLevel.fine,
         ),
         StringProperty(
-          'Android ID',
-          info.androidId,
-          level: DiagnosticLevel.fine,
-        ),
-        StringProperty(
           'Supported 32-Bit ABIs',
           info.supported32BitAbis.whereNotNull().join(', '),
         ),
