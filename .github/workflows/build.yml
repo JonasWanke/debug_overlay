@@ -28,7 +28,7 @@ jobs:
       - run: flutter pub get
 
       - name: Run linter
-        run: flutter analyze > flutter_analyze_report.txt
+        run: flutter analyze | tee flutter_analyze_report.txt
         continue-on-error: ${{ github.event_name == 'pull_request' }}
 
       - uses: actions/setup-ruby@v1
