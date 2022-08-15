@@ -12,5 +12,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+dev_dependencies:
+  flutter_lints: ^2.0.1
+
 flutter:
   uses-material-design: true
