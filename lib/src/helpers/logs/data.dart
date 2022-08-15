@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -25,7 +23,7 @@ class Log {
   final StackTrace? stackTrace;
 
   @override
-  int get hashCode => hashValues(level, timestamp, message, error, stackTrace);
+  int get hashCode => Object.hash(level, timestamp, message, error, stackTrace);
 
   @override
   bool operator ==(Object other) {
