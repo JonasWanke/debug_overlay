@@ -32,6 +32,11 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
     return DebugHelper(
       title: widget.title,
       actions: [
+        IconButton(
+          tooltip: 'Clear logs',
+          onPressed: widget.logs.clear,
+          icon: Icon(Icons.delete_outlined),
+        ),
         DiagnosticLevelSelector(
           value: _minLevel,
           onSelected: (level) => setState(() => _minLevel = level),
