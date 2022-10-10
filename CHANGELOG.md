@@ -15,6 +15,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.2 · 2022-10-10
+
+### 📦 Build & CI
+* Update `device_info_plus` to `^5.0.5` ([`5c645e6`](https://github.com/JonasWanke/debug_overlay/commit/5c645e63131125ff6740b8546f3f3157d974dbf2))
+
 ## 0.2.1 · 2022-08-15
 
 ### 🐛 Bug Fixes
