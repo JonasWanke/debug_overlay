@@ -11,7 +11,7 @@ dependencies:
   black_hole_flutter: ^0.3.0
   collection: ^1.15.0
   data_size: ^0.2.0
-  device_info_plus: ^4.0.1
+  device_info_plus: ^5.0.5
   flutter:
     sdk: flutter
   implicitly_animated_list: ^2.0.0
