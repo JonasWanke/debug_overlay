@@ -20,34 +20,13 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
 
       - run: flutter pub get
 
-      - name: Run linter
-        run: flutter analyze | tee flutter_analyze_report.txt
-        continue-on-error: ${{ github.event_name == 'pull_request' }}
-
-      - uses: actions/setup-ruby@v1
-        if: github.event_name == 'pull_request'
-        with:
-          ruby-version: '2.6'
-      - name: Install ruby gems
-        run: |
-          gem install bundler
-          bundle config set without 'documentation'
-          bundle install
-        if: github.event_name == 'pull_request'
-      - name: Run danger on generated report
-        run: |
-          gem install danger --version ">= 6.0.0"
-          danger --dangerfile=Dangerfile --danger_id="danger-pr"
-        if: github.event_name == 'pull_request'
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
+      - run: flutter analyze
 
   build-example:
     name: Build example
@@ -58,8 +37,7 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
 
