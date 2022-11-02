@@ -61,7 +61,7 @@ class DebugOverlay extends StatefulWidget {
               enableOnlyInDebugMode: enableOnlyInDebugMode,
               child: child,
             )
-        : (context, child) => child ?? SizedBox();
+        : (context, child) => child ?? const SizedBox();
   }
 
   static void show() => DebugOverlayState.key.currentState!.show();
@@ -150,8 +150,8 @@ class DebugOverlayState extends State<DebugOverlay> {
             onGenerateRoute: (settings) => MaterialPageRoute<void>(
               settings: settings,
               builder: (context) => _ScaledTopViewPadding(
-                progress:
-                    Interval(0.7, 1, curve: Curves.easeIn).transform(_extent),
+                progress: const Interval(0.7, 1, curve: Curves.easeIn)
+                    .transform(_extent),
                 child: drawer,
               ),
             ),
@@ -186,7 +186,8 @@ class DebugOverlayContent extends StatelessWidget {
         builder: (context, helpers, _) => ListView.separated(
           primary: false,
           controller: scrollController,
-          padding: context.mediaQuery.viewPadding + EdgeInsets.only(bottom: 16),
+          padding: context.mediaQuery.viewPadding +
+              const EdgeInsets.only(bottom: 16),
           itemCount: helpers.length + 1,
           itemBuilder: (context, index) =>
               index == 0 ? _buildAppBar(context) : helpers[index - 1],
@@ -204,7 +205,7 @@ class DebugOverlayContent extends StatelessWidget {
       backgroundColor: Colors.transparent,
       foregroundColor:
           context.theme.scaffoldBackgroundColor.highEmphasisOnColor,
-      title: Text('🐛 Debug Overlay'),
+      title: const Text('🐛 Debug Overlay'),
       actions: [if (onClose != null) CloseButton(onPressed: onClose!)],
     );
   }

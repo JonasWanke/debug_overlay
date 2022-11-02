@@ -43,7 +43,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
     return ValueListenableBuilder<MediaOverrideState>(
       valueListenable: widget.state,
       builder: (context, currentState, _) => DebugHelper(
-        title: Text('Media Overrides'),
+        title: const Text('Media Overrides'),
         contentPadding: EdgeInsets.zero,
         child: Column(children: [
           _buildThemeModeOverride(currentState),
@@ -60,7 +60,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
         context.theme.brightness.isLight ? ThemeMode.light : ThemeMode.dark;
 
     return CheckboxListTile(
-      title: Text('Theme Mode'),
+      title: const Text('Theme Mode'),
       controlAffinity: ListTileControlAffinity.leading,
       value: currentState.themeMode != null,
       onChanged: (value) {
@@ -83,7 +83,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
         children: [
           for (final themeMode in ThemeMode.values)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(_themeModeToString(themeMode)),
             ),
         ],
@@ -107,7 +107,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
     locale ??= context.locale;
 
     return CheckboxListTile(
-      title: Text('Locale'),
+      title: const Text('Locale'),
       controlAffinity: ListTileControlAffinity.leading,
       value: currentState.locale != null,
       onChanged: (value) {

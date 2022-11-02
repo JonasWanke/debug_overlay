@@ -7,7 +7,7 @@ class DeviceInfoDebugHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
-      title: Text('Device Info'),
+      title: const Text('Device Info'),
       diagnosticsStream: getDiagnostics().asStream(),
     );
   }

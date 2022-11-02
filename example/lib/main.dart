@@ -71,20 +71,23 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('🐛 debug_overlay example')),
+      appBar: AppBar(title: const Text('🐛 debug_overlay example')),
       body: SizedBox.expand(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Brightness: ${context.theme.brightness}'),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text('Locale: ${context.locale}'),
-            SizedBox(height: 16),
-            TextButton(onPressed: () => _createLog(), child: Text('Add log')),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => _createLog(),
+              child: const Text('Add log'),
+            ),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => DebugOverlay.show(),
-              child: Text('Show Debug Overlay'),
+              child: const Text('Show Debug Overlay'),
             ),
           ],
         ),

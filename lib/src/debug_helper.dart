@@ -24,7 +24,7 @@ class DebugHelper extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(children: [
             Expanded(
               child: DefaultTextStyle(
@@ -35,7 +35,7 @@ class DebugHelper extends StatelessWidget {
             ...actions,
           ]),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Padding(padding: contentPadding, child: child),
       ],
     );
@@ -90,7 +90,9 @@ class _DiagnosticsBasedDebugHelperState
           }
 
           final nodes = snapshot.data;
-          if (nodes == null) return Center(child: CircularProgressIndicator());
+          if (nodes == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
           final text = nodes
               .where((it) => it.level.index >= _minLevel.index)

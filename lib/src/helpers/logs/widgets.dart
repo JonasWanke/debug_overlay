@@ -35,7 +35,7 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
         IconButton(
           tooltip: 'Clear logs',
           onPressed: widget.logs.clear,
-          icon: Icon(Icons.delete_outlined),
+          icon: const Icon(Icons.delete_outlined),
         ),
         DiagnosticLevelSelector(
           value: _minLevel,
@@ -62,7 +62,7 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
               logs.where((it) => it.level.index >= _minLevel.index).toList();
           return ImplicitlyAnimatedList<Log>(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemData: filteredLogs,
             itemBuilder: (context, data) => LogEntryWidget(data),
           );
@@ -92,7 +92,7 @@ class LogEntryWidget extends StatelessWidget {
             text: formattedTimestamp,
             style: context.textTheme.caption!.copyWith(
               color: color.withOpacity(0.6),
-              fontFeatures: [FontFeature.tabularFigures()],
+              fontFeatures: [const FontFeature.tabularFigures()],
             ),
           ),
           TextSpan(text: ' ${log.message}'),
@@ -111,7 +111,7 @@ class LogEntryWidget extends StatelessWidget {
     return InkWell(
       onLongPress: () => _copyToClipboard(context),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,7 +120,7 @@ class LogEntryWidget extends StatelessWidget {
               size: 16,
               color: color,
             ),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Expanded(child: content),
           ],
         ),
@@ -140,7 +140,7 @@ class LogEntryWidget extends StatelessWidget {
     return [
       TextSpan(
         text: '\n$title:${addLineBreakAfterTitle ? '\n' : ' '}',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       TextSpan(text: string),
     ];
@@ -180,7 +180,8 @@ class LogEntryWidget extends StatelessWidget {
       if (stackTrace != null) 'Stack Trace: $stackTrace',
     ].join('\n');
     await Clipboard.setData(ClipboardData(text: text));
-    context.scaffoldMessenger.showSnackBar(SnackBar(content: Text('Copied!')));
+    context.scaffoldMessenger
+        .showSnackBar(const SnackBar(content: Text('Copied!')));
   }
 
   String? _stringify(dynamic object) {

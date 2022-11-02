@@ -8,7 +8,7 @@ class PackageInfoDebugHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
-      title: Text('Package Info'),
+      title: const Text('Package Info'),
       diagnosticsStream: _getDiagnostics().asStream(),
     );
   }
