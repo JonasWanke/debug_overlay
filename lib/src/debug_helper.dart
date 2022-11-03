@@ -28,7 +28,7 @@ class DebugHelper extends StatelessWidget {
           child: Row(children: [
             Expanded(
               child: DefaultTextStyle(
-                style: context.textTheme.subtitle1!,
+                style: context.textTheme.titleMedium!,
                 child: title,
               ),
             ),
@@ -100,7 +100,7 @@ class _DiagnosticsBasedDebugHelperState
               .join('\n');
           if (text.isEmpty) {
             return Center(
-              child: Text('Empty', style: context.textTheme.caption),
+              child: Text('Empty', style: context.textTheme.bodySmall),
             );
           }
           return Text(text);

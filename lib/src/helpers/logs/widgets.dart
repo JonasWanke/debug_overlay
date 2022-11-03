@@ -50,7 +50,7 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
             return Center(
               child: Text(
                 'No logs available.',
-                style: context.textTheme.caption!.copyWith(
+                style: context.textTheme.bodySmall!.copyWith(
                   color: context
                       .theme.scaffoldBackgroundColor.mediumEmphasisOnColor,
                 ),
@@ -90,7 +90,7 @@ class LogEntryWidget extends StatelessWidget {
         children: [
           TextSpan(
             text: formattedTimestamp,
-            style: context.textTheme.caption!.copyWith(
+            style: context.textTheme.bodySmall!.copyWith(
               color: color.withOpacity(0.6),
               fontFeatures: [const FontFeature.tabularFigures()],
             ),
@@ -165,7 +165,7 @@ class LogEntryWidget extends StatelessWidget {
       case DiagnosticLevel.summary:
         return brightness.highEmphasisOnColor;
       case DiagnosticLevel.error:
-        return theme.errorColor;
+        return theme.colorScheme.error;
       case DiagnosticLevel.off:
         return Colors.purple;
     }
