@@ -16,17 +16,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
-## v0.2.6 · 2023-01-24
+## 0.2.6 · 2023-01-24
 
 ### 🎉 New Features
 * add `debugOverlay.createShakeDetector`, allowing you to customize the `ShakeDetector` ([`f3cab7c`](https://github.com/JonasWanke/debug_overlay/commit/f3cab7c5a20bb7dea8c9e17260863cc5c1877b80)), closes: [#6](https://github.com/JonasWanke/debug_overlay/issues/6)
 
-## v0.2.5 · 2023-01-24
+## 0.2.5 · 2023-01-24
 
 ### 📜 Documentation updates
 * fix changelog links ([`b6c3f66`](https://github.com/JonasWanke/debug_overlay/commit/b6c3f66c7dcf678e9c1ef39744601b78c6037e20))
 
-## v0.2.4 · 2023-01-24
+## 0.2.4 · 2023-01-24
 
 ### 🎉 New Features
 * add option to show newest logs first ([`bdfb520`](https://github.com/JonasWanke/debug_overlay/commit/bdfb52020088c504cf4e6684f32809eb6be51005)), closes: [#5](https://github.com/JonasWanke/debug_overlay/issues/5)
