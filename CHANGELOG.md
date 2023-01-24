@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## v0.2.6 · 2023-01-24
+
+### 🎉 New Features
+* add `debugOverlay.createShakeDetector`, allowing you to customize the `ShakeDetector` ([`f3cab7c`](https://github.com/JonasWanke/debug_overlay/commit/f3cab7c5a20bb7dea8c9e17260863cc5c1877b80))
+
 ## v0.2.5 · 2023-01-24
 
 ### 📜 Documentation updates
