@@ -1,6 +1,6 @@
 name: debug_overlay
 description: View debug infos and change settings via a central overlay for your app.
-version: 0.2.3
+version: 0.2.4
 repository: https://github.com/JonasWanke/debug_overlay
 
 environment:
