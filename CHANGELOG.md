@@ -19,11 +19,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## v0.2.4 · 2023-01-24
 
 ### 🎉 New Features
-* add option to show newest logs first ([`bdfb520`](https://github.com/JonasWanke/black_hole_flutter/commit/bdfb52020088c504cf4e6684f32809eb6be51005)), closes: [#5](https://github.com/JonasWanke/debug_overlay/issues/5)
+* add option to show newest logs first ([`bdfb520`](https://github.com/JonasWanke/debug_overlay/commit/bdfb52020088c504cf4e6684f32809eb6be51005)), closes: [#5](https://github.com/JonasWanke/debug_overlay/issues/5)
 
 ### 📦 Build & CI
-* upgrade to Flutter: `>=3.3.0`, Dart `>=2.18.0 <3.0.0` ([`5c7230e`](https://github.com/JonasWanke/black_hole_flutter/commit/5c7230e8c328678ef8679002c62d9c09c8a466ac))
-* update `black_hole_flutter` to `^1.0.0` ([`3f40d9f`](https://github.com/JonasWanke/black_hole_flutter/commit/3f40d9f75a75a5f9c3ee70fceb13d0e48cd643fd))
+* upgrade to Flutter: `>=3.3.0`, Dart `>=2.18.0 <3.0.0` ([`5c7230e`](https://github.com/JonasWanke/debug_overlay/commit/5c7230e8c328678ef8679002c62d9c09c8a466ac))
+* update `debug_overlay` to `^1.0.0` ([`3f40d9f`](https://github.com/JonasWanke/debug_overlay/commit/3f40d9f75a75a5f9c3ee70fceb13d0e48cd643fd))
 
 ## 0.2.3 · 2022-11-02
 
