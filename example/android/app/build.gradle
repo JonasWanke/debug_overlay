@@ -26,7 +26,8 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    // device_info_plus requires Android SDK version 33
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
