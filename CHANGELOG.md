@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## v0.2.5 · 2023-01-24
+
+### 📜 Documentation updates
+* fix changelog links ([`b6c3f66`](https://github.com/JonasWanke/debug_overlay/commit/b6c3f66c7dcf678e9c1ef39744601b78c6037e20))
+
 ## v0.2.4 · 2023-01-24
 
 ### 🎉 New Features
