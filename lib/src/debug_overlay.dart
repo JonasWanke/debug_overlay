@@ -12,6 +12,7 @@ class DebugOverlay extends StatefulWidget {
   DebugOverlay({
     required this.child,
     this.showOnShake = true,
+    this.createShakeDetector = _defaultCreateShakeDetector,
     this.enableOnlyInDebugMode = true,
   }) : super(key: DebugOverlayState.key);
 
@@ -33,6 +34,9 @@ class DebugOverlay extends StatefulWidget {
     helpers.value = [...helpers.value, debugHelper];
   }
 
+  static ShakeDetector _defaultCreateShakeDetector(VoidCallback onPhoneShake) =>
+      ShakeDetector.waitForStart(onPhoneShake: onPhoneShake);
+
   /// In debug mode, this returns a builder to add a [DebugOverlay] to your app.
   ///
   /// In profile and release builds, the returned builder doesn't add any
@@ -53,11 +57,13 @@ class DebugOverlay extends StatefulWidget {
   /// `true`) or by calling [show] or [hide].
   static TransitionBuilder builder({
     bool showOnShake = true,
+    ShakeDetectorCreator createShakeDetector = _defaultCreateShakeDetector,
     bool enableOnlyInDebugMode = true,
   }) {
     return _isInDebugMode || !enableOnlyInDebugMode
         ? (context, child) => DebugOverlay(
               showOnShake: showOnShake,
+              createShakeDetector: createShakeDetector,
               enableOnlyInDebugMode: enableOnlyInDebugMode,
               child: child,
             )
@@ -70,11 +76,16 @@ class DebugOverlay extends StatefulWidget {
   final Widget? child;
 
   final bool showOnShake;
+  final ShakeDetectorCreator createShakeDetector;
   final bool enableOnlyInDebugMode;
 
   @override
   DebugOverlayState createState() => DebugOverlayState();
 }
+
+typedef ShakeDetectorCreator = ShakeDetector Function(
+  VoidCallback onPhoneShake,
+);
 
 class DebugOverlayState extends State<DebugOverlay> {
   static final key = GlobalKey<DebugOverlayState>();
@@ -94,8 +105,13 @@ class DebugOverlayState extends State<DebugOverlay> {
     if (!oldWidget.showOnShake && widget.showOnShake) {
       _configureShakeDetector();
     } else if (oldWidget.showOnShake && !widget.showOnShake) {
-      _shakeDetector?.stopListening();
-      _shakeDetector = null;
+      assert(_shakeDetector != null);
+      _disposeShakeDetector();
+    } else if (widget.showOnShake &&
+        oldWidget.createShakeDetector != widget.createShakeDetector) {
+      assert(_shakeDetector != null);
+      _disposeShakeDetector();
+      _configureShakeDetector();
     }
   }
 
@@ -103,13 +119,19 @@ class DebugOverlayState extends State<DebugOverlay> {
     assert(widget.showOnShake);
     assert(_shakeDetector == null);
 
-    _shakeDetector = ShakeDetector.autoStart(onPhoneShake: show);
+    _shakeDetector ??= widget.createShakeDetector(show);
+    _shakeDetector!.startListening();
   }
 
   @override
   void dispose() {
-    _shakeDetector?.stopListening();
+    _disposeShakeDetector();
     super.dispose();
+  }
+
+  void _disposeShakeDetector() {
+    _shakeDetector?.stopListening();
+    _shakeDetector = null;
   }
 
   void show() => setState(() => _isVisible = true);
