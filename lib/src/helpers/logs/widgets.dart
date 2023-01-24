@@ -27,8 +27,20 @@ class LogsDebugHelper extends StatefulWidget {
 
 class _LogsDebugHelperState extends State<LogsDebugHelper> {
   var _minLevel = DiagnosticLevel.debug;
+  var _isOldestFirst = true;
+
   @override
   Widget build(BuildContext context) {
+    Widget sortIcon = const Icon(Icons.sort);
+    if (!_isOldestFirst) {
+      sortIcon = Transform.scale(scaleY: -1, child: sortIcon);
+    }
+    final sortButton = IconButton(
+      tooltip: _isOldestFirst ? 'Show newest first' : 'Show oldest first',
+      onPressed: () => setState(() => _isOldestFirst = !_isOldestFirst),
+      icon: sortIcon,
+    );
+
     return DebugHelper(
       title: widget.title,
       actions: [
@@ -37,13 +49,14 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
           onPressed: widget.logs.clear,
           icon: const Icon(Icons.delete_outlined),
         ),
+        sortButton,
         DiagnosticLevelSelector(
           value: _minLevel,
           onSelected: (level) => setState(() => _minLevel = level),
         ),
       ],
       contentPadding: EdgeInsets.zero,
-      child: ValueListenableBuilder<List<Log>>(
+      child: ValueListenableBuilder(
         valueListenable: widget.logs.listenable,
         builder: (context, logs, _) {
           if (logs.isEmpty) {
@@ -58,9 +71,12 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
             );
           }
 
-          final filteredLogs =
+          var filteredLogs =
               logs.where((it) => it.level.index >= _minLevel.index).toList();
-          return ImplicitlyAnimatedList<Log>(
+          if (!_isOldestFirst) {
+            filteredLogs = filteredLogs.reversed.toList();
+          }
+          return ImplicitlyAnimatedList(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemData: filteredLogs,
