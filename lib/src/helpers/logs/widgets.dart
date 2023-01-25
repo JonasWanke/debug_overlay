@@ -112,9 +112,8 @@ class LogEntryWidget extends StatelessWidget {
             ),
           ),
           TextSpan(text: ' ${log.message}'),
-          ..._toText(context, 'Error', log.error),
+          ..._toText('Error', log.error),
           ..._toText(
-            context,
             'Stack Trace',
             log.stackTrace,
             addLineBreakAfterTitle: true,
@@ -145,7 +144,6 @@ class LogEntryWidget extends StatelessWidget {
   }
 
   List<InlineSpan> _toText(
-    BuildContext context,
     String title,
     dynamic object, {
     bool addLineBreakAfterTitle = false,
