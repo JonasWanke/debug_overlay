@@ -125,7 +125,7 @@ class LogEntryWidget extends StatelessWidget {
     );
 
     return InkWell(
-      onLongPress: () => _copyToClipboard(context),
+      onLongPress: () async => _copyToClipboard(context),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
@@ -196,6 +196,9 @@ class LogEntryWidget extends StatelessWidget {
       if (stackTrace != null) 'Stack Trace: $stackTrace',
     ].join('\n');
     await Clipboard.setData(ClipboardData(text: text));
+
+    // ignore: use_build_context_synchronously, https://github.com/dart-lang/linter/issues/4007
+    if (!context.mounted) return;
     context.scaffoldMessenger
         .showSnackBar(const SnackBar(content: Text('Copied!')));
   }

@@ -8,6 +8,7 @@ class DeviceInfoDebugHelper extends StatelessWidget {
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
       title: const Text('Device Info'),
+      // ignore: discarded_futures, https://github.com/dart-lang/linter/issues/3429
       diagnosticsStream: getDiagnostics().asStream(),
     );
   }
