@@ -5,7 +5,7 @@ repository: https://github.com/JonasWanke/debug_overlay
 
 environment:
   sdk: '>=2.19.0 <3.0.0'
-  flutter: '>=3.7.0 <3.8.0'
+  flutter: '>=3.7.0'
 
 dependencies:
   black_hole_flutter: ^1.0.0
