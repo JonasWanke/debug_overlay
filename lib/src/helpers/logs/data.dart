@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-class Log {
+class Log with Diagnosticable {
   Log({
     this.level = DiagnosticLevel.info,
     DateTime? timestamp,
@@ -24,7 +24,6 @@ class Log {
 
   @override
   int get hashCode => Object.hash(level, timestamp, message, error, stackTrace);
-
   @override
   bool operator ==(Object other) {
     return other is Log &&
@@ -33,6 +32,16 @@ class Log {
         message == other.message &&
         error == other.error &&
         stackTrace == other.stackTrace;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty('level', level));
+    properties.add(DiagnosticsProperty('timestamp', timestamp));
+    properties.add(StringProperty('message', message));
+    properties.add(DiagnosticsProperty('error', error));
+    properties.add(DiagnosticsProperty('stackTrace', stackTrace));
   }
 }
 
