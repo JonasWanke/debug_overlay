@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.7 · 2023-02-17
+
+### 🎉 New Features
+* implement Diagnosticable for VisibleDateRange ([`21a96cb`](https://github.com/JonasWanke/debug_overlay/commit/21a96cbf7d3ffd60da9cfe39dc7e7d6be592339b))
+
 ## 0.2.6 · 2023-01-24
 
 ### 🎉 New Features
