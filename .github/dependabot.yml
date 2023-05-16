@@ -1,19 +1,21 @@
 version: 2
-enable-beta-ecosystems: true
 updates:
-  - package-ecosystem: 'github-actions'
-    directory: '/'
-    reviewers: ['JonasWanke']
+  - package-ecosystem: github-actions
+    directory: /
+    labels: ['T: Build']
+    reviewers: [JonasWanke]
     schedule:
-      interval: 'weekly'
+      interval: weekly
 
-  - package-ecosystem: 'pub'
-    directory: '/common'
-    reviewers: ['JonasWanke']
+  - package-ecosystem: pub
+    directory: /
+    labels: ['T: Build']
+    reviewers: [JonasWanke]
     schedule:
-      interval: 'weekly'
-  - package-ecosystem: 'pub'
-    directory: '/example'
-    reviewers: ['JonasWanke']
+      interval: weekly
+  - package-ecosystem: pub
+    directory: /example
+    labels: ['T: Build']
+    reviewers: [JonasWanke]
     schedule:
-      interval: 'weekly'
+      interval: weekly
