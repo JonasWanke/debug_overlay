@@ -46,7 +46,8 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "dev.wanke.debug_overlay.example"
-        minSdkVersion flutter.minSdkVersion
+        // https://pub.dev/packages/package_info_plus/changelog#400
+        minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
