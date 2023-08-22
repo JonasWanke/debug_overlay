@@ -31,6 +31,7 @@ class MediaQueryDebugHelper extends StatelessWidget {
       ),
       DoubleProperty(
         'Text Scale Factor',
+        // ignore: deprecated_member_use
         data.textScaleFactor,
         defaultValue: 1,
       ),
