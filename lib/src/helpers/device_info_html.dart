@@ -10,7 +10,7 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
   return [
     StringProperty('Platform', 'Web Browser'),
     DiagnosticsBlock(
-      name: 'Browser: ${describeEnum(info.browserName)}',
+      name: 'Browser: ${info.browserName.name}',
       properties: [
         StringProperty(
           'Vendor',

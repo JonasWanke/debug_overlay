@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DiagnosticLevelSelector extends StatelessWidget {
@@ -18,10 +17,7 @@ class DiagnosticLevelSelector extends StatelessWidget {
       onSelected: onSelected,
       itemBuilder: (context) => [
         for (final level in DiagnosticLevel.values)
-          PopupMenuItem(
-            value: level,
-            child: Text(describeEnum(level)),
-          ),
+          PopupMenuItem(value: level, child: Text(level.name)),
       ],
     );
   }
