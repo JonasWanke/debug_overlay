@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.9 · 2023-10-11
+
+### 📦 Build & CI
+* update `device_info_plus` to `>=9.0.0 < 11.0.0`, `package_info_plus` to `>=4.0.0 < 6.0.0` ([`63cca81`](https://github.com/JonasWanke/debug_overlay/commit/63cca816888c3b19cc10e2e010510fdfc9309ae0))
+
 ## 0.2.8 · 2023-05-16
 
 ### 📦 Build & CI
