@@ -3,8 +3,6 @@ description: View debug infos and change settings via a central overlay for your
 version: 0.2.8
 repository: https://github.com/JonasWanke/debug_overlay
 screenshots:
-  - description: Showcase of debug_overlay
-    path: doc/demo.webp
   - description: DeviceInfoDebugHelper
     path: doc/helpers-deviceInfo.png
   - description: MediaQueryDebugHelper
