@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### 📦 Build & CI
 * upgrade to Flutter `>=3.10.0`, Dart `>=3.0.0 <4.0.0` ([`6dafaa0`](https://github.com/JonasWanke/debug_overlay/commit/6dafaa0afb5d02ccd70ee0b1a198a66678ec70ac))
-* Update `device_info_plus` to `^9.0.0`, `package_info_plus` to `^4.0.0` ([`be4e68f`](https://github.com/JonasWanke/debug_overlay/commit/be4e68f1a4561e57e72fef8ae5923af340fed162))
+* update `device_info_plus` to `^9.0.0`, `package_info_plus` to `^4.0.0` ([`be4e68f`](https://github.com/JonasWanke/debug_overlay/commit/be4e68f1a4561e57e72fef8ae5923af340fed162))
 
 ## 0.2.7 · 2023-02-17
 
@@ -49,12 +49,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## 0.2.3 · 2022-11-02
 
 ### 📦 Build & CI
-* Update `device_info_plus` to `^8.0.0`, `package_info_plus` to `^3.0.1` ([`2beb8e5`](https://github.com/JonasWanke/debug_overlay/commit/2beb8e50eddaf73c950d17ebb2292fe77167d662))
+* update `device_info_plus` to `^8.0.0`, `package_info_plus` to `^3.0.1` ([`2beb8e5`](https://github.com/JonasWanke/debug_overlay/commit/2beb8e50eddaf73c950d17ebb2292fe77167d662))
 
 ## 0.2.2 · 2022-10-10
 
 ### 📦 Build & CI
-* Update `device_info_plus` to `^5.0.5` ([`5c645e6`](https://github.com/JonasWanke/debug_overlay/commit/5c645e63131125ff6740b8546f3f3157d974dbf2))
+* update `device_info_plus` to `^5.0.5` ([`5c645e6`](https://github.com/JonasWanke/debug_overlay/commit/5c645e63131125ff6740b8546f3f3157d974dbf2))
 
 ## 0.2.1 · 2022-08-15
 
