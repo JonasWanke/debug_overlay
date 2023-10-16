@@ -8,6 +8,7 @@ environment:
 dependencies:
   debug_overlay:
     path: ../
+    version: 0.2.9
   flutter:
     sdk: flutter
   flutter_localizations:
