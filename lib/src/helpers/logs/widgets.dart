@@ -163,26 +163,17 @@ class LogEntryWidget extends StatelessWidget {
   Color _getTextColor(BuildContext context) {
     final theme = context.theme;
     final brightness = theme.scaffoldBackgroundColor.estimatedBrightness;
-    switch (log.level) {
-      case DiagnosticLevel.hidden:
-        return brightness.disabledOnColor;
-      case DiagnosticLevel.fine:
-        return brightness.disabledOnColor;
-      case DiagnosticLevel.debug:
-        return brightness.mediumEmphasisOnColor;
-      case DiagnosticLevel.info:
-        return brightness.highEmphasisOnColor;
-      case DiagnosticLevel.warning:
-        return Colors.orange;
-      case DiagnosticLevel.hint:
-        return brightness.mediumEmphasisOnColor;
-      case DiagnosticLevel.summary:
-        return brightness.highEmphasisOnColor;
-      case DiagnosticLevel.error:
-        return theme.colorScheme.error;
-      case DiagnosticLevel.off:
-        return Colors.purple;
-    }
+    return switch (log.level) {
+      DiagnosticLevel.hidden => brightness.disabledOnColor,
+      DiagnosticLevel.fine => brightness.disabledOnColor,
+      DiagnosticLevel.debug => brightness.mediumEmphasisOnColor,
+      DiagnosticLevel.info => brightness.highEmphasisOnColor,
+      DiagnosticLevel.warning => Colors.orange,
+      DiagnosticLevel.hint => brightness.mediumEmphasisOnColor,
+      DiagnosticLevel.summary => brightness.highEmphasisOnColor,
+      DiagnosticLevel.error => theme.colorScheme.error,
+      DiagnosticLevel.off => Colors.purple,
+    };
   }
 
   Future<void> _copyToClipboard(BuildContext context) async {
@@ -213,13 +204,11 @@ class LogEntryWidget extends StatelessWidget {
       dynamic toEncodable(dynamic object) {
         try {
           return object.toJson();
-        } catch (_) {
-          try {
-            return '$object';
-          } catch (_) {
-            return describeIdentity(object);
-          }
-        }
+        } catch (_) {}
+        try {
+          return '$object';
+        } catch (_) {}
+        return describeIdentity(object);
       }
 
       return JsonEncoder.withIndent('  ', toEncodable).convert(object);
@@ -227,8 +216,7 @@ class LogEntryWidget extends StatelessWidget {
 
     try {
       return '$object'.trim();
-    } catch (_) {
-      return describeIdentity(object);
-    }
+    } catch (_) {}
+    return describeIdentity(object);
   }
 }

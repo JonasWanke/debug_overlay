@@ -23,25 +23,16 @@ class DiagnosticLevelSelector extends StatelessWidget {
   }
 
   static IconData levelToIcon(DiagnosticLevel level) {
-    switch (level) {
-      case DiagnosticLevel.hidden:
-        return Icons.all_inclusive_outlined;
-      case DiagnosticLevel.fine:
-        return Icons.bubble_chart_outlined;
-      case DiagnosticLevel.debug:
-        return Icons.bug_report_outlined;
-      case DiagnosticLevel.info:
-        return Icons.info_outline;
-      case DiagnosticLevel.warning:
-        return Icons.warning_outlined;
-      case DiagnosticLevel.hint:
-        return Icons.privacy_tip_outlined;
-      case DiagnosticLevel.summary:
-        return Icons.subject;
-      case DiagnosticLevel.error:
-        return Icons.error_outlined;
-      case DiagnosticLevel.off:
-        return Icons.not_interested_outlined;
-    }
+    return switch (level) {
+      DiagnosticLevel.hidden => Icons.all_inclusive_outlined,
+      DiagnosticLevel.fine => Icons.bubble_chart_outlined,
+      DiagnosticLevel.debug => Icons.bug_report_outlined,
+      DiagnosticLevel.info => Icons.info_outline,
+      DiagnosticLevel.warning => Icons.warning_outlined,
+      DiagnosticLevel.hint => Icons.privacy_tip_outlined,
+      DiagnosticLevel.summary => Icons.subject,
+      DiagnosticLevel.error => Icons.error_outlined,
+      DiagnosticLevel.off => Icons.not_interested_outlined,
+    };
   }
 }
