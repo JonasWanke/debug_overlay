@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:implicitly_animated_list/implicitly_animated_list.dart';
+import 'package:json_view/json_view.dart';
 
 import '../../debug_helper.dart';
 import '../../utils/level_selector.dart';
@@ -112,6 +113,7 @@ class LogEntryWidget extends StatelessWidget {
       color: color,
     );
 
+    final textStyle = TextStyle(color: color);
     final title = Text.rich(
       TextSpan(children: [
         TextSpan(
@@ -123,7 +125,7 @@ class LogEntryWidget extends StatelessWidget {
         ),
         TextSpan(text: ' ${log.message}'),
       ]),
-      style: TextStyle(color: color),
+      style: textStyle,
     );
 
     if (log.error == null && log.stackTrace == null) {
@@ -134,7 +136,6 @@ class LogEntryWidget extends StatelessWidget {
       );
     }
 
-    final textStyle = TextStyle(color: color);
     return _ExpansionTile(
       onLongPress: () async => _copyToClipboard(context),
       leading: icon,
@@ -146,23 +147,19 @@ class LogEntryWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (log.error != null) ...[
-              _buildSubtitle(context, _errorLabel),
-              Text(_stringify(log.error as Object), style: textStyle),
-            ],
-            if (log.error != null && log.stackTrace != null)
+              _buildSubtitle(context, '$_errorLabel:'),
+              _buildError(context),
               const SizedBox(height: 8),
+            ],
             if (log.stackTrace != null) ...[
               _buildSubtitle(context, 'Stack Trace:'),
               Text(log.stackTrace!.toString(), style: textStyle),
+              const SizedBox(height: 8),
             ],
           ],
         ),
       ),
     );
-  }
-
-  Widget _buildSubtitle(BuildContext context, String text) {
-    return Text(text, style: Theme.of(context).textTheme.titleSmall);
   }
 
   Color _getTextColor(BuildContext context) {
@@ -179,6 +176,24 @@ class LogEntryWidget extends StatelessWidget {
       DiagnosticLevel.error => theme.colorScheme.error,
       DiagnosticLevel.off => Colors.purple,
     };
+  }
+
+  Widget _buildSubtitle(BuildContext context, String text) =>
+      Text(text, style: Theme.of(context).textTheme.titleSmall);
+  Widget _buildError(BuildContext context) {
+    final json = _errorToJsonListOrMap();
+    if (json != null) {
+      return JsonView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        json: json,
+      );
+    }
+
+    return Text(
+      _stringify(log.error as Object),
+      style: TextStyle(color: _getTextColor(context)),
+    );
   }
 
   Future<void> _copyToClipboard(BuildContext context) async {
@@ -222,6 +237,67 @@ class LogEntryWidget extends StatelessWidget {
       return '$object'.trim();
     } catch (_) {}
     return describeIdentity(object);
+  }
+
+  dynamic _errorToJsonListOrMap() {
+    bool isJson(Object? object) {
+      if (object == null ||
+          object is bool ||
+          object is num ||
+          object is String) {
+        return true;
+      }
+      if (object is List) return object.every(isJson);
+      if (object is Map) {
+        return object.keys.every((it) => it is String) &&
+            object.values.every(isJson);
+      }
+
+      try {
+        (object as dynamic).toJson();
+        return true;
+      } catch (_) {}
+      return false;
+    }
+
+    bool isJsonListOrMap(Object? object) {
+      if (object is List || object is Map) return isJson(object);
+
+      try {
+        return isJsonListOrMap((object as dynamic).toJson());
+      } catch (_) {}
+      return false;
+    }
+
+    if (!isJsonListOrMap(log.error!)) return null;
+
+    dynamic toJson(Object? object) {
+      if (object == null ||
+          object is bool ||
+          object is num ||
+          object is String) {
+        return object;
+      }
+      if (object is List) return object.map(toJson).toList();
+      if (object is Map) {
+        final entries = <String, dynamic>{};
+        for (final entry in object.entries) {
+          if (entry.key is! String) return null;
+          entries[entry.key as String] = toJson(entry.value);
+        }
+        return entries;
+      }
+
+      try {
+        return toJson((object as dynamic).toJson());
+      } catch (_) {}
+      try {
+        return '$object';
+      } catch (_) {}
+      return describeIdentity(object);
+    }
+
+    return toJson(log.error!);
   }
 }
 
@@ -291,12 +367,9 @@ class _ExpansionTileState extends State<_ExpansionTile>
     with SingleTickerProviderStateMixin {
   static const _kExpand = Duration(milliseconds: 200);
 
-  static final Animatable<double> _easeOutTween =
-      CurveTween(curve: Curves.easeOut);
-  static final Animatable<double> _easeInTween =
-      CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _halfTween =
-      Tween<double>(begin: 0, end: 0.5);
+  static final _easeOutTween = CurveTween(curve: Curves.easeOut);
+  static final _easeInTween = CurveTween(curve: Curves.easeIn);
+  static final _halfTween = Tween<double>(begin: 0, end: 0.5);
 
   final _borderTween = ShapeBorderTween();
 
