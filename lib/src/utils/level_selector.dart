@@ -19,6 +19,7 @@ class DiagnosticLevelSelector extends StatelessWidget {
         for (final level in DiagnosticLevel.values)
           PopupMenuItem(value: level, child: Text(level.title)),
       ],
+      icon: const Icon(Icons.filter_alt_outlined),
     );
   }
 
