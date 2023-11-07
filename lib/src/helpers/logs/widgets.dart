@@ -236,6 +236,7 @@ class LogEntryWidget extends StatelessWidget {
         try {
           // ignore: avoid_dynamic_calls
           return object.toJson();
+          // ignore: avoid_catches_without_on_clauses
         } catch (_) {}
         try {
           return '$object';
