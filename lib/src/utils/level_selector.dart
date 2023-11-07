@@ -17,7 +17,7 @@ class DiagnosticLevelSelector extends StatelessWidget {
       onSelected: onSelected,
       itemBuilder: (context) => [
         for (final level in DiagnosticLevel.values)
-          PopupMenuItem(value: level, child: Text(level.name)),
+          PopupMenuItem(value: level, child: Text(level.title)),
       ],
     );
   }
@@ -33,6 +33,22 @@ class DiagnosticLevelSelector extends StatelessWidget {
       DiagnosticLevel.summary => Icons.subject,
       DiagnosticLevel.error => Icons.error_outlined,
       DiagnosticLevel.off => Icons.not_interested_outlined,
+    };
+  }
+}
+
+extension on DiagnosticLevel {
+  String get title {
+    return switch (this) {
+      DiagnosticLevel.hidden => 'All',
+      DiagnosticLevel.fine => '≥ Fine',
+      DiagnosticLevel.debug => '≥ Debug',
+      DiagnosticLevel.info => '≥ Info',
+      DiagnosticLevel.warning => '≥ Warning',
+      DiagnosticLevel.hint => '≥ Hint',
+      DiagnosticLevel.summary => '≥ Summary',
+      DiagnosticLevel.error => '≥ Error',
+      DiagnosticLevel.off => 'None',
     };
   }
 }
