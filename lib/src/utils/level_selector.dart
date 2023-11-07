@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DiagnosticLevelSelector extends StatelessWidget {
@@ -41,14 +42,9 @@ class DiagnosticLevelSelector extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty<DiagnosticLevel>('value', value));
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<ValueSetter<DiagnosticLevel>>.has(
-        'onSelected', onSelected));
+    properties
+      ..add(EnumProperty('value', value))
+      ..add(ObjectFlagProperty.has('onSelected', onSelected));
   }
 }
 

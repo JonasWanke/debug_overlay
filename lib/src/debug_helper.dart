@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'utils/level_selector.dart';
@@ -41,6 +42,12 @@ class DebugHelper extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('contentPadding', contentPadding));
+  }
 }
 
 /// A [DebugHelper] that displays a [Stream] of [DiagnosticsNode]s and allows
@@ -61,6 +68,11 @@ class DiagnosticsBasedDebugHelper extends StatefulWidget {
   @override
   State<DiagnosticsBasedDebugHelper> createState() =>
       _DiagnosticsBasedDebugHelperState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('diagnosticsStream', diagnosticsStream));
+  }
 }
 
 class _DiagnosticsBasedDebugHelperState

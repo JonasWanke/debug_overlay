@@ -1,4 +1,5 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../debug_helper.dart';
@@ -39,6 +40,13 @@ class MediaOverrideDebugHelper extends StatefulWidget {
   @override
   State<MediaOverrideDebugHelper> createState() =>
       _MediaOverrideDebugHelperState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('state', state))
+      ..add(IterableProperty('supportedLocales', supportedLocales));
+  }
 }
 
 class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
@@ -137,5 +145,13 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(EnumProperty('themeMode', themeMode))
+      ..add(DiagnosticsProperty('locale', locale));
   }
 }

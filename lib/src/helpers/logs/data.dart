@@ -37,11 +37,12 @@ class Log with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty('level', level));
-    properties.add(DiagnosticsProperty('timestamp', timestamp));
-    properties.add(StringProperty('message', message));
-    properties.add(DiagnosticsProperty('error', error));
-    properties.add(DiagnosticsProperty('stackTrace', stackTrace));
+    properties
+      ..add(EnumProperty('level', level))
+      ..add(DiagnosticsProperty('timestamp', timestamp))
+      ..add(StringProperty('message', message))
+      ..add(DiagnosticsProperty('error', error))
+      ..add(DiagnosticsProperty('stackTrace', stackTrace));
   }
 }
 

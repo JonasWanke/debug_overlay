@@ -27,6 +27,14 @@ class LogsDebugHelper extends StatefulWidget {
 
   @override
   State<LogsDebugHelper> createState() => _LogsDebugHelperState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('logs', logs))
+      ..add(EnumProperty('initialMinLevel', initialMinLevel));
+  }
 }
 
 class _LogsDebugHelperState extends State<LogsDebugHelper> {
@@ -300,6 +308,12 @@ class LogEntryWidget extends StatelessWidget {
 
     return toJson(log.error!);
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Log>('log', log));
+  }
 }
 
 class _LogEntryLine extends StatelessWidget {
@@ -341,6 +355,14 @@ class _LogEntryLine extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onTap', onTap))
+      ..add(ObjectFlagProperty.has('onLongPress', onLongPress));
+  }
 }
 
 // Based on [ExpansionTile]
@@ -362,6 +384,13 @@ class _ExpansionTile extends StatefulWidget {
 
   @override
   State<_ExpansionTile> createState() => _ExpansionTileState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onLongPress', onLongPress))
+      ..add(DiagnosticsProperty('isInitiallyExpanded', isInitiallyExpanded));
+  }
 }
 
 class _ExpansionTileState extends State<_ExpansionTile>

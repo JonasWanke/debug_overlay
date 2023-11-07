@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 
@@ -81,6 +82,16 @@ class DebugOverlay extends StatefulWidget {
 
   @override
   DebugOverlayState createState() => DebugOverlayState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('showOnShake', showOnShake))
+      ..add(ObjectFlagProperty.has('createShakeDetector', createShakeDetector))
+      ..add(
+        FlagProperty('enableOnlyInDebugMode', value: enableOnlyInDebugMode),
+      );
+  }
 }
 
 typedef ShakeDetectorCreator = ShakeDetector Function(
@@ -231,6 +242,14 @@ class DebugOverlayContent extends StatelessWidget {
       actions: [if (onClose != null) CloseButton(onPressed: onClose!)],
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('scrollController', scrollController))
+      ..add(ObjectFlagProperty<VoidCallback?>.has('onClose', onClose));
+  }
 }
 
 class _ScaledTopViewPadding extends StatelessWidget {
@@ -249,5 +268,11 @@ class _ScaledTopViewPadding extends StatelessWidget {
       ),
       child: child,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('progress', progress));
   }
 }
