@@ -104,14 +104,11 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
   }
 
   String _themeModeToString(ThemeMode themeMode) {
-    switch (themeMode) {
-      case ThemeMode.system:
-        return 'System';
-      case ThemeMode.light:
-        return 'Light';
-      case ThemeMode.dark:
-        return 'Dark';
-    }
+    return switch (themeMode) {
+      ThemeMode.system => 'System',
+      ThemeMode.light => 'Light',
+      ThemeMode.dark => 'Dark',
+    };
   }
 
   Locale? locale;

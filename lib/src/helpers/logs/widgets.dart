@@ -488,11 +488,7 @@ class _ExpansionTileState extends State<_ExpansionTile>
           children: [
             header,
             ClipRect(
-              child: Align(
-                alignment: Alignment.center,
-                heightFactor: _heightFactor.value,
-                child: child,
-              ),
+              child: Center(heightFactor: _heightFactor.value, child: child),
             ),
           ],
         ),
