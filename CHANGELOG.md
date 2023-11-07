@@ -16,6 +16,20 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.10 · 2023-11-07
+
+### 🎉 New Features
+* make `MediaQueryDebugHelper`, `PackageInfoDebugHelper`, and `DeviceInfoDebugHelper` const ([`4a251d2`](https://github.com/JonasWanke/debug_overlay/commit/4a251d20fce941d3347b2a52582b10484f1ad23d))
+* add `logsDebugHelper.initialMinLevel` ([`57ae361`](https://github.com/JonasWanke/debug_overlay/commit/57ae3614576e52b74827a76e5ca0c4855084df4b))
+* customize level titles in `DiagnosticLevelSelector` ([`3108197`](https://github.com/JonasWanke/debug_overlay/commit/310819732713acf38ad7256cf40eaca8d2307ac8))
+* make log entries expandable/collapsible ([`9c480be`](https://github.com/JonasWanke/debug_overlay/commit/9c480be1abac90adec53386172dec85bfb72f829))
+* add JSON viewer for log data ([`991bee8`](https://github.com/JonasWanke/debug_overlay/commit/991bee8ded9dfcd1060bd0ce7f47238d63ee8069))
+* add missing `key` parameters to widgets ([`b06e5a3`](https://github.com/JonasWanke/debug_overlay/commit/b06e5a3b209b7afc927c06649141c99d4164a83a))
+* override `debugFillProperties(…)` ([`6ce47c0`](https://github.com/JonasWanke/debug_overlay/commit/6ce47c084057c0cc54d18afe8000d42ff1635938))
+
+### 📦 Build & CI
+* support `device_info_plus` to `>=8.0.0 <10.0.0`, `package_info_plus` to `>=3.0.0 <5.0.0` ([`c2dc258`](https://github.com/JonasWanke/debug_overlay/commit/c2dc258cb01a4d142e3533f9d1a9275e8314fd36)), ([`822ccbc`](https://github.com/JonasWanke/debug_overlay/commit/822ccbc5ed0bf7773923e66fa9054d21c80365b5)) (the newer major releases got retracted)
+
 ## 0.2.9 · 2023-10-11
 
 ### 📦 Build & CI
