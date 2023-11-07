@@ -14,11 +14,12 @@ import 'data.dart';
 class LogsDebugHelper extends StatefulWidget {
   const LogsDebugHelper(
     this.logs, {
+    this.initialMinLevel = DiagnosticLevel.debug,
     this.title = const Text('Logs'),
   });
 
   final LogCollection logs;
-
+  final DiagnosticLevel initialMinLevel;
   final Widget title;
 
   @override
@@ -26,7 +27,7 @@ class LogsDebugHelper extends StatefulWidget {
 }
 
 class _LogsDebugHelperState extends State<LogsDebugHelper> {
-  var _minLevel = DiagnosticLevel.debug;
+  late var _minLevel = widget.initialMinLevel;
   var _isOldestFirst = true;
 
   @override
