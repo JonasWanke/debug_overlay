@@ -113,7 +113,10 @@ class LogEntryWidget extends StatelessWidget {
             ),
           ),
           TextSpan(text: ' ${log.message}'),
-          ..._toText('Error', log.error),
+          ..._toText(
+            log.level.index >= DiagnosticLevel.error.index ? 'Error' : 'Data',
+            log.error,
+          ),
           ..._toText(
             'Stack Trace',
             log.stackTrace,
