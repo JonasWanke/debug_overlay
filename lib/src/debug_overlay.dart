@@ -154,10 +154,12 @@ class DebugOverlayState extends State<DebugOverlay> {
         _isVisible && (_isInDebugMode || !widget.enableOnlyInDebugMode)
             ? _buildBottomSheet()
             : null;
-    return Stack(children: [
-      if (widget.child != null) widget.child!,
-      if (bottomSheet != null) Positioned.fill(child: bottomSheet),
-    ]);
+    return Stack(
+      children: [
+        if (widget.child != null) widget.child!,
+        if (bottomSheet != null) Positioned.fill(child: bottomSheet),
+      ],
+    );
   }
 
   double _extent = 0;

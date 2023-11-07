@@ -124,16 +124,18 @@ class LogEntryWidget extends StatelessWidget {
 
     final textStyle = TextStyle(color: color);
     final title = Text.rich(
-      TextSpan(children: [
-        TextSpan(
-          text: formattedTimestamp,
-          style: context.textTheme.bodySmall!.copyWith(
-            color: color.withOpacity(0.6),
-            fontFeatures: [const FontFeature.tabularFigures()],
+      TextSpan(
+        children: [
+          TextSpan(
+            text: formattedTimestamp,
+            style: context.textTheme.bodySmall!.copyWith(
+              color: color.withOpacity(0.6),
+              fontFeatures: [const FontFeature.tabularFigures()],
+            ),
           ),
-        ),
-        TextSpan(text: ' ${log.message}'),
-      ]),
+          TextSpan(text: ' ${log.message}'),
+        ],
+      ),
       style: textStyle,
     );
 
@@ -226,24 +228,29 @@ class LogEntryWidget extends StatelessWidget {
     if (object is DiagnosticsNode) return object.toStringDeep();
 
     try {
+      // ignore: avoid_dynamic_calls
       (object as dynamic).toJson();
       // It supports `toJson()`.
 
       dynamic toEncodable(dynamic object) {
         try {
+          // ignore: avoid_dynamic_calls
           return object.toJson();
         } catch (_) {}
         try {
           return '$object';
+          // ignore: avoid_catches_without_on_clauses
         } catch (_) {}
         return describeIdentity(object);
       }
 
       return JsonEncoder.withIndent('  ', toEncodable).convert(object);
+      // ignore: avoid_catches_without_on_clauses
     } catch (_) {}
 
     try {
       return '$object'.trim();
+      // ignore: avoid_catches_without_on_clauses
     } catch (_) {}
     return describeIdentity(object);
   }
@@ -263,8 +270,10 @@ class LogEntryWidget extends StatelessWidget {
       }
 
       try {
+        // ignore: avoid_dynamic_calls
         (object as dynamic).toJson();
         return true;
+        // ignore: avoid_catches_without_on_clauses
       } catch (_) {}
       return false;
     }
@@ -273,7 +282,9 @@ class LogEntryWidget extends StatelessWidget {
       if (object is List || object is Map) return isJson(object);
 
       try {
+        // ignore: avoid_dynamic_calls
         return isJsonListOrMap((object as dynamic).toJson());
+        // ignore: avoid_catches_without_on_clauses
       } catch (_) {}
       return false;
     }
@@ -298,10 +309,13 @@ class LogEntryWidget extends StatelessWidget {
       }
 
       try {
+        // ignore: avoid_dynamic_calls
         return toJson((object as dynamic).toJson());
+        // ignore: avoid_catches_without_on_clauses
       } catch (_) {}
       try {
         return '$object';
+        // ignore: avoid_catches_without_on_clauses
       } catch (_) {}
       return describeIdentity(object);
     }
@@ -449,12 +463,14 @@ class _ExpansionTileState extends State<_ExpansionTile>
       if (_isExpanded) {
         _animationController.forward();
       } else {
-        unawaited(_animationController.reverse().then<void>((value) {
-          if (!mounted) return;
-          setState(() {
-            // Rebuild without widget.children.
-          });
-        }));
+        unawaited(
+          _animationController.reverse().then<void>((value) {
+            if (!mounted) return;
+            setState(() {
+              // Rebuild without widget.children.
+            });
+          }),
+        );
       }
       PageStorage.maybeOf(context)?.writeState(context, _isExpanded);
     });

@@ -57,11 +57,13 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
       builder: (context, currentState, _) => DebugHelper(
         title: const Text('Media Overrides'),
         contentPadding: EdgeInsets.zero,
-        child: Column(children: [
-          _buildThemeModeOverride(currentState),
-          if (widget.supportedLocales != null)
-            _buildLocaleOverride(currentState),
-        ]),
+        child: Column(
+          children: [
+            _buildThemeModeOverride(currentState),
+            if (widget.supportedLocales != null)
+              _buildLocaleOverride(currentState),
+          ],
+        ),
       ),
     );
   }

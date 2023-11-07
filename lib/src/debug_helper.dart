@@ -27,15 +27,17 @@ class DebugHelper extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(children: [
-            Expanded(
-              child: DefaultTextStyle(
-                style: context.textTheme.titleMedium!,
-                child: title,
+          child: Row(
+            children: [
+              Expanded(
+                child: DefaultTextStyle(
+                  style: context.textTheme.titleMedium!,
+                  child: title,
+                ),
               ),
-            ),
-            ...actions,
-          ]),
+              ...actions,
+            ],
+          ),
         ),
         const SizedBox(height: 8),
         Padding(padding: contentPadding, child: child),
