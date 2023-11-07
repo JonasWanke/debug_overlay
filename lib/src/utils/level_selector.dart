@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class DiagnosticLevelSelector extends StatelessWidget {
   const DiagnosticLevelSelector({
+    super.key,
     required this.value,
     required this.onSelected,
   });
@@ -35,6 +36,19 @@ class DiagnosticLevelSelector extends StatelessWidget {
       DiagnosticLevel.error => Icons.error_outlined,
       DiagnosticLevel.off => Icons.not_interested_outlined,
     };
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<DiagnosticLevel>('value', value));
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ValueSetter<DiagnosticLevel>>.has(
+        'onSelected', onSelected));
   }
 }
 

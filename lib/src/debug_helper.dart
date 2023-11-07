@@ -5,6 +5,7 @@ import 'utils/level_selector.dart';
 
 class DebugHelper extends StatelessWidget {
   const DebugHelper({
+    super.key,
     required this.title,
     this.actions = const [],
     required this.child,
@@ -49,6 +50,7 @@ class DebugHelper extends StatelessWidget {
 /// [DiagnosticsNode]s only works in debug mode.
 class DiagnosticsBasedDebugHelper extends StatefulWidget {
   const DiagnosticsBasedDebugHelper({
+    super.key,
     required this.title,
     required this.diagnosticsStream,
   });

@@ -26,7 +26,11 @@ class MediaOverrideState {
 }
 
 class MediaOverrideDebugHelper extends StatefulWidget {
-  const MediaOverrideDebugHelper(this.state, {this.supportedLocales});
+  const MediaOverrideDebugHelper(
+    this.state, {
+    super.key,
+    this.supportedLocales,
+  });
 
   final ValueNotifier<MediaOverrideState> state;
 

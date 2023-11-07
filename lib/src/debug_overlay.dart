@@ -195,7 +195,7 @@ bool get _isInDebugMode {
 }
 
 class DebugOverlayContent extends StatelessWidget {
-  const DebugOverlayContent({this.scrollController, this.onClose});
+  const DebugOverlayContent({super.key, this.scrollController, this.onClose});
 
   final ScrollController? scrollController;
   final VoidCallback? onClose;

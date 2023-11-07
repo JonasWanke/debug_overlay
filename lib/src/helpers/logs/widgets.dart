@@ -16,6 +16,7 @@ import 'data.dart';
 class LogsDebugHelper extends StatefulWidget {
   const LogsDebugHelper(
     this.logs, {
+    super.key,
     this.initialMinLevel = DiagnosticLevel.debug,
     this.title = const Text('Logs'),
   });

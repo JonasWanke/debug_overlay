@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../debug_helper.dart';
 
 class PackageInfoDebugHelper extends StatelessWidget {
-  const PackageInfoDebugHelper();
+  const PackageInfoDebugHelper({super.key});
 
   @override
   Widget build(BuildContext context) {
