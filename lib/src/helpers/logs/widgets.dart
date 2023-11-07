@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
@@ -94,6 +95,9 @@ class LogEntryWidget extends StatelessWidget {
 
   final Log log;
 
+  String get _errorLabel =>
+      log.level.index >= DiagnosticLevel.error.index ? 'Error' : 'Data';
+
   @override
   Widget build(BuildContext context) {
     // We don't show the date to save space.
@@ -102,66 +106,63 @@ class LogEntryWidget extends StatelessWidget {
     final formattedTimestamp = rawTimestamp.substring(timeStartIndex);
 
     final color = _getTextColor(context);
-    final content = Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: formattedTimestamp,
-            style: context.textTheme.bodySmall!.copyWith(
-              color: color.withOpacity(0.6),
-              fontFeatures: [const FontFeature.tabularFigures()],
-            ),
-          ),
-          TextSpan(text: ' ${log.message}'),
-          ..._toText(
-            log.level.index >= DiagnosticLevel.error.index ? 'Error' : 'Data',
-            log.error,
-          ),
-          ..._toText(
-            'Stack Trace',
-            log.stackTrace,
-            addLineBreakAfterTitle: true,
-          ),
-        ],
-        style: TextStyle(color: color),
-      ),
+
+    final icon = Icon(
+      DiagnosticLevelSelector.levelToIcon(log.level),
+      color: color,
     );
 
-    return InkWell(
+    final title = Text.rich(
+      TextSpan(children: [
+        TextSpan(
+          text: formattedTimestamp,
+          style: context.textTheme.bodySmall!.copyWith(
+            color: color.withOpacity(0.6),
+            fontFeatures: [const FontFeature.tabularFigures()],
+          ),
+        ),
+        TextSpan(text: ' ${log.message}'),
+      ]),
+      style: TextStyle(color: color),
+    );
+
+    if (log.error == null && log.stackTrace == null) {
+      return _LogEntryLine(
+        onLongPress: () async => _copyToClipboard(context),
+        leading: icon,
+        title: title,
+      );
+    }
+
+    final textStyle = TextStyle(color: color);
+    return _ExpansionTile(
       onLongPress: () async => _copyToClipboard(context),
+      leading: icon,
+      title: title,
+      isInitiallyExpanded: log.level.index >= DiagnosticLevel.error.index,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Icon(
-              DiagnosticLevelSelector.levelToIcon(log.level),
-              size: 16,
-              color: color,
-            ),
-            const SizedBox(width: 4),
-            Expanded(child: content),
+            if (log.error != null) ...[
+              _buildSubtitle(context, _errorLabel),
+              Text(_stringify(log.error as Object), style: textStyle),
+            ],
+            if (log.error != null && log.stackTrace != null)
+              const SizedBox(height: 8),
+            if (log.stackTrace != null) ...[
+              _buildSubtitle(context, 'Stack Trace:'),
+              Text(log.stackTrace!.toString(), style: textStyle),
+            ],
           ],
         ),
       ),
     );
   }
 
-  List<InlineSpan> _toText(
-    String title,
-    dynamic object, {
-    bool addLineBreakAfterTitle = false,
-  }) {
-    final string = _stringify(object);
-    if (string == null) return [];
-
-    return [
-      TextSpan(
-        text: '\n$title:${addLineBreakAfterTitle ? '\n' : ' '}',
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      TextSpan(text: string),
-    ];
+  Widget _buildSubtitle(BuildContext context, String text) {
+    return Text(text, style: Theme.of(context).textTheme.titleSmall);
   }
 
   Color _getTextColor(BuildContext context) {
@@ -181,11 +182,11 @@ class LogEntryWidget extends StatelessWidget {
   }
 
   Future<void> _copyToClipboard(BuildContext context) async {
-    final error = _stringify(log.error);
-    final stackTrace = _stringify(log.stackTrace);
+    final error = log.error == null ? null : _stringify(log.error as Object);
+    final stackTrace = log.stackTrace?.toString();
     final text = [
       '${log.timestamp}: ${log.message}',
-      if (error != null) 'Error: $error',
+      if (error != null) '$_errorLabel: $error',
       if (stackTrace != null) 'Stack Trace: $stackTrace',
     ].join('\n');
     await Clipboard.setData(ClipboardData(text: text));
@@ -196,13 +197,12 @@ class LogEntryWidget extends StatelessWidget {
         .showSnackBar(const SnackBar(content: Text('Copied!')));
   }
 
-  String? _stringify(dynamic object) {
-    if (object == null) return null;
+  String _stringify(Object object) {
     if (object is String) return object.trim();
     if (object is DiagnosticsNode) return object.toStringDeep();
 
     try {
-      object.toJson();
+      (object as dynamic).toJson();
       // It supports `toJson()`.
 
       dynamic toEncodable(dynamic object) {
@@ -222,5 +222,178 @@ class LogEntryWidget extends StatelessWidget {
       return '$object'.trim();
     } catch (_) {}
     return describeIdentity(object);
+  }
+}
+
+class _LogEntryLine extends StatelessWidget {
+  const _LogEntryLine({
+    this.onTap,
+    required this.onLongPress,
+    required this.leading,
+    required this.title,
+    this.trailing,
+  });
+
+  final VoidCallback? onTap;
+  final VoidCallback onLongPress;
+  final Widget leading;
+  final Widget title;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = IconTheme.merge(
+      data: const IconThemeData(size: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          leading,
+          const SizedBox(width: 4),
+          Expanded(child: title),
+          if (trailing != null) ...[const SizedBox(width: 4), trailing!],
+        ],
+      ),
+    );
+
+    return InkWell(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: child,
+      ),
+    );
+  }
+}
+
+// Based on [ExpansionTile]
+
+class _ExpansionTile extends StatefulWidget {
+  const _ExpansionTile({
+    required this.onLongPress,
+    required this.leading,
+    required this.title,
+    required this.child,
+    this.isInitiallyExpanded = false,
+  });
+
+  final VoidCallback onLongPress;
+  final Widget leading;
+  final Widget title;
+  final Widget child;
+  final bool isInitiallyExpanded;
+
+  @override
+  State<_ExpansionTile> createState() => _ExpansionTileState();
+}
+
+class _ExpansionTileState extends State<_ExpansionTile>
+    with SingleTickerProviderStateMixin {
+  static const _kExpand = Duration(milliseconds: 200);
+
+  static final Animatable<double> _easeOutTween =
+      CurveTween(curve: Curves.easeOut);
+  static final Animatable<double> _easeInTween =
+      CurveTween(curve: Curves.easeIn);
+  static final Animatable<double> _halfTween =
+      Tween<double>(begin: 0, end: 0.5);
+
+  final _borderTween = ShapeBorderTween();
+
+  late final _animationController =
+      AnimationController(duration: _kExpand, vsync: this);
+  late final _iconTurns =
+      _animationController.drive(_halfTween.chain(_easeInTween));
+  late final _heightFactor = _animationController.drive(_easeInTween);
+  late final _border =
+      _animationController.drive(_borderTween.chain(_easeOutTween));
+
+  var _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _isExpanded = PageStorage.maybeOf(context)?.readState(context) as bool? ??
+        widget.isInitiallyExpanded;
+    if (_isExpanded) _animationController.value = 1.0;
+  }
+
+  @override
+  void didChangeDependencies() {
+    final theme = Theme.of(context);
+    _borderTween
+      ..begin = const Border(
+        top: BorderSide(color: Colors.transparent),
+        bottom: BorderSide(color: Colors.transparent),
+      )
+      ..end = Border(
+        top: BorderSide(color: theme.dividerColor),
+        bottom: BorderSide(color: theme.dividerColor),
+      );
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleExpansion() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _animationController.forward();
+      } else {
+        unawaited(_animationController.reverse().then<void>((value) {
+          if (!mounted) return;
+          setState(() {
+            // Rebuild without widget.children.
+          });
+        }));
+      }
+      PageStorage.maybeOf(context)?.writeState(context, _isExpanded);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isClosed = !_isExpanded && _animationController.isDismissed;
+
+    final header = _LogEntryLine(
+      onTap: _toggleExpansion,
+      onLongPress: widget.onLongPress,
+      leading: widget.leading,
+      title: widget.title,
+      trailing: RotationTransition(
+        turns: _iconTurns,
+        child: const Icon(Icons.expand_more),
+      ),
+    );
+
+    return AnimatedBuilder(
+      animation: _animationController.view,
+      child: Offstage(
+        offstage: isClosed,
+        child: TickerMode(enabled: !isClosed, child: widget.child),
+      ),
+      builder: (context, child) => DecoratedBox(
+        decoration: ShapeDecoration(shape: _border.value!),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            header,
+            ClipRect(
+              child: Align(
+                alignment: Alignment.center,
+                heightFactor: _heightFactor.value,
+                child: child,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
