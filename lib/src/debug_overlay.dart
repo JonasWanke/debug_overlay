@@ -20,9 +20,9 @@ class DebugOverlay extends StatefulWidget {
     if (_isInDebugMode) ...[
       // These only work in debug mode; see the documentation of
       // [DiagnosticsBasedDebugHelper] for the explanation.
-      MediaQueryDebugHelper(),
-      PackageInfoDebugHelper(),
-      DeviceInfoDebugHelper(),
+      const MediaQueryDebugHelper(),
+      const PackageInfoDebugHelper(),
+      const DeviceInfoDebugHelper(),
     ],
   ]);
 
