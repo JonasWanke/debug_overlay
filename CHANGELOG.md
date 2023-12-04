@@ -16,6 +16,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 0.2.11 · 2023-12-04
+
+### 📦 Build & CI
+* update `package_info_plus` to `>=3.0.0 <6.0.0` ([`ac133bd`](https://github.com/JonasWanke/debug_overlay/commit/ac133bde2049a8b94f786792c031c1b07f259bf8))
+
 ## 0.2.10 · 2023-11-07
 
 ### 🎉 New Features
@@ -28,7 +33,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * override `debugFillProperties(…)` ([`6ce47c0`](https://github.com/JonasWanke/debug_overlay/commit/6ce47c084057c0cc54d18afe8000d42ff1635938))
 
 ### 📦 Build & CI
-* support `device_info_plus` to `>=8.0.0 <10.0.0`, `package_info_plus` to `>=3.0.0 <5.0.0` ([`c2dc258`](https://github.com/JonasWanke/debug_overlay/commit/c2dc258cb01a4d142e3533f9d1a9275e8314fd36)), ([`822ccbc`](https://github.com/JonasWanke/debug_overlay/commit/822ccbc5ed0bf7773923e66fa9054d21c80365b5)) (the newer major releases got retracted)
+* update `device_info_plus` to `>=8.0.0 <10.0.0`, `package_info_plus` to `>=3.0.0 <5.0.0` ([`c2dc258`](https://github.com/JonasWanke/debug_overlay/commit/c2dc258cb01a4d142e3533f9d1a9275e8314fd36)), ([`822ccbc`](https://github.com/JonasWanke/debug_overlay/commit/822ccbc5ed0bf7773923e66fa9054d21c80365b5)) (the newer major releases got retracted)
 
 ## 0.2.9 · 2023-10-11
 
