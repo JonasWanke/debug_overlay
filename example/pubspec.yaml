@@ -6,15 +6,21 @@ environment:
   flutter: '>=3.10.0'
 
 dependencies:
-  debug_overlay:
-    path: ../
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^2.0.3
+  supernova_flutter:
+    git:
+      url: https://github.com/JonasWanke/supernova.git
+      path: supernova_flutter
+      ref: d863bb61d8a89cb2e23c6ac6f3510c80061d10b7
+
+dependency_overrides:
+  debug_overlay:
+    path: ../
 
 flutter:
   uses-material-design: true
