@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:math';
 
 import 'package:black_hole_flutter/black_hole_flutter.dart';
@@ -14,27 +16,29 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 final logs = LogCollection();
 final mediaOverrideState = ValueNotifier(MediaOverrideState());
 
-final supportedLocales = kMaterialSupportedLanguages
-    .sortedBy((it) => it)
-    .map((it) => Locale(it))
-    .toList();
+final supportedLocales =
+    kMaterialSupportedLanguages.sortedBy((it) => it).map(Locale.new).toList();
 
 void main() {
   if (kDebugMode) {
-    DebugOverlay.prependHelper(MediaOverrideDebugHelper(
-      mediaOverrideState,
-      // To support overriding locales, this value must be set and should
-      // contain the same locales as passed to [MaterialApp.supportedLocales],
-      // [CupertinoApp.supportedLocales] or [WidgetsApp.supportedLocales].
-      supportedLocales: supportedLocales,
-    ));
+    DebugOverlay.prependHelper(
+      MediaOverrideDebugHelper(
+        mediaOverrideState,
+        // To support overriding locales, this value must be set and should
+        // contain the same locales as passed to [MaterialApp.supportedLocales],
+        // [CupertinoApp.supportedLocales] or [WidgetsApp.supportedLocales].
+        supportedLocales: supportedLocales,
+      ),
+    );
     DebugOverlay.appendHelper(LogsDebugHelper(logs));
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     // To use the [MediaOverrideDebugHelper], wrap your app in a
@@ -51,14 +55,14 @@ class MyApp extends StatelessWidget {
 
           // This creates the actual [DebugOverlay] (only in debug mode; not in
           // profile oder release mode).
-          builder: DebugOverlay.builder(showOnShake: true),
+          builder: DebugOverlay.builder(),
 
           // And the usual customization:
           supportedLocales: supportedLocales,
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          home: HomePage(),
+          home: const HomePage(),
         );
       },
     );
@@ -66,6 +70,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   static final _random = Random();
 
   @override
@@ -81,13 +87,13 @@ class HomePage extends StatelessWidget {
             Text('Locale: ${context.locale}'),
             const SizedBox(height: 16),
             TextButton(
-              onPressed: () => _createLog(),
+              onPressed: _createLog,
               child: const Text('Add log'),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => DebugOverlay.show(),
-              child: const Text('Show Debug Overlay'),
+            const ElevatedButton(
+              onPressed: DebugOverlay.show,
+              child: Text('Show Debug Overlay'),
             ),
           ],
         ),
@@ -113,5 +119,3 @@ class HomePage extends StatelessWidget {
     logs.add(log);
   }
 }
-
-// ignore_for_file: unnecessary_lambdas
