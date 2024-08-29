@@ -16,7 +16,7 @@ dev_dependencies:
     git:
       url: https://github.com/JonasWanke/supernova.git
       path: supernova_flutter
-      ref: d863bb61d8a89cb2e23c6ac6f3510c80061d10b7
+      ref: 3156b9397550f48e5a78e8d21b1b06aa265b759f
 
 dependency_overrides:
   debug_overlay:
