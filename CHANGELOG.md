@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2023-xx-xx
+## NEW · 2024-xx-xx
 
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
@@ -15,6 +15,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🏗️ Refactoring
 ### 📦 Build & CI
 -->
+
+## 0.2.12 · 2024-08-29
+
+### 📦 Build & CI
+* update `package_info_plus` to `>=3.0.0 <9.0.0` ([#22](https://github.com/JonasWanke/debug_overlay/pull/22)). Thanks to [@nikolashaag](https://github.com/nikolashaag)!
+* update `device_info_plus` to `>=8.0.0 <11.0.0` ([`5d91238`](https://github.com/JonasWanke/debug_overlay/commit/5d91238628196187922beeeb8d9429d3e95cb7a7))
 
 ## 0.2.11 · 2023-12-04
 
