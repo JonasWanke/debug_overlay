@@ -54,6 +54,7 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
       StringProperty(
         'Memory Size',
         (deviceMemory * 1024 * 1024 * 1024)
+            .round()
             .formatByteSize(prefix: Prefix.binary),
       ),
   ];

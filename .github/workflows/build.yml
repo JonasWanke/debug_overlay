@@ -5,10 +5,10 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: 0 4 * * *
+    - cron: 0 4 * * 1
 
 env:
-  JAVA_VERSION: 12.x
+  JAVA_VERSION: 17
 
 jobs:
   lint:
@@ -26,6 +26,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ matrix.flutter-channel }}
+      - run: flutter --version
 
       - run: flutter pub get
 
@@ -46,6 +47,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ matrix.flutter-channel }}
+      - run: flutter --version
 
       - run: flutter pub get
         working-directory: example
