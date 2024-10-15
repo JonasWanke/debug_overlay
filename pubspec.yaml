@@ -15,7 +15,7 @@ screenshots:
     path: doc/helpers-packageInfo.png
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.0.0
   flutter: '>=3.10.0'
 
 dependencies:
@@ -36,4 +36,4 @@ dev_dependencies:
     git:
       url: https://github.com/JonasWanke/supernova.git
       path: supernova_flutter
-      ref: 3156b9397550f48e5a78e8d21b1b06aa265b759f
+      ref: 07be946452fb9c18c4441b24251671eec196ae77
