@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:data_size/data_size.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -32,19 +31,19 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
         ),
         StringProperty(
           'Supported 32-Bit ABIs',
-          info.supported32BitAbis.whereNotNull().join(', '),
+          info.supported32BitAbis.nonNulls.join(', '),
         ),
         StringProperty(
           'Supported 64-Bit ABIs',
-          info.supported64BitAbis.whereNotNull().join(', '),
+          info.supported64BitAbis.nonNulls.join(', '),
         ),
         StringProperty(
           'Supported ABIs',
-          info.supportedAbis.whereNotNull().join(', '),
+          info.supportedAbis.nonNulls.join(', '),
         ),
         StringProperty(
           'System Features',
-          info.systemFeatures.whereNotNull().join(', '),
+          info.systemFeatures.nonNulls.join(', '),
           level: DiagnosticLevel.fine,
         ),
       ],
