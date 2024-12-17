@@ -59,6 +59,12 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
       title: widget.title,
       actions: [
         IconButton(
+          tooltip: 'Copy logs',
+          onPressed: () async =>
+              _copyLogsToClipboard(context, widget.logs.logs),
+          icon: const Icon(Icons.copy_outlined),
+        ),
+        IconButton(
           tooltip: 'Clear logs',
           onPressed: widget.logs.clear,
           icon: const Icon(Icons.delete_outlined),
@@ -107,9 +113,6 @@ class LogEntryWidget extends StatelessWidget {
 
   final Log log;
 
-  String get _errorLabel =>
-      log.level.index >= DiagnosticLevel.error.index ? 'Error' : 'Data';
-
   @override
   Widget build(BuildContext context) {
     // We don't show the date to save space.
@@ -143,14 +146,14 @@ class LogEntryWidget extends StatelessWidget {
 
     if (log.error == null && log.stackTrace == null) {
       return _LogEntryLine(
-        onLongPress: () async => _copyToClipboard(context),
+        onLongPress: () async => _copyLogsToClipboard(context, [log]),
         leading: icon,
         title: title,
       );
     }
 
     return _ExpansionTile(
-      onLongPress: () async => _copyToClipboard(context),
+      onLongPress: () async => _copyLogsToClipboard(context, [log]),
       leading: icon,
       title: title,
       isInitiallyExpanded: log.level.index >= DiagnosticLevel.error.index,
@@ -160,7 +163,7 @@ class LogEntryWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (log.error != null) ...[
-              _buildSubtitle(context, '$_errorLabel:'),
+              _buildSubtitle(context, '${log._errorLabel}:'),
               _buildError(context),
               const SizedBox(height: 8),
             ],
@@ -194,8 +197,7 @@ class LogEntryWidget extends StatelessWidget {
   Widget _buildSubtitle(BuildContext context, String text) =>
       Text(text, style: Theme.of(context).textTheme.titleSmall);
   Widget _buildError(BuildContext context) {
-    final json = _errorToJsonListOrMap();
-    if (json != null) {
+    if (_errorToJsonListOrMap(log.error) case final json?) {
       return JsonView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -209,128 +211,124 @@ class LogEntryWidget extends StatelessWidget {
     );
   }
 
-  Future<void> _copyToClipboard(BuildContext context) async {
-    final error = log.error == null ? null : _stringify(log.error as Object);
-    final stackTrace = log.stackTrace?.toString();
-    final text = [
-      '${log.timestamp}: ${log.message}',
-      if (error != null) '$_errorLabel: $error',
-      if (stackTrace != null) 'Stack Trace: $stackTrace',
-    ].join('\n');
-    await Clipboard.setData(ClipboardData(text: text));
-
-    // ignore: use_build_context_synchronously, https://github.com/dart-lang/linter/issues/4007
-    if (!context.mounted) return;
-    context.scaffoldMessenger
-        .showSnackBar(const SnackBar(content: Text('Copied!')));
-  }
-
-  String _stringify(Object object) {
-    if (object is String) return object.trim();
-    if (object is DiagnosticsNode) return object.toStringDeep();
-
-    try {
-      // ignore: avoid_dynamic_calls
-      (object as dynamic).toJson();
-      // It supports `toJson()`.
-
-      dynamic toEncodable(dynamic object) {
-        try {
-          // ignore: avoid_dynamic_calls
-          return object.toJson();
-          // ignore: avoid_catches_without_on_clauses
-        } catch (_) {}
-        try {
-          return '$object';
-          // ignore: avoid_catches_without_on_clauses
-        } catch (_) {}
-        return describeIdentity(object);
-      }
-
-      return JsonEncoder.withIndent('  ', toEncodable).convert(object);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {}
-
-    try {
-      return '$object'.trim();
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {}
-    return describeIdentity(object);
-  }
-
-  dynamic _errorToJsonListOrMap() {
-    bool isJson(Object? object) {
-      if (object == null ||
-          object is bool ||
-          object is num ||
-          object is String) {
-        return true;
-      }
-      if (object is List) return object.every(isJson);
-      if (object is Map) {
-        return object.keys.every((it) => it is String) &&
-            object.values.every(isJson);
-      }
-
-      try {
-        // ignore: avoid_dynamic_calls
-        (object as dynamic).toJson();
-        return true;
-        // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
-      return false;
-    }
-
-    bool isJsonListOrMap(Object? object) {
-      if (object is List || object is Map) return isJson(object);
-
-      try {
-        // ignore: avoid_dynamic_calls
-        return isJsonListOrMap((object as dynamic).toJson());
-        // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
-      return false;
-    }
-
-    if (!isJsonListOrMap(log.error!)) return null;
-
-    dynamic toJson(Object? object) {
-      if (object == null ||
-          object is bool ||
-          object is num ||
-          object is String) {
-        return object;
-      }
-      if (object is List) return object.map(toJson).toList();
-      if (object is Map) {
-        final entries = <String, dynamic>{};
-        for (final entry in object.entries) {
-          if (entry.key is! String) return null;
-          entries[entry.key as String] = toJson(entry.value);
-        }
-        return entries;
-      }
-
-      try {
-        // ignore: avoid_dynamic_calls
-        return toJson((object as dynamic).toJson());
-        // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
-      try {
-        return '$object';
-        // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
-      return describeIdentity(object);
-    }
-
-    return toJson(log.error!);
-  }
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('log', log));
   }
+}
+
+Future<void> _copyLogsToClipboard(BuildContext context, List<Log> logs) async {
+  await Clipboard.setData(
+    ClipboardData(
+      text: logs
+          .expand(
+            (log) => [
+              '${log.timestamp}: ${log.message}',
+              if (log.error != null)
+                '${log._errorLabel}: ${_stringify(log.error as Object)}',
+              if (log.stackTrace != null) 'Stack Trace: ${log.stackTrace}',
+            ],
+          )
+          .join('\n'),
+    ),
+  );
+  if (!context.mounted) return;
+
+  context.scaffoldMessenger
+      .showSnackBar(const SnackBar(content: Text('Copied!')));
+}
+
+extension on Log {
+  String get _errorLabel =>
+      level.index >= DiagnosticLevel.error.index ? 'Error' : 'Data';
+}
+
+dynamic _errorToJsonListOrMap(dynamic error) {
+  bool isJson(Object? object) {
+    if (object == null || object is bool || object is num || object is String) {
+      return true;
+    }
+    if (object is List) return object.every(isJson);
+    if (object is Map) {
+      return object.keys.every((it) => it is String) &&
+          object.values.every(isJson);
+    }
+
+    try {
+      // ignore: avoid_dynamic_calls
+      (object as dynamic).toJson();
+      return true;
+    } catch (_) {}
+    return false;
+  }
+
+  bool isJsonListOrMap(Object? object) {
+    if (object is List || object is Map) return isJson(object);
+
+    try {
+      // ignore: avoid_dynamic_calls
+      return isJsonListOrMap((object as dynamic).toJson());
+    } catch (_) {}
+    return false;
+  }
+
+  if (!isJsonListOrMap(error!)) return null;
+
+  dynamic toJson(Object? object) {
+    if (object == null || object is bool || object is num || object is String) {
+      return object;
+    }
+    if (object is List) return object.map(toJson).toList();
+    if (object is Map) {
+      final entries = <String, dynamic>{};
+      for (final entry in object.entries) {
+        if (entry.key is! String) return null;
+        entries[entry.key as String] = toJson(entry.value);
+      }
+      return entries;
+    }
+
+    try {
+      // ignore: avoid_dynamic_calls
+      return toJson((object as dynamic).toJson());
+    } catch (_) {}
+    try {
+      return '$object';
+    } catch (_) {}
+    return describeIdentity(object);
+  }
+
+  return toJson(error!);
+}
+
+String _stringify(Object object) {
+  if (object is String) return object.trim();
+  if (object is DiagnosticsNode) return object.toStringDeep();
+
+  try {
+    // ignore: avoid_dynamic_calls
+    (object as dynamic).toJson();
+    // It supports `toJson()`.
+
+    dynamic toEncodable(dynamic object) {
+      try {
+        // ignore: avoid_dynamic_calls
+        return object.toJson();
+      } catch (_) {}
+      try {
+        return '$object';
+      } catch (_) {}
+      return describeIdentity(object);
+    }
+
+    return JsonEncoder.withIndent('  ', toEncodable).convert(object);
+  } catch (_) {}
+
+  try {
+    return '$object'.trim();
+  } catch (_) {}
+  return describeIdentity(object);
 }
 
 class _LogEntryLine extends StatelessWidget {
