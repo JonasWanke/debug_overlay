@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shake/shake.dart';
+import 'package:shake_detector/shake_detector.dart';
 
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
@@ -35,8 +35,8 @@ class DebugOverlay extends StatefulWidget {
     helpers.value = [...helpers.value, debugHelper];
   }
 
-  static ShakeDetector _defaultCreateShakeDetector(VoidCallback onPhoneShake) =>
-      ShakeDetector.waitForStart(onPhoneShake: onPhoneShake);
+  static ShakeDetector _defaultCreateShakeDetector(VoidCallback onShake) =>
+      ShakeDetector.waitForStart(onShake: onShake);
 
   /// In debug mode, this returns a builder to add a [DebugOverlay] to your app.
   ///
@@ -94,9 +94,7 @@ class DebugOverlay extends StatefulWidget {
   }
 }
 
-typedef ShakeDetectorCreator = ShakeDetector Function(
-  VoidCallback onPhoneShake,
-);
+typedef ShakeDetectorCreator = ShakeDetector Function(VoidCallback onShake);
 
 class DebugOverlayState extends State<DebugOverlay> {
   static final key = GlobalKey<DebugOverlayState>();
