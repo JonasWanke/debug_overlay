@@ -16,7 +16,7 @@ screenshots:
 
 environment:
   sdk: ^3.0.0
-  flutter: '>=3.10.0'
+  flutter: '>=3.27.0-0'
 
 dependencies:
   black_hole_flutter: ^1.0.3
@@ -36,4 +36,4 @@ dev_dependencies:
     git:
       url: https://github.com/JonasWanke/supernova.git
       path: supernova_flutter
-      ref: 07be946452fb9c18c4441b24251671eec196ae77
+      ref: 96c1b7ea5a919c659ac82b63cd6dc953aa9360d1
