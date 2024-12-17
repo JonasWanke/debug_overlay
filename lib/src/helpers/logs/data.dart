@@ -47,7 +47,7 @@ class Log with Diagnosticable {
 }
 
 class LogCollection {
-  LogCollection({int? maximumSize = 50}) : _maximumSize = maximumSize;
+  LogCollection({int? maximumSize = 500}) : _maximumSize = maximumSize;
 
   final _logs = ValueNotifier(<Log>[]);
   ValueListenable<List<Log>> get listenable => _logs;

@@ -9,8 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-// By default, this only stores the last 50 logs. You can customize this via the
-// `maximumSize` parameter.
+// By default, this only stores the last 500 logs. You can customize this via
+// the `maximumSize` parameter.
 //
 // Logs are only stored in debug builds.
 final logs = LogCollection();
