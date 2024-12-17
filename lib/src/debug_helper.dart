@@ -1,6 +1,7 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 import 'utils/level_selector.dart';
 
@@ -9,38 +10,42 @@ class DebugHelper extends StatelessWidget {
     super.key,
     required this.title,
     this.actions = const [],
-    required this.child,
+    required this.sliver,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 16),
   });
 
   final Widget title;
   final List<Widget> actions;
 
-  final Widget child;
+  final Widget sliver;
   final EdgeInsetsGeometry contentPadding;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final header = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: DefaultTextStyle(
+              style: context.textTheme.titleMedium!,
+              child: title,
+            ),
+          ),
+          ...actions,
+        ],
+      ),
+    );
+
+    return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: DefaultTextStyle(
-                  style: context.textTheme.titleMedium!,
-                  child: title,
-                ),
-              ),
-              ...actions,
-            ],
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: header,
           ),
         ),
-        const SizedBox(height: 8),
-        Padding(padding: contentPadding, child: child),
+        SliverPadding(padding: contentPadding, sliver: sliver),
       ],
     );
   }
@@ -91,7 +96,7 @@ class _DiagnosticsBasedDebugHelperState
           onSelected: (level) => setState(() => _minLevel = level),
         ),
       ],
-      child: StreamBuilder(
+      sliver: StreamBuilder(
         stream: widget.diagnosticsStream,
         builder: (context, snapshot) {
           final error = snapshot.error;
@@ -102,24 +107,30 @@ class _DiagnosticsBasedDebugHelperState
               return true;
             }());
 
-            return Center(child: Text('$error\n${snapshot.stackTrace!}'));
+            return SliverToBoxAdapter(
+              child: Center(child: Text('$error\n${snapshot.stackTrace!}')),
+            );
           }
 
           final nodes = snapshot.data;
           if (nodes == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final text = nodes
-              .where((it) => it.level.index >= _minLevel.index)
-              .map((it) => it.toStringDeep(minLevel: _minLevel))
-              .join('\n');
-          if (text.isEmpty) {
-            return Center(
-              child: Text('Empty', style: context.textTheme.bodySmall),
+            return const SliverToBoxAdapter(
+              child: Center(child: CircularProgressIndicator()),
             );
           }
-          return Text(text);
+
+          final entries = nodes
+              .where((it) => it.level.index >= _minLevel.index)
+              .map((it) => Text(it.toStringDeep(minLevel: _minLevel)))
+              .toList();
+          if (entries.isEmpty) {
+            return SliverToBoxAdapter(
+              child: Center(
+                child: Text('Empty', style: context.textTheme.bodySmall),
+              ),
+            );
+          }
+          return SliverList.list(children: entries);
         },
       ),
     );

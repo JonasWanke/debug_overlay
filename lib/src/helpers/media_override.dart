@@ -57,7 +57,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
       builder: (context, currentState, _) => DebugHelper(
         title: const Text('Media Overrides'),
         contentPadding: EdgeInsets.zero,
-        child: Column(
+        sliver: SliverList.list(
           children: [
             _buildThemeModeOverride(currentState),
             if (widget.supportedLocales != null)

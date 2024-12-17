@@ -4,6 +4,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shake_detector/shake_detector.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
@@ -213,26 +214,7 @@ class DebugOverlayContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ValueListenableBuilder(
-        valueListenable: DebugOverlay.helpers,
-        builder: (context, helpers, _) => ListView.separated(
-          primary: false,
-          controller: scrollController,
-          padding: context.mediaQuery.viewPadding +
-              const EdgeInsets.only(bottom: 16),
-          itemCount: helpers.length + 1,
-          itemBuilder: (context, index) =>
-              index == 0 ? _buildAppBar(context) : helpers[index - 1],
-          separatorBuilder: (context, index) =>
-              SizedBox(height: index == 0 ? 0 : 16),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar(BuildContext context) {
-    return AppBar(
+    final appBar = AppBar(
       primary: false,
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -240,6 +222,28 @@ class DebugOverlayContent extends StatelessWidget {
           context.theme.scaffoldBackgroundColor.highEmphasisOnColor,
       title: const Text('🐛 Debug Overlay'),
       actions: [if (onClose != null) CloseButton(onPressed: onClose!)],
+    );
+
+    return Scaffold(
+      body: ValueListenableBuilder(
+        valueListenable: DebugOverlay.helpers,
+        builder: (context, helpers, _) => CustomScrollView(
+          primary: false,
+          controller: scrollController,
+          slivers: [
+            SliverPadding(
+              padding: context.mediaQuery.viewPadding +
+                  const EdgeInsets.only(bottom: 16),
+              sliver: MultiSliver(
+                children: [
+                  SliverToBoxAdapter(child: appBar),
+                  ...helpers.withSeparators(const SizedBox(height: 16)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -274,5 +278,17 @@ class _ScaledTopViewPadding extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('progress', progress));
+  }
+}
+
+extension<T> on Iterable<T> {
+  Iterable<T> withSeparators(T separator) sync* {
+    var isFirst = true;
+    for (final item in this) {
+      if (!isFirst) yield separator;
+      isFirst = false;
+
+      yield item;
+    }
   }
 }

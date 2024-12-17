@@ -70,16 +70,18 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
         ),
       ],
       contentPadding: EdgeInsets.zero,
-      child: ValueListenableBuilder(
+      sliver: ValueListenableBuilder(
         valueListenable: widget.logs.listenable,
         builder: (context, logs, _) {
           if (logs.isEmpty) {
-            return Center(
-              child: Text(
-                'No logs available.',
-                style: context.textTheme.bodySmall!.copyWith(
-                  color: context
-                      .theme.scaffoldBackgroundColor.mediumEmphasisOnColor,
+            return SliverToBoxAdapter(
+              child: Center(
+                child: Text(
+                  'No logs available.',
+                  style: context.textTheme.bodySmall!.copyWith(
+                    color: context
+                        .theme.scaffoldBackgroundColor.mediumEmphasisOnColor,
+                  ),
                 ),
               ),
             );
@@ -90,9 +92,7 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
           if (!_isOldestFirst) {
             filteredLogs = filteredLogs.reversed.toList();
           }
-          return ImplicitlyAnimatedList(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+          return SliverImplicitlyAnimatedList(
             itemData: filteredLogs,
             itemBuilder: (context, data) => LogEntryWidget(data),
           );
