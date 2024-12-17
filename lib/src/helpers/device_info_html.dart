@@ -41,7 +41,7 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
       ],
     ),
     StringProperty('Language', info.language),
-    IterableProperty<dynamic>('Languages', info.languages),
+    IterableProperty('Languages', info.languages),
     StringProperty('User Agent', info.userAgent),
     IntProperty(
       'Maximum Simultaneous Touch Points',

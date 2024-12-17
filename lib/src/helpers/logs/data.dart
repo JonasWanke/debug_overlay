@@ -49,7 +49,7 @@ class Log with Diagnosticable {
 class LogCollection {
   LogCollection({int? maximumSize = 50}) : _maximumSize = maximumSize;
 
-  final _logs = ValueNotifier<List<Log>>([]);
+  final _logs = ValueNotifier(<Log>[]);
   ValueListenable<List<Log>> get listenable => _logs;
   List<Log> get logs => listenable.value;
 

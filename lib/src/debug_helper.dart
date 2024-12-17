@@ -91,7 +91,7 @@ class _DiagnosticsBasedDebugHelperState
           onSelected: (level) => setState(() => _minLevel = level),
         ),
       ],
-      child: StreamBuilder<List<DiagnosticsNode>>(
+      child: StreamBuilder(
         stream: widget.diagnosticsStream,
         builder: (context, snapshot) {
           final error = snapshot.error;

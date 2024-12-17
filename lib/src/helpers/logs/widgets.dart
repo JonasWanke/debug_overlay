@@ -329,7 +329,7 @@ class LogEntryWidget extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Log>('log', log));
+    properties.add(DiagnosticsProperty('log', log));
   }
 }
 
@@ -467,7 +467,7 @@ class _ExpansionTileState extends State<_ExpansionTile>
         _animationController.forward();
       } else {
         unawaited(
-          _animationController.reverse().then<void>((value) {
+          _animationController.reverse().then((value) {
             if (!mounted) return;
             setState(() {
               // Rebuild without widget.children.

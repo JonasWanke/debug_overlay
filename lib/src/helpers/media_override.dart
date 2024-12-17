@@ -52,7 +52,7 @@ class MediaOverrideDebugHelper extends StatefulWidget {
 class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<MediaOverrideState>(
+    return ValueListenableBuilder(
       valueListenable: widget.state,
       builder: (context, currentState, _) => DebugHelper(
         title: const Text('Media Overrides'),
@@ -127,7 +127,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
           locale: value ? locale! : null,
         );
       },
-      secondary: DropdownButton<Locale>(
+      secondary: DropdownButton(
         value: currentState.locale ?? locale!,
         onChanged: (locale) {
           setState(() {

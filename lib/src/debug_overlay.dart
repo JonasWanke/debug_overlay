@@ -214,7 +214,7 @@ class DebugOverlayContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ValueListenableBuilder<List<Widget>>(
+      body: ValueListenableBuilder(
         valueListenable: DebugOverlay.helpers,
         builder: (context, helpers, _) => ListView.separated(
           primary: false,

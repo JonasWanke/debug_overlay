@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // To use the [MediaOverrideDebugHelper], wrap your app in a
     // [ValueListenableBuilder] to access the overridden values:
-    return ValueListenableBuilder<MediaOverrideState>(
+    return ValueListenableBuilder(
       valueListenable: mediaOverrideState,
       builder: (context, overrideState, child) {
         return MaterialApp(
