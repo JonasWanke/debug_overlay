@@ -398,10 +398,10 @@ packages:
     dependency: transitive
     description:
       name: implicitly_animated_list
-      sha256: "327074913ed350fbd5089bf433d6268fb98022210e03668035523da7ff64dfdb"
+      sha256: "0912337ba058609ad8b4db8c1886959a4f82e03ee197ecdacbd8bf906bf1e195"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   intl:
     dependency: transitive
     description:
