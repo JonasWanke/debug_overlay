@@ -1,6 +1,6 @@
 name: debug_overlay
 description: View debug infos and change settings via a central overlay for your app.
-version: 0.2.12
+version: 1.0.0
 repository: https://github.com/JonasWanke/debug_overlay
 screenshots:
   - description: DeviceInfoDebugHelper
@@ -33,8 +33,8 @@ dependencies:
   sliver_tools: ^0.2.12
 
 dev_dependencies:
-  supernova_flutter:
+  supernova_lints:
     git:
       url: https://github.com/JonasWanke/supernova.git
-      path: supernova_flutter
-      ref: 96c1b7ea5a919c659ac82b63cd6dc953aa9360d1
+      path: supernova_lints
+      ref: 9c81000d8eb487e9443f43f61a72fddc97c0bb00
