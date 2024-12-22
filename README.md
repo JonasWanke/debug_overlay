@@ -25,12 +25,12 @@ By default, this overlay includes `MediaQueryDebugHelper`, `PackageInfoDebugHelp
 
 ## Debug Helpers
 
-To add a debug helper, you have to register it by calling either of the following two (which accept any widget):
+To add a debug helper, you have to register it by calling either of the following two (which accept any sliver widget):
 
 - `DebugOverlay.prependHelper(myDebugHelper)` to add it to the front of the list
 - `DebugOverlay.appendHelper(myDebugHelper)` to add it to the end of the list
 
-Or, if you want to override all currently registered overlays, set `DebugOverlay.helpers.value` to a list of widgets.
+Or, if you want to override all currently registered overlays, set `DebugOverlay.helpers.value` to a list of sliver widget.
 
 ### `DeviceInfoDebugHelper`
 
