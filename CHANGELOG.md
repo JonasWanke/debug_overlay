@@ -16,6 +16,29 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 1.0.0 · 2024-12-22
+
+### ⚠️ BREAKING CHANGES
+
+- convert `DebugHelper` & co. to slivers ([`a23c55c`](https://github.com/JonasWanke/debug_overlay/commit/a23c55c2a81e7e6b9c5d2118b36f05f2a73d3ce9))
+  - this avoids stutters for large numbers of logs
+  - rename `DebugHelper`'s `child` to `sliver`
+- switch from `shake` to `shake_detector` ([`18d59b8`](https://github.com/JonasWanke/debug_overlay/commit/18d59b8e763ed5c9a23f1ff556457d1e9821dc3b))
+
+### 🎉 New Features
+
+- `LogsDebugHelper`: add option to copy all logs ([`2cfbad9`](https://github.com/JonasWanke/debug_overlay/commit/2cfbad9e8abab71fd415196d61ebde22e1e3317d))
+- `LogsDebugHelper`: add `logCollection.onlyStoreLogsInDebugMode` to configure whether logs are also stored in non-debug builds ([`8a9d885`](https://github.com/JonasWanke/debug_overlay/commit/8a9d885fe837ee8bc09fab73984f295bc3ad8cf6))
+
+### ⚡ Changes
+
+- increase default log maximum from 50 to 500 ([`1b5a9ae`](https://github.com/JonasWanke/debug_overlay/commit/1b5a9ae8c7118f477a877b05c83f554ca34aa014))
+
+### 📦 Build & CI
+
+- update `device_info_plus` to `>=8.0.0 <12.0.0` ([`9c12480`](https://github.com/JonasWanke/debug_overlay/commit/9c12480189f9d2d8eacb3803922a9fe7a9b6cea6))
+- upgrade to Flutter `>=3.27.0-0` ([`5f81679`](https://github.com/JonasWanke/debug_overlay/commit/5f8167953c3e622e8042d570f1fd12a214612351))
+
 ## 0.2.12 · 2024-08-29
 
 ### 📦 Build & CI
