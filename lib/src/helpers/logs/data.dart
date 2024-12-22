@@ -47,7 +47,10 @@ class Log with Diagnosticable {
 }
 
 class LogCollection {
-  LogCollection({int? maximumSize = 500}) : _maximumSize = maximumSize;
+  LogCollection({
+    int? maximumSize = 500,
+    this.onlyStoreLogsInDebugMode = true,
+  }) : _maximumSize = maximumSize;
 
   final _logs = ValueNotifier(<Log>[]);
   ValueListenable<List<Log>> get listenable => _logs;
@@ -68,7 +71,12 @@ class LogCollection {
     }
   }
 
+  /// Whether to only store logs in debug mode.
+  final bool onlyStoreLogsInDebugMode;
+
   void add(Log log) {
+    if (onlyStoreLogsInDebugMode && !kDebugMode) return;
+
     int index;
     if (logs.isEmpty || !log.timestamp.isBefore(logs.last.timestamp)) {
       // Quick path as new logs are usually more recent.

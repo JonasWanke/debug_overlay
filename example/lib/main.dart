@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:math';
@@ -9,11 +10,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-// By default, this only stores the last 500 logs. You can customize this via
-// the `maximumSize` parameter.
-//
-// Logs are only stored in debug builds.
-final logs = LogCollection();
+final logs = LogCollection(
+  // Default values:
+  maximumSize: 500,
+  onlyStoreLogsInDebugMode: true,
+);
 final mediaOverrideState = ValueNotifier(MediaOverrideState());
 
 final supportedLocales =
