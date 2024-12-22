@@ -19,7 +19,7 @@ class DebugOverlay extends StatefulWidget {
   }) : super(key: DebugOverlayState.key);
 
   static final helpers = ValueNotifier<List<Widget>>([
-    if (_isInDebugMode) ...[
+    if (kDebugMode) ...[
       // These only work in debug mode; see the documentation of
       // [DiagnosticsBasedDebugHelper] for the explanation.
       const MediaQueryDebugHelper(),
@@ -62,7 +62,7 @@ class DebugOverlay extends StatefulWidget {
     ShakeDetectorCreator createShakeDetector = _defaultCreateShakeDetector,
     bool enableOnlyInDebugMode = true,
   }) {
-    return _isInDebugMode || !enableOnlyInDebugMode
+    return kDebugMode || !enableOnlyInDebugMode
         ? (context, child) => DebugOverlay(
               showOnShake: showOnShake,
               createShakeDetector: createShakeDetector,
@@ -150,7 +150,7 @@ class DebugOverlayState extends State<DebugOverlay> {
   @override
   Widget build(BuildContext context) {
     final bottomSheet =
-        _isVisible && (_isInDebugMode || !widget.enableOnlyInDebugMode)
+        _isVisible && (kDebugMode || !widget.enableOnlyInDebugMode)
             ? _buildBottomSheet()
             : null;
     return Stack(
@@ -195,15 +195,6 @@ class DebugOverlayState extends State<DebugOverlay> {
       ),
     );
   }
-}
-
-bool get _isInDebugMode {
-  var isInDebugMode = false;
-  assert(() {
-    isInDebugMode = true;
-    return true;
-  }());
-  return isInDebugMode;
 }
 
 class DebugOverlayContent extends StatelessWidget {
