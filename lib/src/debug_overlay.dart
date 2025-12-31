@@ -90,7 +90,11 @@ class DebugOverlay extends StatefulWidget {
       ..add(DiagnosticsProperty('showOnShake', showOnShake))
       ..add(ObjectFlagProperty.has('createShakeDetector', createShakeDetector))
       ..add(
-        FlagProperty('enableOnlyInDebugMode', value: enableOnlyInDebugMode),
+        FlagProperty(
+          'enableOnlyInDebugMode',
+          value: enableOnlyInDebugMode,
+          ifTrue: 'enabled only in debug mode',
+        ),
       );
   }
 }
