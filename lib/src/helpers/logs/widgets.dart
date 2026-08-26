@@ -19,7 +19,7 @@ class LogsDebugHelper extends StatefulWidget {
   const LogsDebugHelper(
     this.logs, {
     super.key,
-    this.initialMinLevel = DiagnosticLevel.debug,
+    this.initialMinLevel = .debug,
     this.title = const Text('Logs'),
   });
 
@@ -184,15 +184,15 @@ class LogEntryWidget extends StatelessWidget {
     final theme = context.theme;
     final brightness = theme.scaffoldBackgroundColor.estimatedBrightness;
     return switch (log.level) {
-      DiagnosticLevel.hidden => brightness.disabledOnColor,
-      DiagnosticLevel.fine => brightness.disabledOnColor,
-      DiagnosticLevel.debug => brightness.mediumEmphasisOnColor,
-      DiagnosticLevel.info => brightness.highEmphasisOnColor,
-      DiagnosticLevel.warning => Colors.orange,
-      DiagnosticLevel.hint => brightness.mediumEmphasisOnColor,
-      DiagnosticLevel.summary => brightness.highEmphasisOnColor,
-      DiagnosticLevel.error => theme.colorScheme.error,
-      DiagnosticLevel.off => Colors.purple,
+      .hidden => brightness.disabledOnColor,
+      .fine => brightness.disabledOnColor,
+      .debug => brightness.mediumEmphasisOnColor,
+      .info => brightness.highEmphasisOnColor,
+      .warning => Colors.orange,
+      .hint => brightness.mediumEmphasisOnColor,
+      .summary => brightness.highEmphasisOnColor,
+      .error => theme.colorScheme.error,
+      .off => Colors.purple,
     };
   }
 

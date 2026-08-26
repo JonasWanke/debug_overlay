@@ -12,32 +12,16 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
     DiagnosticsBlock(
       name: 'Browser: ${info.browserName.name}',
       properties: [
-        StringProperty(
-          'Vendor',
-          info.vendor,
-          level: DiagnosticLevel.fine,
-        ),
+        StringProperty('Vendor', info.vendor, level: .fine),
         StringProperty(
           'Vendor Version',
           info.vendorSub,
           defaultValue: '',
-          level: DiagnosticLevel.fine,
+          level: .fine,
         ),
-        StringProperty(
-          'Codename',
-          info.appCodeName,
-          level: DiagnosticLevel.fine,
-        ),
-        StringProperty(
-          'Version',
-          info.appVersion,
-          level: DiagnosticLevel.fine,
-        ),
-        StringProperty(
-          'Build Number',
-          info.productSub,
-          level: DiagnosticLevel.fine,
-        ),
+        StringProperty('Codename', info.appCodeName, level: .fine),
+        StringProperty('Version', info.appVersion, level: .fine),
+        StringProperty('Build Number', info.productSub, level: .fine),
       ],
     ),
     StringProperty('Language', info.language),
@@ -53,9 +37,9 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
     if (deviceMemory != null)
       StringProperty(
         'Memory Size',
-        (deviceMemory * 1024 * 1024 * 1024)
-            .round()
-            .formatByteSize(prefix: Prefix.binary),
+        (deviceMemory * 1024 * 1024 * 1024).round().formatByteSize(
+          prefix: Prefix.binary,
+        ),
       ),
   ];
 }

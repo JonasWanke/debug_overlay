@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Log with Diagnosticable {
   Log({
-    this.level = DiagnosticLevel.info,
+    this.level = .info,
     DateTime? timestamp,
     required this.message,
     this.error,
     this.stackTrace,
   }) : assert(
-         level != DiagnosticLevel.off,
+         level != .off,
          '`DiagnosticLevel.off` is a "[special] level indicating that no '
          'diagnostics should be shown" and should not be used as a value.',
        ),

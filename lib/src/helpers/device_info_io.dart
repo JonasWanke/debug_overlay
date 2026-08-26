@@ -24,11 +24,7 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
       properties: [
         StringProperty('Build Type', info.type),
         StringProperty('Build Tags', info.tags),
-        StringProperty(
-          'Fingerprint',
-          info.fingerprint,
-          level: DiagnosticLevel.fine,
-        ),
+        StringProperty('Fingerprint', info.fingerprint, level: .fine),
         StringProperty(
           'Supported 32-Bit ABIs',
           info.supported32BitAbis.join(', '),
@@ -41,7 +37,7 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
         StringProperty(
           'System Features',
           info.systemFeatures.join(', '),
-          level: DiagnosticLevel.fine,
+          level: .fine,
         ),
       ],
       children: [
@@ -84,13 +80,13 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
           ifTrue: 'Running on a physical device',
           ifFalse: 'Running on an emulator or unknown device',
         ),
-        StringProperty('Board', info.board, level: DiagnosticLevel.fine),
+        StringProperty('Board', info.board, level: .fine),
         StringProperty('Manufacturer', info.manufacturer),
         StringProperty('Brand', info.brand),
         StringProperty('Product', info.product),
         StringProperty('Device', info.device),
         StringProperty('Model', info.model),
-        StringProperty('Display', info.display, level: DiagnosticLevel.fine),
+        StringProperty('Display', info.display, level: .fine),
         StringProperty('Bootloader', info.bootloader),
         StringProperty('Hardware', info.hardware),
         StringProperty('Hostname', info.host),
@@ -137,7 +133,7 @@ Future<List<DiagnosticsNode>> _getDiagnosticsIos() async {
         StringProperty(
           'Identifier for the Vendor',
           info.identifierForVendor,
-          level: DiagnosticLevel.fine,
+          level: .fine,
         ),
       ],
     ),
@@ -164,12 +160,7 @@ Future<List<DiagnosticsNode>> _getDiagnosticsLinux() async {
   final info = await DeviceInfoPlugin().linuxInfo;
   return [
     StringProperty('OS', info.prettyName),
-    StringProperty(
-      'ID',
-      info.id,
-      defaultValue: 'linux',
-      level: DiagnosticLevel.fine,
-    ),
+    StringProperty('ID', info.id, defaultValue: 'linux', level: .fine),
     IterableProperty('ID-like', info.idLike),
     StringProperty('Version', info.version, defaultValue: null),
     StringProperty('Version ID', info.versionId, defaultValue: null),
@@ -184,13 +175,13 @@ Future<List<DiagnosticsNode>> _getDiagnosticsLinux() async {
       'Variant ID',
       info.variantId,
       defaultValue: null,
-      level: DiagnosticLevel.fine,
+      level: .fine,
     ),
     StringProperty(
       'Machine ID',
       info.machineId,
       defaultValue: null,
-      level: DiagnosticLevel.fine,
+      level: .fine,
     ),
   ];
 }
@@ -200,11 +191,7 @@ Future<List<DiagnosticsNode>> _getDiagnosticsMacOs() async {
   return [
     StringProperty('OS', 'macOS'),
     StringProperty('OS Release', info.osRelease),
-    StringProperty(
-      'Kernel Version',
-      info.kernelVersion,
-      level: DiagnosticLevel.fine,
-    ),
+    StringProperty('Kernel Version', info.kernelVersion, level: .fine),
     StringProperty('Architecture', info.arch),
     StringProperty('Device Model', info.model),
     StringProperty('Computer Name', info.computerName),

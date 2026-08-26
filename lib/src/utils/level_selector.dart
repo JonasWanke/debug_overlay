@@ -25,19 +25,17 @@ class DiagnosticLevelSelector extends StatelessWidget {
     );
   }
 
-  static IconData levelToIcon(DiagnosticLevel level) {
-    return switch (level) {
-      DiagnosticLevel.hidden => Icons.all_inclusive_outlined,
-      DiagnosticLevel.fine => Icons.bubble_chart_outlined,
-      DiagnosticLevel.debug => Icons.bug_report_outlined,
-      DiagnosticLevel.info => Icons.info_outline,
-      DiagnosticLevel.warning => Icons.warning_outlined,
-      DiagnosticLevel.hint => Icons.privacy_tip_outlined,
-      DiagnosticLevel.summary => Icons.subject,
-      DiagnosticLevel.error => Icons.error_outlined,
-      DiagnosticLevel.off => Icons.not_interested_outlined,
-    };
-  }
+  static IconData levelToIcon(DiagnosticLevel level) => switch (level) {
+    .hidden => Icons.all_inclusive_outlined,
+    .fine => Icons.bubble_chart_outlined,
+    .debug => Icons.bug_report_outlined,
+    .info => Icons.info_outline,
+    .warning => Icons.warning_outlined,
+    .hint => Icons.privacy_tip_outlined,
+    .summary => Icons.subject,
+    .error => Icons.error_outlined,
+    .off => Icons.not_interested_outlined,
+  };
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -49,17 +47,15 @@ class DiagnosticLevelSelector extends StatelessWidget {
 }
 
 extension on DiagnosticLevel {
-  String get title {
-    return switch (this) {
-      DiagnosticLevel.hidden => 'All',
-      DiagnosticLevel.fine => '≥ Fine',
-      DiagnosticLevel.debug => '≥ Debug',
-      DiagnosticLevel.info => '≥ Info',
-      DiagnosticLevel.warning => '≥ Warning',
-      DiagnosticLevel.hint => '≥ Hint',
-      DiagnosticLevel.summary => '≥ Summary',
-      DiagnosticLevel.error => '≥ Error',
-      DiagnosticLevel.off => 'None',
-    };
-  }
+  String get title => switch (this) {
+    .hidden => 'All',
+    .fine => '≥ Fine',
+    .debug => '≥ Debug',
+    .info => '≥ Info',
+    .warning => '≥ Warning',
+    .hint => '≥ Hint',
+    .summary => '≥ Summary',
+    .error => '≥ Error',
+    .off => 'None',
+  };
 }
