@@ -4,8 +4,14 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -20,17 +26,26 @@
         # Android
         androidSdkArgs = {
           buildToolsVersions = [ "33.0.1" ];
-          platformVersions = [ "33" "34" "35" ];
+          platformVersions = [
+            "33"
+            "34"
+            "35"
+          ];
         };
-        androidComposition =
-          pkgs.androidenv.composeAndroidPackages androidSdkArgs;
+        androidComposition = pkgs.androidenv.composeAndroidPackages androidSdkArgs;
         androidSdk = androidComposition.androidsdk;
-      in {
-        devShell = with pkgs;
+      in
+      {
+        devShell =
+          with pkgs;
           mkShell {
             ANDROID_SDK_ROOT = "${androidSdk}/libexec/android-sdk";
             FLUTTER_ROOT = flutter;
-            buildInputs = [ androidSdk flutter ];
+            buildInputs = [
+              androidSdk
+              flutter
+            ];
           };
-      });
+      }
+    );
 }
