@@ -16,6 +16,31 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 2.0.0 · 2026-08-26
+
+### ⚠️ BREAKING CHANGES
+
+- remove shake-to-open support ([`ce6c9c2`](https://github.com/JonasWanke/debug_overlay/commit/ce6c9c2cf55d2736685b94ca6363c741b44bfaae))
+  - `shake_detector` uses very outdated dependencies and doesn't support all platforms. You can still implement your own shake-to-open logic.
+  - drop the `shake_detector` dependency
+  - remove `DebugOverlay`'s/`DebugOverlay.builder`'s `showOnShake` and `createShakeDetector` parameters — call `DebugOverlay.show()` to open the overlay instead
+
+### ⚡ Changes
+
+- `MediaQueryDebugHelper`: show `textScaler` instead of the deprecated `textScaleFactor` ([`1f50a7e`](https://github.com/JonasWanke/debug_overlay/commit/1f50a7e9f189f0224c9ee634a2a3cf3f9fbb6a9a))
+
+### 🐛 Bug Fixes
+
+- add missing string to `FlagProperty` for `enableOnlyInDebugMode` ([`a8c1655`](https://github.com/JonasWanke/debug_overlay/commit/a8c165561053a994140e9547ed0d1b0adf5a1bac))
+
+### 📦 Build & CI
+
+- update to Flutter `>=3.47.0` and Dart `^3.13.0` ([`7796d5e`](https://github.com/JonasWanke/debug_overlay/commit/7796d5e437d84896ef5f503b7b8ffeff936b8084), [`db72472`](https://github.com/JonasWanke/debug_overlay/commit/db72472341cf23258dffa08faa9cf50f0c9befba))
+- update `device_info_plus` to `^13.0.0`, `package_info_plus` to `^10.0.0` ([`e342c0d`](https://github.com/JonasWanke/debug_overlay/commit/e342c0d3986f71c003303aa6c2f95d2ecc8a2ae8))
+- update `supernova_lints` and use dot-shorthands & primary constructors throughout ([`540a976`](https://github.com/JonasWanke/debug_overlay/commit/540a97627b202d78562555abe0d58c93382b5157), [`1bf689e`](https://github.com/JonasWanke/debug_overlay/commit/1bf689e0d4253d19aad750936c7c6e97f53e33e2), [`74d9de7`](https://github.com/JonasWanke/debug_overlay/commit/74d9de78ca82420ad82ccfc113c1067053062db8))
+- CI: add `workflow_dispatch` trigger, re-enable Flutter beta in example CI, and update `actions/setup-java` to v6 ([`4a8ddfc`](https://github.com/JonasWanke/debug_overlay/commit/4a8ddfc9b9932920bdcea575f21c704507d6e5e9), [`e912204`](https://github.com/JonasWanke/debug_overlay/commit/e9122048b2e9bf3b145c6b6f0df2d334b22c490d), [`1bbfe6b`](https://github.com/JonasWanke/debug_overlay/commit/1bbfe6b79da95d9cb004568faa9506599d91ae25))
+- re-generate the example app's Android platform directory (Groovy → Kotlin DSL Gradle files) ([`9290fc4`](https://github.com/JonasWanke/debug_overlay/commit/9290fc45fb20099c7fe7c64bcf4878b1d7c1bf82))
+
 ## 1.0.0 · 2024-12-22
 
 ### ⚠️ BREAKING CHANGES

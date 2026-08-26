@@ -1,6 +1,6 @@
 name: debug_overlay
 description: View debug infos and change settings via a central overlay for your app.
-version: 1.0.0
+version: 2.0.0
 repository: https://github.com/JonasWanke/debug_overlay
 screenshots:
   - description: DeviceInfoDebugHelper
