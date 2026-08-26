@@ -9,9 +9,12 @@ import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
 import 'helpers/package_info.dart';
 
-class DebugOverlay extends StatefulWidget {
-  DebugOverlay({required this.child, this.enableOnlyInDebugMode = true})
-    : super(key: DebugOverlayState.key);
+// ignore: prefer_const_constructors_in_immutables
+class DebugOverlay({
+  required final Widget? child,
+  final bool enableOnlyInDebugMode = true,
+}) extends StatefulWidget {
+  this : super(key: DebugOverlayState.key);
 
   static final helpers = ValueNotifier<List<Widget>>([
     if (kDebugMode) ...[
@@ -59,10 +62,6 @@ class DebugOverlay extends StatefulWidget {
 
   static void show() => DebugOverlayState.key.currentState!.show();
   static void hide() => DebugOverlayState.key.currentState!.hide();
-
-  final Widget? child;
-
-  final bool enableOnlyInDebugMode;
 
   @override
   DebugOverlayState createState() => DebugOverlayState();
@@ -140,12 +139,11 @@ class DebugOverlayState extends State<DebugOverlay> {
   }
 }
 
-class DebugOverlayContent extends StatelessWidget {
-  const DebugOverlayContent({super.key, this.scrollController, this.onClose});
-
-  final ScrollController? scrollController;
-  final VoidCallback? onClose;
-
+class const DebugOverlayContent({
+  super.key,
+  final ScrollController? scrollController,
+  final VoidCallback? onClose,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
@@ -191,12 +189,10 @@ class DebugOverlayContent extends StatelessWidget {
   }
 }
 
-class _ScaledTopViewPadding extends StatelessWidget {
-  const _ScaledTopViewPadding({required this.progress, required this.child});
-
-  final double progress;
-  final Widget child;
-
+class const _ScaledTopViewPadding({
+  required final double progress,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = context.mediaQuery;

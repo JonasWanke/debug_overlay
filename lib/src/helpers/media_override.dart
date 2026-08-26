@@ -4,12 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../debug_helper.dart';
 
-class MediaOverrideState {
-  MediaOverrideState({this.themeMode, this.locale});
-
-  final ThemeMode? themeMode;
-  final Locale? locale;
-
+class MediaOverrideState({final ThemeMode? themeMode, final Locale? locale}) {
   MediaOverrideState copyWith({
     ThemeMode? themeMode,
     bool clearThemeMode = false,
@@ -26,20 +21,15 @@ class MediaOverrideState {
   }
 }
 
-class MediaOverrideDebugHelper extends StatefulWidget {
-  const MediaOverrideDebugHelper(
-    this.state, {
-    super.key,
-    this.supportedLocales,
-  });
-
-  final ValueNotifier<MediaOverrideState> state;
-
-  final List<Locale>? supportedLocales;
-
+class const MediaOverrideDebugHelper(
+  final ValueNotifier<MediaOverrideState> state, {
+  super.key,
+  final List<Locale>? supportedLocales,
+}) extends StatefulWidget {
   @override
   State<MediaOverrideDebugHelper> createState() =>
       _MediaOverrideDebugHelperState();
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -70,8 +60,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
 
   ThemeMode? themeMode;
   Widget _buildThemeModeOverride(MediaOverrideState currentState) {
-    themeMode ??=
-        context.theme.brightness.isLight ? ThemeMode.light : ThemeMode.dark;
+    themeMode ??= context.theme.brightness.isLight ? .light : .dark;
 
     return CheckboxListTile(
       title: const Text('Theme Mode'),
@@ -97,7 +86,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
         children: [
           for (final themeMode in ThemeMode.values)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const .symmetric(horizontal: 4),
               child: Text(_themeModeToString(themeMode)),
             ),
         ],

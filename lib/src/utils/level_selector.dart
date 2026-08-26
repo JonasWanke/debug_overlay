@@ -1,16 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class DiagnosticLevelSelector extends StatelessWidget {
-  const DiagnosticLevelSelector({
-    super.key,
-    required this.value,
-    required this.onSelected,
-  });
-
-  final DiagnosticLevel value;
-  final ValueSetter<DiagnosticLevel> onSelected;
-
+class const DiagnosticLevelSelector({
+  super.key,
+  required final DiagnosticLevel value,
+  required final ValueSetter<DiagnosticLevel> onSelected,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(

@@ -12,18 +12,12 @@ import '../../debug_helper.dart';
 import '../../utils/level_selector.dart';
 import 'data.dart';
 
-class LogsDebugHelper extends StatefulWidget {
-  const LogsDebugHelper(
-    this.logs, {
-    super.key,
-    this.initialMinLevel = .debug,
-    this.title = const Text('Logs'),
-  });
-
-  final LogCollection logs;
-  final DiagnosticLevel initialMinLevel;
-  final Widget title;
-
+class const LogsDebugHelper(
+  final LogCollection logs, {
+  super.key,
+  final DiagnosticLevel initialMinLevel = .debug,
+  final Widget title = const Text('Logs'),
+}) extends StatefulWidget {
   @override
   State<LogsDebugHelper> createState() => _LogsDebugHelperState();
 
@@ -107,10 +101,9 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
   }
 }
 
-class LogEntryWidget extends StatelessWidget {
-  LogEntryWidget(this.log) : super(key: ValueKey(log));
-
-  final Log log;
+// ignore: prefer_const_constructors_in_immutables
+class LogEntryWidget(final Log log) extends StatelessWidget {
+  this : super(key: ValueKey(log));
 
   @override
   Widget build(BuildContext context) {
@@ -327,21 +320,13 @@ String _stringify(Object object) {
   return describeIdentity(object);
 }
 
-class _LogEntryLine extends StatelessWidget {
-  const _LogEntryLine({
-    this.onTap,
-    required this.onLongPress,
-    required this.leading,
-    required this.title,
-    this.trailing,
-  });
-
-  final VoidCallback? onTap;
-  final VoidCallback onLongPress;
-  final Widget leading;
-  final Widget title;
-  final Widget? trailing;
-
+class const _LogEntryLine({
+  final VoidCallback? onTap,
+  required final VoidCallback onLongPress,
+  required final Widget leading,
+  required final Widget title,
+  final Widget? trailing,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = IconTheme.merge(
@@ -378,21 +363,13 @@ class _LogEntryLine extends StatelessWidget {
 
 // Based on [ExpansionTile]
 
-class _ExpansionTile extends StatefulWidget {
-  const _ExpansionTile({
-    required this.onLongPress,
-    required this.leading,
-    required this.title,
-    required this.child,
-    this.isInitiallyExpanded = false,
-  });
-
-  final VoidCallback onLongPress;
-  final Widget leading;
-  final Widget title;
-  final Widget child;
-  final bool isInitiallyExpanded;
-
+class const _ExpansionTile({
+  required final VoidCallback onLongPress,
+  required final Widget leading,
+  required final Widget title,
+  required final Widget child,
+  final bool isInitiallyExpanded = false,
+}) extends StatefulWidget {
   @override
   State<_ExpansionTile> createState() => _ExpansionTileState();
   @override

@@ -1,26 +1,25 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-class Log with Diagnosticable {
-  Log({
-    this.level = .info,
-    DateTime? timestamp,
-    required this.message,
-    this.error,
-    this.stackTrace,
-  }) : assert(
-         level != .off,
-         '`DiagnosticLevel.off` is a "[special] level indicating that no '
-         'diagnostics should be shown" and should not be used as a value.',
-       ),
-       assert(timestamp == null || !timestamp.isUtc),
-       timestamp = timestamp ?? DateTime.now();
+class Log({
+  final DiagnosticLevel level = .info,
+  DateTime? timestamp,
+  required final String message,
+  final dynamic error,
+  final StackTrace? stackTrace,
+}) with Diagnosticable {
+  this
+    : assert(
+        // ignore: avoid-unused-parameters
+        level != .off,
+        '`DiagnosticLevel.off` is a "[special] level indicating that no '
+        'diagnostics should be shown" and should not be used as a value.',
+      ),
+      // ignore: avoid-unused-parameters
+      assert(timestamp == null || !timestamp.isUtc),
+      timestamp = timestamp ?? DateTime.now();
 
-  final DiagnosticLevel level;
   final DateTime timestamp;
-  final String message;
-  final dynamic error;
-  final StackTrace? stackTrace;
 
   @override
   int get hashCode => Object.hash(level, timestamp, message, error, stackTrace);
@@ -46,12 +45,12 @@ class Log with Diagnosticable {
   }
 }
 
-class LogCollection {
-  LogCollection({
-    this._maximumSize = 500,
-    this.onlyStoreLogsInDebugMode = true,
-  });
+class LogCollection({
+  this._maximumSize = 500,
 
+  /// Whether to only store logs in debug mode.
+  final bool onlyStoreLogsInDebugMode = true,
+}) {
   final _logs = ValueNotifier(<Log>[]);
   ValueListenable<List<Log>> get listenable => _logs;
   List<Log> get logs => listenable.value;
@@ -70,9 +69,6 @@ class LogCollection {
       _logs.value = logs.sublist(logs.length - value, logs.length);
     }
   }
-
-  /// Whether to only store logs in debug mode.
-  final bool onlyStoreLogsInDebugMode;
 
   void add(Log log) {
     if (onlyStoreLogsInDebugMode && !kDebugMode) return;

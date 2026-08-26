@@ -3,9 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../debug_helper.dart';
 
-class MediaQueryDebugHelper extends StatelessWidget {
-  const MediaQueryDebugHelper({super.key});
-
+class const MediaQueryDebugHelper({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(

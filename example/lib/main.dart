@@ -17,8 +17,10 @@ final logs = LogCollection(
 );
 final mediaOverrideState = ValueNotifier(MediaOverrideState());
 
-final supportedLocales =
-    kMaterialSupportedLanguages.sortedBy((it) => it).map(Locale.new).toList();
+final supportedLocales = kMaterialSupportedLanguages
+    .sortedBy((it) => it)
+    .map(Locale.new)
+    .toList();
 
 void main() {
   if (kDebugMode) {
@@ -37,42 +39,36 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class const MyApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // To use the [MediaOverrideDebugHelper], wrap your app in a
     // [ValueListenableBuilder] to access the overridden values:
     return ValueListenableBuilder(
       valueListenable: mediaOverrideState,
-      builder: (context, overrideState, child) {
-        return MaterialApp(
-          title: '🐛 debug_overlay example',
+      builder: (context, overrideState, child) => MaterialApp(
+        title: '🐛 debug_overlay example',
 
-          // You can access overridden values via [overrideState]:
-          themeMode: overrideState.themeMode,
-          locale: overrideState.locale,
+        // You can access overridden values via [overrideState]:
+        themeMode: overrideState.themeMode,
+        locale: overrideState.locale,
 
-          // This creates the actual [DebugOverlay] (only in debug mode; not in
-          // profile oder release mode).
-          builder: DebugOverlay.builder(),
+        // This creates the actual [DebugOverlay] (only in debug mode; not in
+        // profile oder release mode).
+        builder: DebugOverlay.builder(),
 
-          // And the usual customization:
-          supportedLocales: supportedLocales,
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          home: const HomePage(),
-        );
-      },
+        // And the usual customization:
+        supportedLocales: supportedLocales,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        home: const HomePage(),
+      ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
+class const HomePage({super.key}) extends StatelessWidget {
   static final _random = Random();
 
   @override
@@ -87,10 +83,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 4),
             Text('Locale: ${context.locale}'),
             const SizedBox(height: 16),
-            TextButton(
-              onPressed: _createLog,
-              child: const Text('Add log'),
-            ),
+            TextButton(onPressed: _createLog, child: const Text('Add log')),
             const SizedBox(height: 16),
             const ElevatedButton(
               onPressed: DebugOverlay.show,
