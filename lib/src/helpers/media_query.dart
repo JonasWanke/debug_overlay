@@ -30,12 +30,7 @@ class MediaQueryDebugHelper extends StatelessWidget {
         data.devicePixelRatio,
         defaultValue: 1,
       ),
-      DoubleProperty(
-        'Text Scale Factor',
-        // ignore: deprecated_member_use
-        data.textScaleFactor,
-        defaultValue: 1,
-      ),
+      StringProperty('Text Scaler', data.textScaler.toString()),
       EnumProperty('Platform Brightness', data.platformBrightness),
       DiagnosticsProperty(
         'Padding',
