@@ -10,7 +10,6 @@ class MediaQueryDebugHelper extends StatelessWidget {
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
       title: const Text('MediaQuery'),
-      // ignore: discarded_futures, https://github.com/dart-lang/linter/issues/3429
       diagnosticsStream: _getDiagnostics(context).asStream(),
     );
   }
@@ -83,11 +82,7 @@ class MediaQueryDebugHelper extends StatelessWidget {
         value: data.disableAnimations,
         ifTrue: 'Disable animations',
       ),
-      FlagProperty(
-        'Bold Text',
-        value: data.boldText,
-        ifTrue: 'Use bold text',
-      ),
+      FlagProperty('Bold Text', value: data.boldText, ifTrue: 'Use bold text'),
       EnumProperty(
         'Navigation Mode',
         data.navigationMode,

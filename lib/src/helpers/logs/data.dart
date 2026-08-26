@@ -8,13 +8,13 @@ class Log with Diagnosticable {
     required this.message,
     this.error,
     this.stackTrace,
-  })  : assert(
-          level != DiagnosticLevel.off,
-          '`DiagnosticLevel.off` is a "[special] level indicating that no '
-          'diagnostics should be shown" and should not be used as a value.',
-        ),
-        assert(timestamp == null || !timestamp.isUtc),
-        timestamp = timestamp ?? DateTime.now();
+  }) : assert(
+         level != DiagnosticLevel.off,
+         '`DiagnosticLevel.off` is a "[special] level indicating that no '
+         'diagnostics should be shown" and should not be used as a value.',
+       ),
+       assert(timestamp == null || !timestamp.isUtc),
+       timestamp = timestamp ?? DateTime.now();
 
   final DiagnosticLevel level;
   final DateTime timestamp;
@@ -48,9 +48,9 @@ class Log with Diagnosticable {
 
 class LogCollection {
   LogCollection({
-    int? maximumSize = 500,
+    this._maximumSize = 500,
     this.onlyStoreLogsInDebugMode = true,
-  }) : _maximumSize = maximumSize;
+  });
 
   final _logs = ValueNotifier(<Log>[]);
   ValueListenable<List<Log>> get listenable => _logs;

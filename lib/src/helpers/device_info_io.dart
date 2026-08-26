@@ -31,19 +31,16 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
         ),
         StringProperty(
           'Supported 32-Bit ABIs',
-          info.supported32BitAbis.nonNulls.join(', '),
+          info.supported32BitAbis.join(', '),
         ),
         StringProperty(
           'Supported 64-Bit ABIs',
-          info.supported64BitAbis.nonNulls.join(', '),
+          info.supported64BitAbis.join(', '),
         ),
-        StringProperty(
-          'Supported ABIs',
-          info.supportedAbis.nonNulls.join(', '),
-        ),
+        StringProperty('Supported ABIs', info.supportedAbis.join(', ')),
         StringProperty(
           'System Features',
-          info.systemFeatures.nonNulls.join(', '),
+          info.systemFeatures.join(', '),
           level: DiagnosticLevel.fine,
         ),
       ],
@@ -87,21 +84,13 @@ Future<List<DiagnosticsNode>> _getDiagnosticsAndroid() async {
           ifTrue: 'Running on a physical device',
           ifFalse: 'Running on an emulator or unknown device',
         ),
-        StringProperty(
-          'Board',
-          info.board,
-          level: DiagnosticLevel.fine,
-        ),
+        StringProperty('Board', info.board, level: DiagnosticLevel.fine),
         StringProperty('Manufacturer', info.manufacturer),
         StringProperty('Brand', info.brand),
         StringProperty('Product', info.product),
         StringProperty('Device', info.device),
         StringProperty('Model', info.model),
-        StringProperty(
-          'Display',
-          info.display,
-          level: DiagnosticLevel.fine,
-        ),
+        StringProperty('Display', info.display, level: DiagnosticLevel.fine),
         StringProperty('Bootloader', info.bootloader),
         StringProperty('Hardware', info.hardware),
         StringProperty('Hostname', info.host),
@@ -164,8 +153,9 @@ Future<List<DiagnosticsNode>> _getDiagnosticsWindows() async {
     // The getter says megabytes, but it's actually mebibytes…
     StringProperty(
       'Memory Size',
-      (info.systemMemoryInMegabytes * 1024 * 1024)
-          .formatByteSize(prefix: Prefix.binary),
+      (info.systemMemoryInMegabytes * 1024 * 1024).formatByteSize(
+        prefix: Prefix.binary,
+      ),
     ),
   ];
 }

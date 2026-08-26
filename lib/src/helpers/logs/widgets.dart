@@ -60,8 +60,7 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
       actions: [
         IconButton(
           tooltip: 'Copy logs',
-          onPressed: () async =>
-              _copyLogsToClipboard(context, widget.logs.logs),
+          onPressed: () => _copyLogsToClipboard(context, widget.logs.logs),
           icon: const Icon(Icons.copy_outlined),
         ),
         IconButton(
@@ -86,15 +85,18 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
                   'No logs available.',
                   style: context.textTheme.bodySmall!.copyWith(
                     color: context
-                        .theme.scaffoldBackgroundColor.mediumEmphasisOnColor,
+                        .theme
+                        .scaffoldBackgroundColor
+                        .mediumEmphasisOnColor,
                   ),
                 ),
               ),
             );
           }
 
-          var filteredLogs =
-              logs.where((it) => it.level.index >= _minLevel.index).toList();
+          var filteredLogs = logs
+              .where((it) => it.level.index >= _minLevel.index)
+              .toList();
           if (!_isOldestFirst) {
             filteredLogs = filteredLogs.reversed.toList();
           }
@@ -146,14 +148,14 @@ class LogEntryWidget extends StatelessWidget {
 
     if (log.error == null && log.stackTrace == null) {
       return _LogEntryLine(
-        onLongPress: () async => _copyLogsToClipboard(context, [log]),
+        onLongPress: () => _copyLogsToClipboard(context, [log]),
         leading: icon,
         title: title,
       );
     }
 
     return _ExpansionTile(
-      onLongPress: () async => _copyLogsToClipboard(context, [log]),
+      onLongPress: () => _copyLogsToClipboard(context, [log]),
       leading: icon,
       title: title,
       isInitiallyExpanded: log.level.index >= DiagnosticLevel.error.index,
@@ -235,8 +237,9 @@ Future<void> _copyLogsToClipboard(BuildContext context, List<Log> logs) async {
   );
   if (!context.mounted) return;
 
-  context.scaffoldMessenger
-      .showSnackBar(const SnackBar(content: Text('Copied!')));
+  context.scaffoldMessenger.showSnackBar(
+    const SnackBar(content: Text('Copied!')),
+  );
 }
 
 extension on Log {
@@ -256,7 +259,6 @@ dynamic _errorToJsonListOrMap(dynamic error) {
     }
 
     try {
-      // ignore: avoid_dynamic_calls
       (object as dynamic).toJson();
       return true;
     } catch (_) {}
@@ -267,7 +269,6 @@ dynamic _errorToJsonListOrMap(dynamic error) {
     if (object is List || object is Map) return isJson(object);
 
     try {
-      // ignore: avoid_dynamic_calls
       return isJsonListOrMap((object as dynamic).toJson());
     } catch (_) {}
     return false;
@@ -290,7 +291,6 @@ dynamic _errorToJsonListOrMap(dynamic error) {
     }
 
     try {
-      // ignore: avoid_dynamic_calls
       return toJson((object as dynamic).toJson());
     } catch (_) {}
     try {
@@ -307,7 +307,6 @@ String _stringify(Object object) {
   if (object is DiagnosticsNode) return object.toStringDeep();
 
   try {
-    // ignore: avoid_dynamic_calls
     (object as dynamic).toJson();
     // It supports `toJson()`.
 
@@ -418,13 +417,17 @@ class _ExpansionTileState extends State<_ExpansionTile>
 
   final _borderTween = ShapeBorderTween();
 
-  late final _animationController =
-      AnimationController(duration: _kExpand, vsync: this);
-  late final _iconTurns =
-      _animationController.drive(_halfTween.chain(_easeInTween));
+  late final _animationController = AnimationController(
+    duration: _kExpand,
+    vsync: this,
+  );
+  late final _iconTurns = _animationController.drive(
+    _halfTween.chain(_easeInTween),
+  );
   late final _heightFactor = _animationController.drive(_easeInTween);
-  late final _border =
-      _animationController.drive(_borderTween.chain(_easeOutTween));
+  late final _border = _animationController.drive(
+    _borderTween.chain(_easeOutTween),
+  );
 
   var _isExpanded = false;
 
@@ -432,7 +435,8 @@ class _ExpansionTileState extends State<_ExpansionTile>
   void initState() {
     super.initState();
 
-    _isExpanded = PageStorage.maybeOf(context)?.readState(context) as bool? ??
+    _isExpanded =
+        PageStorage.maybeOf(context)?.readState(context) as bool? ??
         widget.isInitiallyExpanded;
     if (_isExpanded) _animationController.value = 1.0;
   }
