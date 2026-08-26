@@ -15,11 +15,7 @@ MaterialApp(
 
 > The debug overlay only works in debug mode and is not included in your widget tree in profile or release mode unless you pass `enableOnlyInDebugMode: false`.
 
-There are two ways to open the debug overlay:
-
-- Shake your phone!
-  (You can disable the shake detection by passing `showOnShake: false` to `DebugOverlay.builder`.)
-- Call `DebugOverlay.show()`.
+To open the overlay, call `DebugOverlay.show()`.
 
 By default, this overlay includes `MediaQueryDebugHelper`, `PackageInfoDebugHelper`, and `DeviceInfoDebugHelper`.
 
@@ -129,7 +125,7 @@ This allows you to override the theme mode and locale of your app. To use it, fo
          themeMode: overrideState.themeMode,
          locale: overrideState.locale,
 
-         builder: DebugOverlay.builder(showOnShake: false),
+         builder: DebugOverlay.builder(),
          supportedLocales: supportedLocales,
 
          // And your other customizations...

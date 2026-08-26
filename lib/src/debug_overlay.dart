@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shake_detector/shake_detector.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'helpers/device_info.dart';
@@ -11,12 +10,8 @@ import 'helpers/media_query.dart';
 import 'helpers/package_info.dart';
 
 class DebugOverlay extends StatefulWidget {
-  DebugOverlay({
-    required this.child,
-    this.showOnShake = true,
-    this.createShakeDetector = _defaultCreateShakeDetector,
-    this.enableOnlyInDebugMode = true,
-  }) : super(key: DebugOverlayState.key);
+  DebugOverlay({required this.child, this.enableOnlyInDebugMode = true})
+    : super(key: DebugOverlayState.key);
 
   static final helpers = ValueNotifier<List<Widget>>([
     if (kDebugMode) ...[
@@ -36,9 +31,6 @@ class DebugOverlay extends StatefulWidget {
     helpers.value = [...helpers.value, debugHelper];
   }
 
-  static ShakeDetector _defaultCreateShakeDetector(VoidCallback onShake) =>
-      ShakeDetector.waitForStart(onShake: onShake);
-
   /// In debug mode, this returns a builder to add a [DebugOverlay] to your app.
   ///
   /// In profile and release builds, the returned builder doesn't add any
@@ -55,20 +47,13 @@ class DebugOverlay extends StatefulWidget {
   /// )
   /// ```
   ///
-  /// You can open the overlay by shaking your phone (if [showOnShake] is
-  /// `true`) or by calling [show] or [hide].
-  static TransitionBuilder builder({
-    bool showOnShake = true,
-    ShakeDetectorCreator createShakeDetector = _defaultCreateShakeDetector,
-    bool enableOnlyInDebugMode = true,
-  }) {
+  /// You can open the overlay by calling [show] or [hide].
+  static TransitionBuilder builder({bool enableOnlyInDebugMode = true}) {
     return kDebugMode || !enableOnlyInDebugMode
         ? (context, child) => DebugOverlay(
-              showOnShake: showOnShake,
-              createShakeDetector: createShakeDetector,
-              enableOnlyInDebugMode: enableOnlyInDebugMode,
-              child: child,
-            )
+            enableOnlyInDebugMode: enableOnlyInDebugMode,
+            child: child,
+          )
         : (context, child) => child ?? const SizedBox();
   }
 
@@ -77,8 +62,6 @@ class DebugOverlay extends StatefulWidget {
 
   final Widget? child;
 
-  final bool showOnShake;
-  final ShakeDetectorCreator createShakeDetector;
   final bool enableOnlyInDebugMode;
 
   @override
@@ -86,67 +69,20 @@ class DebugOverlay extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('showOnShake', showOnShake))
-      ..add(ObjectFlagProperty.has('createShakeDetector', createShakeDetector))
-      ..add(
-        FlagProperty(
-          'enableOnlyInDebugMode',
-          value: enableOnlyInDebugMode,
-          ifTrue: 'enabled only in debug mode',
-        ),
-      );
+    properties.add(
+      FlagProperty(
+        'enableOnlyInDebugMode',
+        value: enableOnlyInDebugMode,
+        ifTrue: 'enabled only in debug mode',
+      ),
+    );
   }
 }
-
-typedef ShakeDetectorCreator = ShakeDetector Function(VoidCallback onShake);
 
 class DebugOverlayState extends State<DebugOverlay> {
   static final key = GlobalKey<DebugOverlayState>();
 
-  ShakeDetector? _shakeDetector;
   bool _isVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.showOnShake) _configureShakeDetector();
-  }
-
-  @override
-  void didUpdateWidget(DebugOverlay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!oldWidget.showOnShake && widget.showOnShake) {
-      _configureShakeDetector();
-    } else if (oldWidget.showOnShake && !widget.showOnShake) {
-      assert(_shakeDetector != null);
-      _disposeShakeDetector();
-    } else if (widget.showOnShake &&
-        oldWidget.createShakeDetector != widget.createShakeDetector) {
-      assert(_shakeDetector != null);
-      _disposeShakeDetector();
-      _configureShakeDetector();
-    }
-  }
-
-  void _configureShakeDetector() {
-    assert(widget.showOnShake);
-    assert(_shakeDetector == null);
-
-    _shakeDetector ??= widget.createShakeDetector(show);
-    _shakeDetector!.startListening();
-  }
-
-  @override
-  void dispose() {
-    _disposeShakeDetector();
-    super.dispose();
-  }
-
-  void _disposeShakeDetector() {
-    _shakeDetector?.stopListening();
-    _shakeDetector = null;
-  }
 
   void show() => setState(() => _isVisible = true);
   void hide() => setState(() => _isVisible = false);
@@ -155,8 +91,8 @@ class DebugOverlayState extends State<DebugOverlay> {
   Widget build(BuildContext context) {
     final bottomSheet =
         _isVisible && (kDebugMode || !widget.enableOnlyInDebugMode)
-            ? _buildBottomSheet()
-            : null;
+        ? _buildBottomSheet()
+        : null;
     return Stack(
       children: [
         if (widget.child != null) widget.child!,
@@ -188,8 +124,11 @@ class DebugOverlayState extends State<DebugOverlay> {
             onGenerateRoute: (settings) => MaterialPageRoute<void>(
               settings: settings,
               builder: (context) => _ScaledTopViewPadding(
-                progress: const Interval(0.7, 1, curve: Curves.easeIn)
-                    .transform(_extent),
+                progress: const Interval(
+                  0.7,
+                  1,
+                  curve: Curves.easeIn,
+                ).transform(_extent),
                 child: drawer,
               ),
             ),
@@ -227,7 +166,8 @@ class DebugOverlayContent extends StatelessWidget {
           controller: scrollController,
           slivers: [
             SliverPadding(
-              padding: context.mediaQuery.viewPadding +
+              padding:
+                  context.mediaQuery.viewPadding +
                   const EdgeInsets.only(bottom: 16),
               sliver: MultiSliver(
                 children: [
@@ -262,8 +202,9 @@ class _ScaledTopViewPadding extends StatelessWidget {
     final data = context.mediaQuery;
     return MediaQuery(
       data: data.copyWith(
-        viewPadding: data.viewPadding
-            .copyWith(top: lerpDouble(0, data.viewPadding.top, progress)!),
+        viewPadding: data.viewPadding.copyWith(
+          top: lerpDouble(0, data.viewPadding.top, progress)!,
+        ),
       ),
       child: child,
     );
