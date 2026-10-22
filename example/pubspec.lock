@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "2.13.1"
   black_hole_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: black_hole_flutter
       sha256: b8f0d6816f38da96c1c781770813b530f72294b2ee3f222827d6da668ac24f67
@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "1.1.3"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
@@ -176,7 +176,7 @@ packages:
     source: hosted
     version: "0.13.0"
   material_ui:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: material_ui
       sha256: e4031746f96c8316864d9b92bce375f1320a36ed56e166307e1e1bda9d90b4ab

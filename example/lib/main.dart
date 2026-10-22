@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_redundant_argument_values
-// ignore_for_file: depend_on_referenced_packages
 
 import 'dart:math';
 
@@ -7,8 +6,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:collection/collection.dart';
 import 'package:debug_overlay/debug_overlay.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 final logs = LogCollection(
   // Default values:

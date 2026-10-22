@@ -6,12 +6,15 @@ environment:
   flutter: '>=3.47.0'
 
 dependencies:
+  black_hole_flutter: ^2.0.0
+  collection: ^1.19.1
   debug_overlay:
     path: ../
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  material_ui: ^1.8.0
 
 dev_dependencies:
   supernova_lints:
