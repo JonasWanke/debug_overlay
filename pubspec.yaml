@@ -19,7 +19,7 @@ environment:
   flutter: '>=3.47.0'
 
 dependencies:
-  black_hole_flutter: ^1.0.3
+  black_hole_flutter: ^2.0.0
   collection: ^1.15.0
   data_size: ^0.2.0
   device_info_plus: ^13.0.0
