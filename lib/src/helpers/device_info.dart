@@ -14,7 +14,6 @@ class const DeviceInfoDebugHelper({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
-      title: const Text('Device Info'),
       diagnosticsStream: getDiagnostics().asStream(),
     );
   }

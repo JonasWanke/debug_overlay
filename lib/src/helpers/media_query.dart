@@ -14,7 +14,6 @@ class const MediaQueryDebugHelper({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
-      title: const Text('MediaQuery'),
       diagnosticsStream: _getDiagnostics(context).asStream(),
     );
   }

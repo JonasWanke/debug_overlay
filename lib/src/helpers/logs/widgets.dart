@@ -17,21 +17,15 @@ class const LogsDebugHelper(
   final LogCollection logs, {
   super.key,
   final DiagnosticLevel initialMinLevel = .debug,
-  final Widget title = const Text('Logs'),
 }) extends StatefulWidget {
   static DebugTool tool(
     LogCollection logs, {
     DiagnosticLevel initialMinLevel = .debug,
-    Widget title = const Text('Logs'),
   }) {
     return DebugTool(
       icon: Icons.list_alt,
       title: 'Logs',
-      sliver: LogsDebugHelper(
-        logs,
-        initialMinLevel: initialMinLevel,
-        title: title,
-      ),
+      sliver: LogsDebugHelper(logs, initialMinLevel: initialMinLevel),
     );
   }
 
@@ -64,7 +58,6 @@ class _LogsDebugHelperState extends State<LogsDebugHelper> {
     );
 
     return DebugHelper(
-      title: widget.title,
       actions: [
         IconButton(
           tooltip: 'Copy logs',

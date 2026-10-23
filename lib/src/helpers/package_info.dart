@@ -15,7 +15,6 @@ class const PackageInfoDebugHelper({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
-      title: const Text('Package Info'),
       diagnosticsStream: _getDiagnostics().asStream(),
     );
   }

@@ -75,7 +75,7 @@ class const HomePage({super.key}) extends StatelessWidget {
       appBar: AppBar(title: const Text('🐛 debug_overlay example')),
       body: SizedBox.expand(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Text('Brightness: ${context.theme.brightness}'),
             const SizedBox(height: 4),

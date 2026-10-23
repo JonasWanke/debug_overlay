@@ -8,13 +8,14 @@ import 'utils/level_selector.dart';
 class DebugHelper extends StatelessWidget {
   const DebugHelper({
     super.key,
-    required this.title,
     this.actions = const [],
     required this.sliver,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16),
+    this.contentPadding = const .symmetric(horizontal: 16),
   });
 
-  final Widget title;
+  /// Buttons shown in a row above [sliver].
+  ///
+  /// If empty, no row is shown.
   final List<Widget> actions;
 
   final Widget sliver;
@@ -22,29 +23,15 @@ class DebugHelper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final header = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: DefaultTextStyle(
-              style: context.textTheme.titleMedium!,
-              child: title,
-            ),
-          ),
-          ...actions,
-        ],
-      ),
-    );
-
     return MultiSliver(
       children: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: header,
+        if (actions.isNotEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const .fromLTRB(16, 0, 16, 8),
+              child: Row(mainAxisAlignment: .end, children: actions),
+            ),
           ),
-        ),
         SliverPadding(padding: contentPadding, sliver: sliver),
       ],
     );
@@ -65,11 +52,9 @@ class DebugHelper extends StatelessWidget {
 class DiagnosticsBasedDebugHelper extends StatefulWidget {
   const DiagnosticsBasedDebugHelper({
     super.key,
-    required this.title,
     required this.diagnosticsStream,
   });
 
-  final Widget title;
   final Stream<List<DiagnosticsNode>> diagnosticsStream;
 
   @override
@@ -89,7 +74,6 @@ class _DiagnosticsBasedDebugHelperState
   @override
   Widget build(BuildContext context) {
     return DebugHelper(
-      title: widget.title,
       actions: [
         DiagnosticLevelSelector(
           value: _minLevel,

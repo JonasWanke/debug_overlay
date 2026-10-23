@@ -60,7 +60,6 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
     return ValueListenableBuilder(
       valueListenable: widget.state,
       builder: (context, currentState, _) => DebugHelper(
-        title: const Text('Media Overrides'),
         contentPadding: EdgeInsets.zero,
         sliver: SliverList.list(
           children: [

@@ -299,42 +299,52 @@ class _DebugOverlayContentState extends State<DebugOverlayContent> {
     int? selectedIndex,
   ) {
     final viewPadding = context.mediaQuery.viewPadding;
+    // Sliver content is painted over the header's shadow, so we use a
+    // different background color and a divider to separate it from the
+    // content below.
     return Material(
-      color: context.theme.scaffoldBackgroundColor,
-      child: Padding(
-        padding: .fromLTRB(
-          viewPadding.left + 8,
-          viewPadding.top + 4,
-          viewPadding.right + 8,
-          4,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: .horizontal,
-                child: Row(
-                  children: [
-                    for (final (index, tool) in tools.indexed)
-                      (index == selectedIndex
-                          ? IconButton.filledTonal
-                          : IconButton.new)(
-                        icon: Icon(tool.icon),
-                        tooltip: tool.title,
-                        onPressed: () => _select(tools, selectedIndex!, index),
-                      ),
-                  ],
-                ),
-              ),
+      color: context.theme.colorScheme.surfaceContainerHigh,
+      child: Column(
+        mainAxisSize: .min,
+        children: [
+          Padding(
+            padding: .fromLTRB(
+              viewPadding.left + 8,
+              viewPadding.top + 4,
+              viewPadding.right + 8,
+              4,
             ),
-            if (widget.onCollapse != null)
-              IconButton(
-                icon: const Icon(Icons.close_fullscreen),
-                tooltip: 'Collapse',
-                onPressed: widget.onCollapse,
-              ),
-          ],
-        ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: .horizontal,
+                    child: Row(
+                      children: [
+                        for (final (index, tool) in tools.indexed)
+                          (index == selectedIndex
+                              ? IconButton.filledTonal
+                              : IconButton.new)(
+                            icon: Icon(tool.icon),
+                            tooltip: tool.title,
+                            onPressed: () =>
+                                _select(tools, selectedIndex!, index),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (widget.onCollapse != null)
+                  IconButton(
+                    icon: const Icon(Icons.close_fullscreen),
+                    tooltip: 'Collapse',
+                    onPressed: widget.onCollapse,
+                  ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+        ],
       ),
     );
   }
