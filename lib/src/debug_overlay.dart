@@ -183,10 +183,17 @@ class _ExpandedSheetState extends State<_ExpandedSheet> {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         _extent.value = notification.extent;
+
+        // Dragging (or flinging) the sheet down to its minimum size collapses
+        // it into the bubble.
+        if (notification.extent <= notification.minExtent) {
+          DebugOverlay.collapse();
+        }
         return true;
       },
       child: DraggableScrollableSheet(
         initialChildSize: 0.4,
+        minChildSize: 0.15,
         builder: (context, scrollController) {
           final drawer = Material(
             elevation: 16,
