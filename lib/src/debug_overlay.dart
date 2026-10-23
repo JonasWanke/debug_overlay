@@ -11,6 +11,7 @@ import 'debug_tool.dart';
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
 import 'helpers/package_info.dart';
+import 'helpers/rendering.dart';
 
 /// How much of the [DebugOverlay] is visible.
 enum DebugOverlayMode {
@@ -42,6 +43,11 @@ class const DebugOverlay({
   /// [enableOnlyInDebugMode]).
   static final mode = ValueNotifier(DebugOverlayMode.closed);
 
+  /// Static so that it survives the overlay being remounted, e.g., when the
+  /// app wraps its content in an additional widget (like the performance
+  /// overlay does).
+  static final _selectedToolIndex = ValueNotifier(0);
+
   static void close() => mode.value = .closed;
   static void collapse() => mode.value = .collapsed;
   static void expand() => mode.value = .expanded;
@@ -54,6 +60,7 @@ class const DebugOverlay({
       PackageInfoDebugHelper.tool,
       DeviceInfoDebugHelper.tool,
     ],
+    RenderingDebugHelper.tool,
   ]);
 
   static void prependTool(DebugTool tool) {
@@ -114,13 +121,6 @@ class const DebugOverlay({
 
 class _DebugOverlayState extends State<DebugOverlay> {
   var _bubbleAlignment = const Alignment(1, -0.4);
-  final _selectedToolIndex = ValueNotifier(0);
-
-  @override
-  void dispose() {
-    _selectedToolIndex.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +146,9 @@ class _DebugOverlayState extends State<DebugOverlay> {
               ),
             if (mode == .expanded)
               Positioned.fill(
-                child: _ExpandedSheet(selectedToolIndex: _selectedToolIndex),
+                child: _ExpandedSheet(
+                  selectedToolIndex: DebugOverlay._selectedToolIndex,
+                ),
               ),
           ],
         ),
