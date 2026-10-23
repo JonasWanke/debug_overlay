@@ -78,7 +78,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
 
     return CheckboxListTile(
       title: const Text('Theme Mode'),
-      controlAffinity: ListTileControlAffinity.leading,
+      controlAffinity: .leading,
       value: currentState.themeMode != null,
       onChanged: (value) {
         widget.state.value = currentState.copyWith(
@@ -122,7 +122,7 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
 
     return CheckboxListTile(
       title: const Text('Locale'),
-      controlAffinity: ListTileControlAffinity.leading,
+      controlAffinity: .leading,
       value: currentState.locale != null,
       onChanged: (value) {
         widget.state.value = currentState.copyWith(
