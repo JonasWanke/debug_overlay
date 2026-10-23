@@ -5,16 +5,45 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+import 'debug_overlay_bubble.dart';
+import 'debug_overlay_trigger.dart';
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
 import 'helpers/package_info.dart';
 
-// ignore: prefer_const_constructors_in_immutables
-class DebugOverlay({
+/// How much of the [DebugOverlay] is visible.
+enum DebugOverlayMode {
+  /// Nothing is visible.
+  ///
+  /// The user can still open the overlay via the [DebugOverlayTrigger].
+  closed,
+
+  /// Only a draggable bubble is visible.
+  ///
+  /// Tapping it expands the overlay; dropping it onto the dismiss target closes
+  /// the overlay.
+  collapsed,
+
+  /// The sheet with all debug helpers is visible.
+  expanded,
+}
+
+class const DebugOverlay({
+  super.key,
   required final Widget? child,
+  final DebugOverlayTrigger trigger = const DebugOverlayTrigger(),
   final bool enableOnlyInDebugMode = true,
 }) extends StatefulWidget {
-  this : super(key: DebugOverlayState.key);
+  /// The current mode of the overlay.
+  ///
+  /// Starts as [DebugOverlayMode.closed]; set it before `runApp` to start in a
+  /// different mode. Has no visible effect if the overlay is disabled (see
+  /// [enableOnlyInDebugMode]).
+  static final mode = ValueNotifier(DebugOverlayMode.closed);
+
+  static void close() => mode.value = .closed;
+  static void collapse() => mode.value = .collapsed;
+  static void expand() => mode.value = .expanded;
 
   static final helpers = ValueNotifier<List<Widget>>([
     if (kDebugMode) ...[
@@ -50,58 +79,82 @@ class DebugOverlay({
   /// )
   /// ```
   ///
-  /// You can open the overlay by calling [show] or [hide].
-  static TransitionBuilder builder({bool enableOnlyInDebugMode = true}) {
+  /// The user can open the overlay using the [trigger]. You can also control
+  /// it via [mode], [close], [collapse], and [expand].
+  static TransitionBuilder builder({
+    DebugOverlayTrigger trigger = const DebugOverlayTrigger(),
+    bool enableOnlyInDebugMode = true,
+  }) {
     return kDebugMode || !enableOnlyInDebugMode
         ? (context, child) => DebugOverlay(
+            trigger: trigger,
             enableOnlyInDebugMode: enableOnlyInDebugMode,
             child: child,
           )
         : (context, child) => child ?? const SizedBox();
   }
 
-  static void show() => DebugOverlayState.key.currentState!.show();
-  static void hide() => DebugOverlayState.key.currentState!.hide();
-
   @override
-  DebugOverlayState createState() => DebugOverlayState();
+  State<DebugOverlay> createState() => _DebugOverlayState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      FlagProperty(
-        'enableOnlyInDebugMode',
-        value: enableOnlyInDebugMode,
-        ifTrue: 'enabled only in debug mode',
+    properties
+      ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(
+        FlagProperty(
+          'enableOnlyInDebugMode',
+          value: enableOnlyInDebugMode,
+          ifTrue: 'enabled only in debug mode',
+        ),
+      );
+  }
+}
+
+class _DebugOverlayState extends State<DebugOverlay> {
+  var _bubbleAlignment = const Alignment(1, -0.4);
+
+  @override
+  Widget build(BuildContext context) {
+    if (!(kDebugMode || !widget.enableOnlyInDebugMode)) {
+      return widget.child ?? const SizedBox();
+    }
+
+    return DebugOverlayTriggerDetector(
+      trigger: widget.trigger,
+      onTriggered: DebugOverlay.expand,
+      child: ValueListenableBuilder(
+        valueListenable: DebugOverlay.mode,
+        builder: (context, mode, _) => Stack(
+          children: [
+            ?widget.child,
+            if (mode == .collapsed)
+              Positioned.fill(
+                child: DebugOverlayBubble(
+                  alignment: _bubbleAlignment,
+                  onAlignmentChanged: (it) =>
+                      setState(() => _bubbleAlignment = it),
+                ),
+              ),
+            if (mode == .expanded)
+              const Positioned.fill(child: _ExpandedSheet()),
+          ],
+        ),
       ),
     );
   }
 }
 
-class DebugOverlayState extends State<DebugOverlay> {
-  static final key = GlobalKey<DebugOverlayState>();
+class const _ExpandedSheet() extends StatefulWidget {
+  @override
+  State<_ExpandedSheet> createState() => _ExpandedSheetState();
+}
 
-  bool _isVisible = false;
-
-  void show() => setState(() => _isVisible = true);
-  void hide() => setState(() => _isVisible = false);
+class _ExpandedSheetState extends State<_ExpandedSheet> {
+  double _extent = 0;
 
   @override
   Widget build(BuildContext context) {
-    final bottomSheet =
-        _isVisible && (kDebugMode || !widget.enableOnlyInDebugMode)
-        ? _buildBottomSheet()
-        : null;
-    return Stack(
-      children: [
-        if (widget.child != null) widget.child!,
-        if (bottomSheet != null) Positioned.fill(child: bottomSheet),
-      ],
-    );
-  }
-
-  double _extent = 0;
-  Widget _buildBottomSheet() {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         setState(() => _extent = notification.extent);
@@ -114,7 +167,7 @@ class DebugOverlayState extends State<DebugOverlay> {
             elevation: 16,
             child: DebugOverlayContent(
               scrollController: scrollController,
-              onClose: hide,
+              onCollapse: DebugOverlay.collapse,
             ),
           );
 
@@ -142,7 +195,7 @@ class DebugOverlayState extends State<DebugOverlay> {
 class const DebugOverlayContent({
   super.key,
   final ScrollController? scrollController,
-  final VoidCallback? onClose,
+  final VoidCallback? onCollapse,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -153,7 +206,14 @@ class const DebugOverlayContent({
       foregroundColor:
           context.theme.scaffoldBackgroundColor.highEmphasisOnColor,
       title: const Text('🐛 Debug Overlay'),
-      actions: [if (onClose != null) CloseButton(onPressed: onClose!)],
+      actions: [
+        if (onCollapse != null)
+          IconButton(
+            icon: const Icon(Icons.close_fullscreen),
+            tooltip: 'Collapse',
+            onPressed: onCollapse,
+          ),
+      ],
     );
 
     return Scaffold(
@@ -185,7 +245,7 @@ class const DebugOverlayContent({
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('scrollController', scrollController))
-      ..add(ObjectFlagProperty<VoidCallback?>.has('onClose', onClose));
+      ..add(ObjectFlagProperty<VoidCallback?>.has('onCollapse', onCollapse));
   }
 }
 

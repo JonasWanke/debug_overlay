@@ -15,7 +15,17 @@ MaterialApp(
 
 > The debug overlay only works in debug mode and is not included in your widget tree in profile or release mode unless you pass `enableOnlyInDebugMode: false`.
 
-To open the overlay, call `DebugOverlay.show()`.
+The overlay has three modes (`DebugOverlayMode`):
+
+- `closed`: Nothing is visible (the default).
+- `collapsed`: Only a draggable bubble is visible. Tap it to expand the overlay, or drag it onto the target at the bottom to close the overlay.
+- `expanded`: The sheet with all debug helpers is visible.
+
+To open the overlay, press and hold two fingers on the screen (or press <kbd>Alt</kbd> + <kbd>F12</kbd> on a platform with a keyboard).
+You can change or disable these triggers via `DebugOverlay.builder(trigger: ...)`, e.g., `DebugOverlayTrigger.none`.
+
+To control the overlay from code, use `DebugOverlay.expand()`, `DebugOverlay.collapse()`, and `DebugOverlay.close()`.
+You can read and listen to the current mode via `DebugOverlay.mode`, which is a `ValueNotifier` that you can also set before `runApp` to start in a different mode.
 
 By default, this overlay includes `MediaQueryDebugHelper`, `PackageInfoDebugHelper`, and `DeviceInfoDebugHelper`.
 

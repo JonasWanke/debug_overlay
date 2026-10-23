@@ -16,7 +16,7 @@ final logs = LogCollection(
 final mediaOverrideState = ValueNotifier(MediaOverrideState());
 
 final supportedLocales = kMaterialSupportedLanguages
-    .sortedBy((it) => it)
+    .sorted()
     .map(Locale.new)
     .toList();
 
@@ -84,8 +84,8 @@ class const HomePage({super.key}) extends StatelessWidget {
             TextButton(onPressed: _createLog, child: const Text('Add log')),
             const SizedBox(height: 16),
             const ElevatedButton(
-              onPressed: DebugOverlay.show,
-              child: Text('Show Debug Overlay'),
+              onPressed: DebugOverlay.expand,
+              child: Text('Expand Debug Overlay'),
             ),
           ],
         ),
