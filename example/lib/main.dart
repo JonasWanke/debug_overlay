@@ -22,8 +22,8 @@ final supportedLocales = kMaterialSupportedLanguages
 
 void main() {
   if (kDebugMode) {
-    DebugOverlay.prependHelper(
-      MediaOverrideDebugHelper(
+    DebugOverlay.prependTool(
+      MediaOverrideDebugHelper.tool(
         mediaOverrideState,
         // To support overriding locales, this value must be set and should
         // contain the same locales as passed to [MaterialApp.supportedLocales],
@@ -31,7 +31,7 @@ void main() {
         supportedLocales: supportedLocales,
       ),
     );
-    DebugOverlay.appendHelper(LogsDebugHelper(logs));
+    DebugOverlay.appendTool(LogsDebugHelper.tool(logs));
   }
 
   runApp(const MyApp());

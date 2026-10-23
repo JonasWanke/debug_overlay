@@ -7,6 +7,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 import 'debug_overlay_bubble.dart';
 import 'debug_overlay_trigger.dart';
+import 'debug_tool.dart';
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
 import 'helpers/package_info.dart';
@@ -45,22 +46,22 @@ class const DebugOverlay({
   static void collapse() => mode.value = .collapsed;
   static void expand() => mode.value = .expanded;
 
-  static final helpers = ValueNotifier<List<Widget>>([
+  static final tools = ValueNotifier<List<DebugTool>>([
     if (kDebugMode) ...[
       // These only work in debug mode; see the documentation of
       // [DiagnosticsBasedDebugHelper] for the explanation.
-      const MediaQueryDebugHelper(),
-      const PackageInfoDebugHelper(),
-      const DeviceInfoDebugHelper(),
+      MediaQueryDebugHelper.tool,
+      PackageInfoDebugHelper.tool,
+      DeviceInfoDebugHelper.tool,
     ],
   ]);
 
-  static void prependHelper(Widget debugHelper) {
-    helpers.value = [debugHelper, ...helpers.value];
+  static void prependTool(DebugTool tool) {
+    tools.value = [tool, ...tools.value];
   }
 
-  static void appendHelper(Widget debugHelper) {
-    helpers.value = [...helpers.value, debugHelper];
+  static void appendTool(DebugTool tool) {
+    tools.value = [...tools.value, tool];
   }
 
   /// In debug mode, this returns a builder to add a [DebugOverlay] to your app.
@@ -113,6 +114,13 @@ class const DebugOverlay({
 
 class _DebugOverlayState extends State<DebugOverlay> {
   var _bubbleAlignment = const Alignment(1, -0.4);
+  final _selectedToolIndex = ValueNotifier(0);
+
+  @override
+  void dispose() {
+    _selectedToolIndex.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +145,9 @@ class _DebugOverlayState extends State<DebugOverlay> {
                 ),
               ),
             if (mode == .expanded)
-              const Positioned.fill(child: _ExpandedSheet()),
+              Positioned.fill(
+                child: _ExpandedSheet(selectedToolIndex: _selectedToolIndex),
+              ),
           ],
         ),
       ),
@@ -145,19 +155,34 @@ class _DebugOverlayState extends State<DebugOverlay> {
   }
 }
 
-class const _ExpandedSheet() extends StatefulWidget {
+class const _ExpandedSheet({
+  required final ValueNotifier<int> selectedToolIndex,
+}) extends StatefulWidget {
   @override
   State<_ExpandedSheet> createState() => _ExpandedSheetState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('selectedToolIndex', selectedToolIndex));
+  }
 }
 
 class _ExpandedSheetState extends State<_ExpandedSheet> {
-  double _extent = 0;
+  // Notifier instead of [setState] because the [Navigator] below only builds
+  // its route once, so its content has to listen itself.
+  final _extent = ValueNotifier<double>(0);
+
+  @override
+  void dispose() {
+    _extent.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
-        setState(() => _extent = notification.extent);
+        _extent.value = notification.extent;
         return true;
       },
       child: DraggableScrollableSheet(
@@ -165,9 +190,15 @@ class _ExpandedSheetState extends State<_ExpandedSheet> {
         builder: (context, scrollController) {
           final drawer = Material(
             elevation: 16,
-            child: DebugOverlayContent(
-              scrollController: scrollController,
-              onCollapse: DebugOverlay.collapse,
+            child: ValueListenableBuilder(
+              valueListenable: widget.selectedToolIndex,
+              builder: (context, selectedToolIndex, _) => DebugOverlayContent(
+                scrollController: scrollController,
+                selectedToolIndex: selectedToolIndex,
+                onSelectedToolIndexChanged: (it) =>
+                    widget.selectedToolIndex.value = it,
+                onCollapse: DebugOverlay.collapse,
+              ),
             ),
           );
 
@@ -175,13 +206,16 @@ class _ExpandedSheetState extends State<_ExpandedSheet> {
             // We need a [Navigator] for inner overlays.
             onGenerateRoute: (settings) => MaterialPageRoute<void>(
               settings: settings,
-              builder: (context) => _ScaledTopViewPadding(
-                progress: const Interval(
-                  0.7,
-                  1,
-                  curve: Curves.easeIn,
-                ).transform(_extent),
-                child: drawer,
+              builder: (context) => ValueListenableBuilder(
+                valueListenable: _extent,
+                builder: (context, extent, _) => _ScaledTopViewPadding(
+                  progress: const Interval(
+                    0.7,
+                    1,
+                    curve: Curves.easeIn,
+                  ).transform(extent),
+                  child: drawer,
+                ),
               ),
             ),
           );
@@ -195,57 +229,132 @@ class _ExpandedSheetState extends State<_ExpandedSheet> {
 class const DebugOverlayContent({
   super.key,
   final ScrollController? scrollController,
+  final int selectedToolIndex = 0,
+  final ValueChanged<int>? onSelectedToolIndexChanged,
   final VoidCallback? onCollapse,
-}) extends StatelessWidget {
+}) extends StatefulWidget {
+  @override
+  State<DebugOverlayContent> createState() => _DebugOverlayContentState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('scrollController', scrollController))
+      ..add(IntProperty('selectedToolIndex', selectedToolIndex))
+      ..add(
+        ObjectFlagProperty<ValueChanged<int>?>.has(
+          'onSelectedToolIndexChanged',
+          onSelectedToolIndexChanged,
+        ),
+      )
+      ..add(ObjectFlagProperty<VoidCallback?>.has('onCollapse', onCollapse));
+  }
+}
+
+class _DebugOverlayContentState extends State<DebugOverlayContent> {
+  /// The scroll offset of each tool when it was last deselected.
+  final _scrollOffsets = <DebugTool, double>{};
+
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      primary: false,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      foregroundColor:
-          context.theme.scaffoldBackgroundColor.highEmphasisOnColor,
-      title: const Text('🐛 Debug Overlay'),
-      actions: [
-        if (onCollapse != null)
-          IconButton(
-            icon: const Icon(Icons.close_fullscreen),
-            tooltip: 'Collapse',
-            onPressed: onCollapse,
-          ),
-      ],
-    );
-
+    final viewPadding = context.mediaQuery.viewPadding;
     return Scaffold(
       body: ValueListenableBuilder(
-        valueListenable: DebugOverlay.helpers,
-        builder: (context, helpers, _) => CustomScrollView(
-          primary: false,
-          controller: scrollController,
-          slivers: [
-            SliverPadding(
-              padding:
-                  context.mediaQuery.viewPadding +
-                  const EdgeInsets.only(bottom: 16),
-              sliver: MultiSliver(
-                children: [
-                  SliverToBoxAdapter(child: appBar),
-                  ...helpers.withSeparators(const SizedBox(height: 16)),
-                ],
+        valueListenable: DebugOverlay.tools,
+        builder: (context, tools, _) {
+          final selectedIndex = tools.isEmpty
+              ? null
+              : widget.selectedToolIndex.clamp(0, tools.length - 1);
+          return CustomScrollView(
+            primary: false,
+            controller: widget.scrollController,
+            slivers: [
+              SliverPinnedHeader(
+                child: _buildHeader(context, tools, selectedIndex),
+              ),
+              if (selectedIndex == null)
+                const SliverToBoxAdapter(
+                  child: Center(child: Text('No debug tools registered')),
+                )
+              else
+                SliverPadding(
+                  padding: .fromLTRB(
+                    viewPadding.left,
+                    8,
+                    viewPadding.right,
+                    viewPadding.bottom + 16,
+                  ),
+                  sliver: tools[selectedIndex].sliver,
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildHeader(
+    BuildContext context,
+    List<DebugTool> tools,
+    int? selectedIndex,
+  ) {
+    final viewPadding = context.mediaQuery.viewPadding;
+    return Material(
+      color: context.theme.scaffoldBackgroundColor,
+      child: Padding(
+        padding: .fromLTRB(
+          viewPadding.left + 8,
+          viewPadding.top + 4,
+          viewPadding.right + 8,
+          4,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: .horizontal,
+                child: Row(
+                  children: [
+                    for (final (index, tool) in tools.indexed)
+                      (index == selectedIndex
+                          ? IconButton.filledTonal
+                          : IconButton.new)(
+                        icon: Icon(tool.icon),
+                        tooltip: tool.title,
+                        onPressed: () => _select(tools, selectedIndex!, index),
+                      ),
+                  ],
+                ),
               ),
             ),
+            if (widget.onCollapse != null)
+              IconButton(
+                icon: const Icon(Icons.close_fullscreen),
+                tooltip: 'Collapse',
+                onPressed: widget.onCollapse,
+              ),
           ],
         ),
       ),
     );
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('scrollController', scrollController))
-      ..add(ObjectFlagProperty<VoidCallback?>.has('onCollapse', onCollapse));
+  void _select(List<DebugTool> tools, int oldIndex, int newIndex) {
+    if (newIndex == oldIndex) return;
+
+    final controller = widget.scrollController;
+    if (controller != null && controller.hasClients) {
+      _scrollOffsets[tools[oldIndex]] = controller.offset;
+    }
+    widget.onSelectedToolIndexChanged?.call(newIndex);
+
+    // The new tool's content is only laid out in the next frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || controller == null || !controller.hasClients) return;
+
+      final offset = _scrollOffsets[tools[newIndex]] ?? 0;
+      controller.jumpTo(offset.clamp(0, controller.position.maxScrollExtent));
+    });
   }
 }
 
@@ -270,17 +379,5 @@ class const _ScaledTopViewPadding({
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('progress', progress));
-  }
-}
-
-extension<T> on Iterable<T> {
-  Iterable<T> withSeparators(T separator) sync* {
-    var isFirst = true;
-    for (final item in this) {
-      if (!isFirst) yield separator;
-      isFirst = false;
-
-      yield item;
-    }
   }
 }

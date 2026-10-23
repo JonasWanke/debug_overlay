@@ -1,6 +1,7 @@
 export 'src/debug_helper.dart';
 export 'src/debug_overlay.dart';
 export 'src/debug_overlay_trigger.dart' hide DebugOverlayTriggerDetector;
+export 'src/debug_tool.dart';
 export 'src/helpers/device_info.dart';
 export 'src/helpers/logs/data.dart';
 export 'src/helpers/logs/widgets.dart';

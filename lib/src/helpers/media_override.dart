@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../debug_helper.dart';
+import '../debug_tool.dart';
 
 class MediaOverrideState({final ThemeMode? themeMode, final Locale? locale}) {
   MediaOverrideState copyWith({
@@ -26,6 +27,20 @@ class const MediaOverrideDebugHelper(
   super.key,
   final List<Locale>? supportedLocales,
 }) extends StatefulWidget {
+  static DebugTool tool(
+    ValueNotifier<MediaOverrideState> state, {
+    List<Locale>? supportedLocales,
+  }) {
+    return DebugTool(
+      icon: Icons.tune,
+      title: 'Media Overrides',
+      sliver: MediaOverrideDebugHelper(
+        state,
+        supportedLocales: supportedLocales,
+      ),
+    );
+  }
+
   @override
   State<MediaOverrideDebugHelper> createState() =>
       _MediaOverrideDebugHelperState();

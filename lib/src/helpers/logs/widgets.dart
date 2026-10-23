@@ -9,6 +9,7 @@ import 'package:json_view/json_view.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../debug_helper.dart';
+import '../../debug_tool.dart';
 import '../../utils/level_selector.dart';
 import 'data.dart';
 
@@ -18,6 +19,22 @@ class const LogsDebugHelper(
   final DiagnosticLevel initialMinLevel = .debug,
   final Widget title = const Text('Logs'),
 }) extends StatefulWidget {
+  static DebugTool tool(
+    LogCollection logs, {
+    DiagnosticLevel initialMinLevel = .debug,
+    Widget title = const Text('Logs'),
+  }) {
+    return DebugTool(
+      icon: Icons.list_alt,
+      title: 'Logs',
+      sliver: LogsDebugHelper(
+        logs,
+        initialMinLevel: initialMinLevel,
+        title: title,
+      ),
+    );
+  }
+
   @override
   State<LogsDebugHelper> createState() => _LogsDebugHelperState();
 

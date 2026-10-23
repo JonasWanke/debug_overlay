@@ -1,9 +1,16 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../debug_helper.dart';
+import '../debug_tool.dart';
 
 class const MediaQueryDebugHelper({super.key}) extends StatelessWidget {
+  static const tool = DebugTool(
+    icon: Icons.aspect_ratio,
+    title: 'MediaQuery',
+    sliver: MediaQueryDebugHelper(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return DiagnosticsBasedDebugHelper(
