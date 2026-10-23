@@ -10,12 +10,10 @@ class Log({
 }) with Diagnosticable {
   this
     : assert(
-        // ignore: avoid-unused-parameters
         level != .off,
         '`DiagnosticLevel.off` is a "[special] level indicating that no '
         'diagnostics should be shown" and should not be used as a value.',
       ),
-      // ignore: avoid-unused-parameters
       assert(timestamp == null || !timestamp.isUtc),
       timestamp = timestamp ?? DateTime.now();
 
