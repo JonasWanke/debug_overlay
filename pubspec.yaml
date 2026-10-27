@@ -8,3 +8,11 @@ environment:
 workspace:
   - debug_overlay/
   - debug_overlay/example/
+  - debug_overlay_package_info_plus/
+
+dev_dependencies:
+  supernova_lints:
+    git:
+      url: https://github.com/JonasWanke/supernova.git
+      path: supernova_lints
+      ref: 88ffdb5c434ea2d1012c0f98f478b9240c2aedbf
