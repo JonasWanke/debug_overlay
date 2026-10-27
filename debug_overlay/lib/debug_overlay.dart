@@ -7,6 +7,5 @@ export 'src/helpers/logs/data.dart';
 export 'src/helpers/logs/widgets.dart';
 export 'src/helpers/media_override.dart';
 export 'src/helpers/media_query.dart';
-export 'src/helpers/package_info.dart';
 export 'src/helpers/rendering.dart';
 export 'src/utils/level_selector.dart';

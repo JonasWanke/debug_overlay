@@ -10,7 +10,6 @@ import 'debug_overlay_trigger.dart';
 import 'debug_tool.dart';
 import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
-import 'helpers/package_info.dart';
 import 'helpers/rendering.dart';
 
 /// How much of the [DebugOverlay] is visible.
@@ -57,7 +56,6 @@ class const DebugOverlay({
       // These only work in debug mode; see the documentation of
       // [DiagnosticsBasedDebugHelper] for the explanation.
       MediaQueryDebugHelper.tool,
-      PackageInfoDebugHelper.tool,
       DeviceInfoDebugHelper.tool,
     ],
     RenderingDebugHelper.tool,

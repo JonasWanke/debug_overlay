@@ -1,9 +1,7 @@
+import 'package:debug_overlay/debug_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-import '../debug_helper.dart';
-import '../debug_tool.dart';
 
 class const PackageInfoDebugHelper({super.key}) extends StatelessWidget {
   static const tool = DebugTool(

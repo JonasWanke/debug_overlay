@@ -27,7 +27,16 @@ You can change or disable these triggers via `DebugOverlay.builder(trigger: ...)
 To control the overlay from code, use `DebugOverlay.expand()`, `DebugOverlay.collapse()`, and `DebugOverlay.close()`.
 You can read and listen to the current mode via `DebugOverlay.mode`, which is a `ValueNotifier` that you can also set before `runApp` to start in a different mode.
 
-By default, this overlay includes `MediaQueryDebugHelper`, `PackageInfoDebugHelper`, and `DeviceInfoDebugHelper`.
+By default, this overlay includes `MediaQueryDebugHelper`, `DeviceInfoDebugHelper`, and `RenderingDebugHelper`.
+More tools are available in the [additional packages](#additional-packages) below.
+
+## Additional Packages
+
+Helpers that need additional dependencies live in separate packages, so you only pay for what you use:
+
+| Package                                                                                                          | Contents                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus) | `PackageInfoDebugHelper` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus)) |
 
 ## Debug Tools & Helpers
 
@@ -148,12 +157,6 @@ This allows you to override the theme mode and locale of your app. To use it, fo
    );
    ```
 
-### `PackageInfoDebugHelper`
-
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/doc/helpers-packageInfo.png?raw=true" width="400px" alt="PackageInfoDebugHelper demo" />
-
-Displays information obtained from [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus).
-
 <!-- ![Button demo](https://github.com/JonasWanke/black_hole_flutter/raw/master/doc/widgets-buttons.gif?raw=true) -->
 
 ### Custom
@@ -161,4 +164,4 @@ Displays information obtained from [<kbd>package_info_plus</kbd>](https://pub.de
 To implement your own debug tool, wrap a sliver in a `DebugTool`. You can use the provided `DebugHelper` class for the layout.
 
 If your information can be represented with Flutter's [`DiagnosticsNode`](https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html), you can use `DiagnosticsBasedDebugHelper` which automatically provides filtering.
-This is also used internally by `DeviceInfoDebugHelper`, `MediaQueryDebugHelper`, and `PackageInfoDebugHelper`.
+This is also used internally by `DeviceInfoDebugHelper`, `MediaQueryDebugHelper`, and `PackageInfoDebugHelper` (from `debug_overlay_package_info_plus`).

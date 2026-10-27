@@ -16,6 +16,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## NEXT
+
+### ⚠️ BREAKING CHANGES
+
+- move `PackageInfoDebugHelper` into the new `debug_overlay_package_info_plus` package in a pub workspace
+  - `DebugOverlay.tools` no longer contains it by default; add it via `DebugOverlay.appendTool(PackageInfoDebugHelper.tool)`
+
 ## 2.0.0 · 2026-08-26
 
 ### ⚠️ BREAKING CHANGES

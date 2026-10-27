@@ -1,0 +1,16 @@
+name: debug_overlay_package_info_plus
+description: View `package_info_plus` data in debug_overlay.
+version: 1.0.0
+repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
+
+dependencies:
+  debug_overlay: ^3.0.0
+  flutter:
+    sdk: flutter
+  material_ui: ^1.8.0
+  package_info_plus: ^10.0.0
