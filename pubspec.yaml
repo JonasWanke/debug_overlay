@@ -10,6 +10,7 @@ workspace:
   - debug_overlay/example/
   - debug_overlay_device_info_plus/
   - debug_overlay_package_info_plus/
+  - debug_overlay_shared_preferences/
 
 dev_dependencies:
   supernova_lints:

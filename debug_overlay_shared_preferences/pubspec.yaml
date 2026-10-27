@@ -1,0 +1,17 @@
+name: debug_overlay_shared_preferences
+description: View and edit `shared_preferences` entries in debug_overlay.
+version: 1.0.0
+repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
+
+dependencies:
+  black_hole_flutter: ^2.0.0
+  debug_overlay: ^3.0.0
+  flutter:
+    sdk: flutter
+  material_ui: ^1.8.0
+  shared_preferences: ^2.5.6

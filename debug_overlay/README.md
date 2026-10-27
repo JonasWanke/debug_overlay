@@ -38,6 +38,7 @@ Helpers that need additional dependencies live in separate packages, so you only
 | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)   | `DeviceInfoDebugHelper` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))    |
 | [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus) | `PackageInfoDebugHelper` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus)) |
+| [`debug_overlay_shared_preferences`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences) | `SharedPreferencesDebugHelper` (uses [<kbd>shared_preferences</kbd>](https://pub.dev/packages/shared_preferences)) |
 
 ## Debug Tools & Helpers
 

@@ -25,6 +25,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - `PackageInfoDebugHelper` -> `debug_overlay_package_info_plus`
   - `DebugOverlay.tools` no longer contains them by default; add them via `DebugOverlay.appendTool(...)`
 
+### 🎉 New Features
+
+- add `debug_overlay_shared_preferences` with `SharedPreferencesDebugHelper`
+
 ## 2.0.0 · 2026-08-26
 
 ### ⚠️ BREAKING CHANGES
