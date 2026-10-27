@@ -27,15 +27,16 @@ You can change or disable these triggers via `DebugOverlay.builder(trigger: ...)
 To control the overlay from code, use `DebugOverlay.expand()`, `DebugOverlay.collapse()`, and `DebugOverlay.close()`.
 You can read and listen to the current mode via `DebugOverlay.mode`, which is a `ValueNotifier` that you can also set before `runApp` to start in a different mode.
 
-By default, this overlay includes `MediaQueryDebugHelper`, `DeviceInfoDebugHelper`, and `RenderingDebugHelper`.
+By default, this overlay includes `MediaQueryDebugHelper` and `RenderingDebugHelper`.
 More tools are available in the [additional packages](#additional-packages) below.
 
 ## Additional Packages
 
 Helpers that need additional dependencies live in separate packages, so you only pay for what you use:
 
-| Package                                                                                                          | Contents                                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Package                                                                                                                    | Contents                                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)   | `DeviceInfoDebugHelper` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))    |
 | [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus) | `PackageInfoDebugHelper` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus)) |
 
 ## Debug Tools & Helpers
@@ -50,12 +51,6 @@ Or, if you want to override all currently registered tools, set `DebugOverlay.to
 
 Every built-in helper below provides a ready-made tool via `tool`, e.g., `DebugOverlay.appendTool(LogsDebugHelper.tool(logs))`.
 The helper widgets themselves are public too, so you can, for example, use a different icon or title (`DebugTool(icon: ..., title: ..., sliver: LogsDebugHelper(logs))`) or combine several helpers in one tool.
-
-### `DeviceInfoDebugHelper`
-
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/doc/helpers-deviceInfo.png?raw=true" width="400px" alt="DeviceInfoDebugHelper demo" />
-
-Displays information obtained from [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus).
 
 ### `MediaQueryDebugHelper`
 
@@ -164,4 +159,4 @@ This allows you to override the theme mode and locale of your app. To use it, fo
 To implement your own debug tool, wrap a sliver in a `DebugTool`. You can use the provided `DebugHelper` class for the layout.
 
 If your information can be represented with Flutter's [`DiagnosticsNode`](https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html), you can use `DiagnosticsBasedDebugHelper` which automatically provides filtering.
-This is also used internally by `DeviceInfoDebugHelper`, `MediaQueryDebugHelper`, and `PackageInfoDebugHelper` (from `debug_overlay_package_info_plus`).
+This is also used internally by `DeviceInfoDebugHelper` (from `debug_overlay_device_info_plus`), `MediaQueryDebugHelper`, and `PackageInfoDebugHelper` (from `debug_overlay_package_info_plus`).

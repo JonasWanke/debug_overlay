@@ -11,6 +11,7 @@ dependencies:
   collection: ^1.19.1
   debug_overlay:
     path: ../
+  debug_overlay_device_info_plus: ^1.0.0
   debug_overlay_package_info_plus: ^1.0.0
   flutter:
     sdk: flutter

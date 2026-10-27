@@ -8,7 +8,6 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'debug_overlay_bubble.dart';
 import 'debug_overlay_trigger.dart';
 import 'debug_tool.dart';
-import 'helpers/device_info.dart';
 import 'helpers/media_query.dart';
 import 'helpers/rendering.dart';
 
@@ -52,12 +51,9 @@ class const DebugOverlay({
   static void expand() => mode.value = .expanded;
 
   static final tools = ValueNotifier<List<DebugTool>>([
-    if (kDebugMode) ...[
-      // These only work in debug mode; see the documentation of
-      // [DiagnosticsBasedDebugHelper] for the explanation.
-      MediaQueryDebugHelper.tool,
-      DeviceInfoDebugHelper.tool,
-    ],
+    // Only works in debug mode; see the documentation of
+    // [DiagnosticsBasedDebugHelper] for the explanation.
+    if (kDebugMode) MediaQueryDebugHelper.tool,
     RenderingDebugHelper.tool,
   ]);
 

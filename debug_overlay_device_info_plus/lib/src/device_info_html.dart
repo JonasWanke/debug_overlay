@@ -6,7 +6,6 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
   assert(kIsWeb);
 
   final info = await DeviceInfoPlugin().webBrowserInfo;
-  final deviceMemory = info.deviceMemory;
   return [
     StringProperty('Platform', 'Web Browser'),
     DiagnosticsBlock(
@@ -34,11 +33,11 @@ Future<List<DiagnosticsNode>> getDiagnostics() async {
     ),
     IntProperty('Logical CPU Cores', info.hardwareConcurrency),
     // The doc comment says gigabytes, but it's actually imprecise gibibytes…
-    if (deviceMemory != null)
+    if (info.deviceMemory case final deviceMemory?)
       StringProperty(
         'Memory Size',
         (deviceMemory * 1024 * 1024 * 1024).round().formatByteSize(
-          prefix: Prefix.binary,
+          prefix: .binary,
         ),
       ),
   ];

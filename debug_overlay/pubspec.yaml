@@ -4,8 +4,6 @@ version: 3.0.0
 repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay
 resolution: workspace
 screenshots:
-  - description: DeviceInfoDebugHelper
-    path: doc/helpers-deviceInfo.png
   - description: MediaQueryDebugHelper
     path: doc/helpers-mediaQuery.png
   - description: LogsDebugHelper
@@ -20,8 +18,6 @@ environment:
 dependencies:
   black_hole_flutter: ^2.0.0
   collection: ^1.15.0
-  data_size: ^0.2.0
-  device_info_plus: ^13.0.0
   flutter:
     sdk: flutter
   implicitly_animated_list: ^2.3.0

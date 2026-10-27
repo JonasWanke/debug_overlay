@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:collection/collection.dart';
 import 'package:debug_overlay/debug_overlay.dart';
+import 'package:debug_overlay_device_info_plus/debug_overlay_device_info_plus.dart';
 import 'package:debug_overlay_package_info_plus/debug_overlay_package_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -34,6 +35,7 @@ void main() {
     );
     DebugOverlay.appendTool(LogsDebugHelper.tool(logs));
     DebugOverlay.appendTool(PackageInfoDebugHelper.tool);
+    DebugOverlay.appendTool(DeviceInfoDebugHelper.tool);
   }
 
   runApp(const MyApp());

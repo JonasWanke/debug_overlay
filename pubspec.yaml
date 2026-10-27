@@ -8,6 +8,7 @@ environment:
 workspace:
   - debug_overlay/
   - debug_overlay/example/
+  - debug_overlay_device_info_plus/
   - debug_overlay_package_info_plus/
 
 dev_dependencies:
