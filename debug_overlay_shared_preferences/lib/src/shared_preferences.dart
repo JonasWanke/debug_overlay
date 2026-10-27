@@ -94,7 +94,7 @@ class _SharedPreferencesDebugHelperState
                 key: ValueKey(entry.key),
                 entry: entry,
                 onEdit: () => _showEditor(context, entry),
-                onDelete: () => _delete(entry.key),
+                onDelete: () => _confirmAndDelete(context, entry.key),
               );
             },
           );
@@ -135,7 +135,26 @@ class _SharedPreferencesDebugHelperState
     _ => throw ArgumentError.value(value, 'value', 'Unsupported type'),
   };
 
-  Future<void> _delete(String key) async {
+  Future<void> _confirmAndDelete(BuildContext context, String key) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete entry?'),
+        content: Text('Do you want to delete "$key"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
     await _preferences.remove(key);
     if (!mounted) return;
     _refresh();
