@@ -164,8 +164,8 @@ class const _ExpandedSheet({
 }
 
 class _ExpandedSheetState extends State<_ExpandedSheet> {
-  // Notifier instead of [setState] because the [Navigator] below only builds
-  // its route once, so its content has to listen itself.
+  // Notifier instead of [setState] because the [Navigator] only builds its
+  // route once, so its content has to listen itself.
   final _extent = ValueNotifier<double>(0);
 
   @override
@@ -187,46 +187,69 @@ class _ExpandedSheetState extends State<_ExpandedSheet> {
         }
         return true;
       },
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        minChildSize: 0.15,
-        builder: (context, scrollController) {
-          final drawer = Material(
-            elevation: 16,
-            child: ValueListenableBuilder(
-              valueListenable: widget.selectedToolIndex,
-              builder: (context, selectedToolIndex, _) => DebugOverlayContent(
-                scrollController: scrollController,
-                selectedToolIndex: selectedToolIndex,
-                onSelectedToolIndexChanged: (it) =>
-                    widget.selectedToolIndex.value = it,
-                onCollapse: DebugOverlay.collapse,
-              ),
-            ),
-          );
-
-          final navigator = Navigator(
-            // We need a [Navigator] for inner overlays.
-            onGenerateRoute: (settings) => MaterialPageRoute<void>(
-              settings: settings,
-              builder: (context) => ValueListenableBuilder(
-                valueListenable: _extent,
-                builder: (context, extent, _) => _ScaledTopViewPadding(
-                  progress: const Interval(
-                    0.7,
-                    1,
-                    curve: Curves.easeIn,
-                  ).transform(extent),
-                  child: drawer,
-                ),
-              ),
-            ),
-          );
-          return HeroControllerScope.none(child: navigator);
-        },
+      // The [Navigator] covers the whole screen (not just the sheet), so
+      // dialogs shown by tools can use all of it.
+      child: HeroControllerScope.none(
+        child: Navigator(
+          onGenerateRoute: (settings) => _SheetRoute(
+            settings: settings,
+            pageBuilder: (_, _, _) => _buildSheet(),
+          ),
+        ),
       ),
     );
   }
+
+  Widget _buildSheet() {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.4,
+      minChildSize: 0.15,
+      builder: (context, scrollController) {
+        final drawer = Material(
+          elevation: 16,
+          child: ValueListenableBuilder(
+            valueListenable: widget.selectedToolIndex,
+            builder: (context, selectedToolIndex, _) => DebugOverlayContent(
+              scrollController: scrollController,
+              selectedToolIndex: selectedToolIndex,
+              onSelectedToolIndexChanged: (it) =>
+                  widget.selectedToolIndex.value = it,
+              onCollapse: DebugOverlay.collapse,
+            ),
+          ),
+        );
+
+        // Notifier instead of [setState] because the [Navigator] only builds
+        // its route once.
+        return ValueListenableBuilder(
+          valueListenable: _extent,
+          builder: (context, extent, _) => _ScaledTopViewPadding(
+            progress: const Interval(
+              0.7,
+              1,
+              curve: Curves.easeIn,
+            ).transform(extent),
+            child: drawer,
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// A transparent route that, unlike other [PageRoute]s, doesn't have a modal
+/// barrier, so touches outside of the sheet reach the app below.
+class _SheetRoute({super.settings, required super.pageBuilder})
+    extends PageRouteBuilder<void> {
+  this
+    : super(
+        opaque: false,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      );
+
+  @override
+  Widget buildModalBarrier() => const SizedBox.shrink();
 }
 
 class const DebugOverlayContent({
