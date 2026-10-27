@@ -11,8 +11,3 @@ updates:
     labels: ['T: Build']
     schedule:
       interval: weekly
-  - package-ecosystem: pub
-    directory: /example
-    labels: ['T: Build']
-    schedule:
-      interval: weekly

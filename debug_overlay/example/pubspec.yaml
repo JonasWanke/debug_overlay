@@ -1,5 +1,6 @@
 name: debug_overlay_example
 publish_to: none
+resolution: workspace
 
 environment:
   sdk: ^3.13.0
