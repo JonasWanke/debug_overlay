@@ -2,6 +2,8 @@
 
 Browse, preview, and delete files in the app's private storage directories (documents, support, temporary, cache, and platform-specific ones) in the `debug_overlay`.
 
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay_file_browser/doc/helpers-fileBrowser.png?raw=true" width="400px" alt="FileBrowserDebugHelper demo" />
+
 Part of [<kbd>debug_overlay</kbd>](https://pub.dev/packages/debug_overlay).
 
 ## Usage

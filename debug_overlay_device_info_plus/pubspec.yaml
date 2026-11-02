@@ -3,6 +3,9 @@ description: View `device_info_plus` data in debug_overlay.
 version: 1.0.0
 repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus
 resolution: workspace
+screenshots:
+  - description: DeviceInfoDebugHelper
+    path: doc/helpers-deviceInfo.png
 
 environment:
   sdk: ^3.13.0

@@ -10,6 +10,10 @@ screenshots:
     path: doc/helpers-logs.png
   - description: MediaOverridesDebugHelper
     path: doc/helpers-mediaOverrides.png
+  - description: NetworkDebugHelper
+    path: doc/helpers-network.png
+  - description: RenderingDebugHelper
+    path: doc/helpers-rendering.png
 
 environment:
   sdk: ^3.13.0

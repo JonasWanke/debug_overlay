@@ -3,6 +3,9 @@ description: Record `package:http` requests in the debug_overlay network inspect
 version: 1.0.0
 repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http
 resolution: workspace
+screenshots:
+  - description: NetworkDebugHelper
+    path: doc/helpers-network.png
 
 environment:
   sdk: ^3.13.0

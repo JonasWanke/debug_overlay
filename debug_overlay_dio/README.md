@@ -2,6 +2,8 @@
 
 Records requests of [`dio`](https://pub.dev/packages/dio) in the `debug_overlay` network inspector.
 
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay_dio/doc/helpers-network.png?raw=true" width="400px" alt="NetworkDebugHelper demo" />
+
 Part of [<kbd>debug_overlay</kbd>](https://pub.dev/packages/debug_overlay).
 
 ## Usage

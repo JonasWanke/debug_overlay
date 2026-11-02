@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### 🎉 New Features
 
+- add `RenderingDebugHelper`
 - add `NetworkDebugHelper` and `NetworkRequestCollection`, with `debug_overlay_http` and `debug_overlay_dio` to record requests
 - add `debug_overlay_shared_preferences` with `SharedPreferencesDebugHelper`
 - add `debug_overlay_file_browser` with `FileBrowserDebugHelper`
