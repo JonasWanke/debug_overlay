@@ -162,7 +162,7 @@ class LogEntryWidget(final Log log) extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             if (log.error != null) ...[
               _buildSubtitle(context, '${log._errorLabel}:'),
@@ -342,7 +342,7 @@ class const _LogEntryLine({
     final child = IconTheme.merge(
       data: const IconThemeData(size: 16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           leading,
           const SizedBox(width: 4),

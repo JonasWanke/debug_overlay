@@ -112,7 +112,7 @@ class _FilePreviewDialogState extends State<FilePreviewDialog> {
           ),
         if (preview.isTruncated && !_isImage) ...[
           const SizedBox(height: 8),
-          Text('... (truncated)', style: context.textTheme.bodySmall),
+          Text('… (truncated)', style: context.textTheme.bodySmall),
         ],
       ],
     );

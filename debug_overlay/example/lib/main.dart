@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:debug_overlay/debug_overlay.dart';
 import 'package:debug_overlay_device_info_plus/debug_overlay_device_info_plus.dart';
 import 'package:debug_overlay_file_browser/debug_overlay_file_browser.dart';
+import 'package:debug_overlay_http/debug_overlay_http.dart';
 import 'package:debug_overlay_package_info_plus/debug_overlay_package_info_plus.dart';
 import 'package:debug_overlay_shared_preferences/debug_overlay_shared_preferences.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,8 @@ final logs = LogCollection(
   maximumSize: 500,
   onlyStoreLogsInDebugMode: true,
 );
+final networkRequests = NetworkRequestCollection();
+final httpClient = DebugHttpClient(networkRequests);
 final mediaOverrideState = ValueNotifier(MediaOverrideState());
 
 final supportedLocales = kMaterialSupportedLanguages
@@ -36,6 +39,7 @@ void main() {
       ),
     );
     DebugOverlay.appendTool(LogsDebugHelper.tool(logs));
+    DebugOverlay.appendTool(NetworkDebugHelper.tool(networkRequests));
     DebugOverlay.appendTool(SharedPreferencesDebugHelper.tool());
     DebugOverlay.appendTool(FileBrowserDebugHelper.tool());
     DebugOverlay.appendTool(PackageInfoDebugHelper.tool);
@@ -90,6 +94,10 @@ class const HomePage({super.key}) extends StatelessWidget {
             Text('Locale: ${context.locale}'),
             const SizedBox(height: 16),
             TextButton(onPressed: _createLog, child: const Text('Add log')),
+            TextButton(
+              onPressed: _requestWithHttp,
+              child: const Text('Request via http'),
+            ),
             const SizedBox(height: 16),
             const ElevatedButton(
               onPressed: DebugOverlay.expand,
@@ -117,5 +125,13 @@ class const HomePage({super.key}) extends StatelessWidget {
     // If you use a custom logging solution, you have to also append logs to
     // `debug_overlay`'s LogCollection.
     logs.add(log);
+  }
+
+  Future<void> _requestWithHttp() async {
+    try {
+      await httpClient.get(Uri.https('example.com'));
+    } on Object {
+      // Errors are shown in the network tool.
+    }
   }
 }

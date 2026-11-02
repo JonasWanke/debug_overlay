@@ -13,6 +13,7 @@ dependencies:
     path: ../
   debug_overlay_device_info_plus: ^1.0.0
   debug_overlay_file_browser: ^1.0.0
+  debug_overlay_http: ^1.0.0
   debug_overlay_package_info_plus: ^1.0.0
   debug_overlay_shared_preferences: ^1.0.0
   flutter:
