@@ -28,6 +28,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 🎉 New Features
 
 - add `debug_overlay_shared_preferences` with `SharedPreferencesDebugHelper`
+- add `debug_overlay_file_browser` with `FileBrowserDebugHelper`
 
 ## 2.0.0 · 2026-08-26
 

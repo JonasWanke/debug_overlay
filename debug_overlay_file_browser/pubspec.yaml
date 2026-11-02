@@ -1,0 +1,18 @@
+name: debug_overlay_file_browser
+description: Browse the app's private storage directories in debug_overlay.
+version: 1.0.0
+repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_file_browser
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
+
+dependencies:
+  black_hole_flutter: ^2.0.0
+  data_size: ^0.2.0
+  debug_overlay: ^3.0.0
+  flutter:
+    sdk: flutter
+  material_ui: ^1.8.0
+  path_provider: ^2.1.6
