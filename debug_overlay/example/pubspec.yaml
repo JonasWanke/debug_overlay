@@ -12,10 +12,12 @@ dependencies:
   debug_overlay:
     path: ../
   debug_overlay_device_info_plus: ^1.0.0
+  debug_overlay_dio: ^1.0.0
   debug_overlay_file_browser: ^1.0.0
   debug_overlay_http: ^1.0.0
   debug_overlay_package_info_plus: ^1.0.0
   debug_overlay_shared_preferences: ^1.0.0
+  dio: ^5.9.0
   flutter:
     sdk: flutter
   flutter_localizations:

@@ -8,6 +8,7 @@ This repository is a pub workspace with the following packages:
 | ----------------------------------------------------------------------- | ------------------------------------------------------------ |
 | [`debug_overlay`](debug_overlay/)                                       | The overlay, logs, media overrides, and the built-in helpers |
 | [`debug_overlay_device_info_plus`](debug_overlay_device_info_plus/)     | Device info tool (`device_info_plus`)                        |
+| [`debug_overlay_dio`](debug_overlay_dio/)                               | Network inspector support for `dio`                          |
 | [`debug_overlay_file_browser`](debug_overlay_file_browser/)             | Browser for the app's private storage directories            |
 | [`debug_overlay_http`](debug_overlay_http/)                             | Network inspector support for `http`                         |
 | [`debug_overlay_package_info_plus`](debug_overlay_package_info_plus/)   | Package info tool (`package_info_plus`)                      |

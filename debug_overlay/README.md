@@ -39,6 +39,7 @@ Helpers that need additional dependencies live in separate packages, so you only
 | [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)     | `DeviceInfoDebugHelper` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))            |
 | [`debug_overlay_file_browser`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_file_browser)             | `FileBrowserDebugHelper` (uses [<kbd>path_provider</kbd>](https://pub.dev/packages/path_provider))                 |
 | [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http)                             | `DebugHttpClient` for the network inspector                                                                        |
+| [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio)                               | `DebugDioInterceptor` for the network inspector                                                                    |
 | [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus)   | `PackageInfoDebugHelper` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus))         |
 | [`debug_overlay_shared_preferences`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences) | `SharedPreferencesDebugHelper` (uses [<kbd>shared_preferences</kbd>](https://pub.dev/packages/shared_preferences)) |
 
@@ -180,6 +181,7 @@ Lists HTTP requests with their status, duration, headers, and bodies. To use it,
 3. Record requests using one of the following:
 
    - [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http): `DebugHttpClient` for [`http`](https://pub.dev/packages/http)
+   - [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio): `DebugDioInterceptor` for [`dio`](https://pub.dev/packages/dio)
    - Any other client: call `networkRequests.start(...)`, `complete(...)`, and `fail(...)` manually.
 
 ### Custom

@@ -6,10 +6,12 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:collection/collection.dart';
 import 'package:debug_overlay/debug_overlay.dart';
 import 'package:debug_overlay_device_info_plus/debug_overlay_device_info_plus.dart';
+import 'package:debug_overlay_dio/debug_overlay_dio.dart';
 import 'package:debug_overlay_file_browser/debug_overlay_file_browser.dart';
 import 'package:debug_overlay_http/debug_overlay_http.dart';
 import 'package:debug_overlay_package_info_plus/debug_overlay_package_info_plus.dart';
 import 'package:debug_overlay_shared_preferences/debug_overlay_shared_preferences.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -20,6 +22,7 @@ final logs = LogCollection(
 );
 final networkRequests = NetworkRequestCollection();
 final httpClient = DebugHttpClient(networkRequests);
+final dioClient = Dio()..interceptors.add(DebugDioInterceptor(networkRequests));
 final mediaOverrideState = ValueNotifier(MediaOverrideState());
 
 final supportedLocales = kMaterialSupportedLanguages
@@ -98,6 +101,10 @@ class const HomePage({super.key}) extends StatelessWidget {
               onPressed: _requestWithHttp,
               child: const Text('Request via http'),
             ),
+            TextButton(
+              onPressed: _requestWithDio,
+              child: const Text('Request via dio'),
+            ),
             const SizedBox(height: 16),
             const ElevatedButton(
               onPressed: DebugOverlay.expand,
@@ -130,6 +137,14 @@ class const HomePage({super.key}) extends StatelessWidget {
   Future<void> _requestWithHttp() async {
     try {
       await httpClient.get(Uri.https('example.com'));
+    } on Object {
+      // Errors are shown in the network tool.
+    }
+  }
+
+  Future<void> _requestWithDio() async {
+    try {
+      await dioClient.get<Object?>('https://example.com');
     } on Object {
       // Errors are shown in the network tool.
     }

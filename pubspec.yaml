@@ -9,6 +9,7 @@ workspace:
   - debug_overlay/
   - debug_overlay/example/
   - debug_overlay_device_info_plus/
+  - debug_overlay_dio/
   - debug_overlay_file_browser/
   - debug_overlay_http/
   - debug_overlay_package_info_plus/
