@@ -3,84 +3,69 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../debug_helper.dart';
 import '../../debug_tool.dart';
 import 'data.dart';
 
-class const NetworkDebugHelper(
-  final NetworkRequestCollection requests, {
-  super.key,
-}) extends StatefulWidget {
-  static DebugTool tool(NetworkRequestCollection requests) {
-    return DebugTool(
-      icon: Icons.swap_vert,
-      title: 'Network',
-      sliver: NetworkDebugHelper(requests),
-    );
-  }
+/// A [DebugTool] that lists the requests of a [NetworkRequestCollection].
+class NetworkDebugTool(final NetworkRequestCollection requests)
+    extends DebugTool {
+  this : super(icon: Icons.swap_vert, title: 'Network');
 
-  @override
-  State<NetworkDebugHelper> createState() => _NetworkDebugHelperState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('requests', requests));
-  }
-}
-
-class _NetworkDebugHelperState extends State<NetworkDebugHelper> {
   var _onlyErrors = false;
 
   @override
-  Widget build(BuildContext context) {
-    return DebugHelper(
-      actions: [
-        (_onlyErrors ? IconButton.filledTonal : IconButton.new)(
-          tooltip: _onlyErrors ? 'Show all requests' : 'Only show errors',
-          onPressed: () => setState(() => _onlyErrors = !_onlyErrors),
-          icon: const Icon(Icons.error_outline),
-        ),
-        IconButton(
-          tooltip: 'Clear requests',
-          onPressed: widget.requests.clear,
-          icon: const Icon(Icons.delete_outlined),
-        ),
-      ],
-      contentPadding: .zero,
-      sliver: ValueListenableBuilder(
-        valueListenable: widget.requests.listenable,
-        builder: (context, requests, _) {
-          // Newest first.
-          final visible = [
-            for (final request in requests.reversed)
-              if (!_onlyErrors || _isError(request)) request,
-          ];
-          if (visible.isEmpty) {
-            return SliverToBoxAdapter(
-              child: Center(
-                child: Text(
-                  requests.isEmpty
-                      ? 'No requests available.'
-                      : 'No failed requests.',
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: context
-                        .theme
-                        .scaffoldBackgroundColor
-                        .mediumEmphasisOnColor,
-                  ),
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      (_onlyErrors ? IconButton.filledTonal : IconButton.new)(
+        tooltip: _onlyErrors ? 'Show all requests' : 'Only show errors',
+        onPressed: () {
+          _onlyErrors = !_onlyErrors;
+          notifyListeners();
+        },
+        icon: const Icon(Icons.error_outline),
+      ),
+      IconButton(
+        tooltip: 'Clear requests',
+        onPressed: requests.clear,
+        icon: const Icon(Icons.delete_outlined),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildSliver(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: requests.listenable,
+      builder: (context, requests, _) {
+        // Newest first.
+        final visible = [
+          for (final request in requests.reversed)
+            if (!_onlyErrors || _isError(request)) request,
+        ];
+        if (visible.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                requests.isEmpty
+                    ? 'No requests available.'
+                    : 'No failed requests.',
+                style: context.textTheme.bodySmall!.copyWith(
+                  color: context
+                      .theme
+                      .scaffoldBackgroundColor
+                      .mediumEmphasisOnColor,
                 ),
               ),
-            );
-          }
-
-          return SliverList.builder(
-            itemCount: visible.length,
-            itemBuilder: (context, index) =>
-                NetworkRequestWidget(visible[index]),
+            ),
           );
-        },
-      ),
+        }
+
+        return SliverList.builder(
+          itemCount: visible.length,
+          itemBuilder: (context, index) =>
+              _NetworkRequestWidget(visible[index]),
+        );
+      },
     );
   }
 
@@ -89,16 +74,10 @@ class _NetworkDebugHelperState extends State<NetworkDebugHelper> {
     final statusCode = request.statusCode;
     return request.hasFailed || (statusCode != null && statusCode >= 400);
   }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(FlagProperty('onlyErrors', value: _onlyErrors));
-  }
 }
 
 // ignore: prefer_const_constructors_in_immutables
-class NetworkRequestWidget(final NetworkRequest request)
+class _NetworkRequestWidget(final NetworkRequest request)
     extends StatelessWidget {
   this : super(key: ValueKey(request.id));
 

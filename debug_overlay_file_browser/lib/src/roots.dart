@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// A top-level directory in the `FileBrowserDebugHelper`.
+/// A top-level directory in the `FileBrowserDebugTool`.
 @immutable
 class const FileBrowserRoot({
   /// The label shown in the list of roots.

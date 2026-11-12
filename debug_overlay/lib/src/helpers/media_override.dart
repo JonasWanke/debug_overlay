@@ -1,8 +1,6 @@
 import 'package:black_hole_flutter/black_hole_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../debug_helper.dart';
 import '../debug_tool.dart';
 
 class MediaOverrideState({final ThemeMode? themeMode, final Locale? locale}) {
@@ -22,80 +20,54 @@ class MediaOverrideState({final ThemeMode? themeMode, final Locale? locale}) {
   }
 }
 
-class const MediaOverrideDebugHelper(
+/// A [DebugTool] to override the theme mode and locale of your app.
+///
+/// Wrap your app in a widget that listens to [state] and applies the overrides.
+class MediaOverrideDebugTool(
   final ValueNotifier<MediaOverrideState> state, {
-  super.key,
   final List<Locale>? supportedLocales,
-}) extends StatefulWidget {
-  static DebugTool tool(
-    ValueNotifier<MediaOverrideState> state, {
-    List<Locale>? supportedLocales,
-  }) {
-    return DebugTool(
-      icon: Icons.tune,
-      title: 'Media Overrides',
-      sliver: MediaOverrideDebugHelper(
-        state,
-        supportedLocales: supportedLocales,
-      ),
-    );
-  }
+}) extends DebugTool {
+  this : super(icon: Icons.tune, title: 'Media Overrides');
 
   @override
-  State<MediaOverrideDebugHelper> createState() =>
-      _MediaOverrideDebugHelperState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('state', state))
-      ..add(IterableProperty('supportedLocales', supportedLocales));
-  }
-}
-
-class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
-  @override
-  Widget build(BuildContext context) {
+  Widget buildSliver(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: widget.state,
-      builder: (context, currentState, _) => DebugHelper(
-        contentPadding: EdgeInsets.zero,
-        sliver: SliverList.list(
-          children: [
-            _buildThemeModeOverride(currentState),
-            if (widget.supportedLocales != null)
-              _buildLocaleOverride(currentState),
-          ],
-        ),
+      valueListenable: state,
+      builder: (context, currentState, _) => SliverList.list(
+        children: [
+          _buildThemeModeOverride(context, currentState),
+          if (supportedLocales != null)
+            _buildLocaleOverride(context, currentState),
+        ],
       ),
     );
   }
 
-  ThemeMode? themeMode;
-  Widget _buildThemeModeOverride(MediaOverrideState currentState) {
-    themeMode ??= context.theme.brightness.isLight ? .light : .dark;
+  ThemeMode? _themeMode;
+  Widget _buildThemeModeOverride(
+    BuildContext context,
+    MediaOverrideState currentState,
+  ) {
+    _themeMode ??= context.theme.brightness.isLight ? .light : .dark;
 
     return CheckboxListTile(
       title: const Text('Theme Mode'),
       controlAffinity: .leading,
       value: currentState.themeMode != null,
       onChanged: (value) {
-        widget.state.value = currentState.copyWith(
+        state.value = currentState.copyWith(
           clearThemeMode: !value!,
-          themeMode: value ? themeMode! : null,
+          themeMode: value ? _themeMode! : null,
         );
       },
       secondary: ToggleButtons(
         onPressed: (index) {
-          setState(() {
-            themeMode = ThemeMode.values[index];
-            widget.state.value = currentState.copyWith(themeMode: themeMode!);
-          });
+          _themeMode = ThemeMode.values[index];
+          state.value = currentState.copyWith(themeMode: _themeMode!);
         },
         isSelected: [
           for (final themeMode in ThemeMode.values)
-            themeMode == (currentState.themeMode ?? this.themeMode!),
+            themeMode == (currentState.themeMode ?? _themeMode!),
         ],
         children: [
           for (final themeMode in ThemeMode.values)
@@ -116,30 +88,31 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
     };
   }
 
-  Locale? locale;
-  Widget _buildLocaleOverride(MediaOverrideState currentState) {
-    locale ??= context.locale;
+  Locale? _locale;
+  Widget _buildLocaleOverride(
+    BuildContext context,
+    MediaOverrideState currentState,
+  ) {
+    _locale ??= context.locale;
 
     return CheckboxListTile(
       title: const Text('Locale'),
       controlAffinity: .leading,
       value: currentState.locale != null,
       onChanged: (value) {
-        widget.state.value = currentState.copyWith(
+        state.value = currentState.copyWith(
           clearLocale: !value!,
-          locale: value ? locale! : null,
+          locale: value ? _locale! : null,
         );
       },
       secondary: DropdownButton(
-        value: currentState.locale ?? locale!,
+        value: currentState.locale ?? _locale!,
         onChanged: (locale) {
-          setState(() {
-            this.locale = locale!;
-            widget.state.value = currentState.copyWith(locale: locale);
-          });
+          _locale = locale!;
+          state.value = currentState.copyWith(locale: locale);
         },
         items: [
-          for (final locale in widget.supportedLocales!)
+          for (final locale in supportedLocales!)
             DropdownMenuItem(
               value: locale,
               child: Text(locale.toLanguageTag()),
@@ -147,13 +120,5 @@ class _MediaOverrideDebugHelperState extends State<MediaOverrideDebugHelper> {
         ],
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(EnumProperty('themeMode', themeMode))
-      ..add(DiagnosticsProperty('locale', locale));
   }
 }

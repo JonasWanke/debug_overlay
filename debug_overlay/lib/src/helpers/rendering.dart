@@ -5,10 +5,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../debug_helper.dart';
 import '../debug_tool.dart';
 
-/// Switches for Flutter's debug rendering flags (e.g.,
+/// A [DebugTool] with switches for Flutter's debug rendering flags (e.g.,
 /// [debugPaintSizeEnabled]), a slider for [timeDilation], and a switch for the
 /// performance overlay.
 ///
@@ -19,56 +18,44 @@ import '../debug_tool.dart';
 /// Changing a flag reassembles the whole application (see
 /// [BindingBase.reassembleApplication]), so that already painted frames pick
 /// up the change. This preserves state, but is expensive.
-class const RenderingDebugHelper({super.key}) extends StatefulWidget {
-  static const tool = DebugTool(
-    icon: Icons.brush,
-    title: 'Rendering',
-    sliver: RenderingDebugHelper(),
-  );
+class RenderingDebugTool() extends DebugTool {
+  this : super(icon: Icons.brush, title: 'Rendering');
 
   @override
-  State<RenderingDebugHelper> createState() => _RenderingDebugHelperState();
-}
-
-class _RenderingDebugHelperState extends State<RenderingDebugHelper> {
-  @override
-  Widget build(BuildContext context) {
-    return DebugHelper(
-      contentPadding: EdgeInsets.zero,
-      sliver: SliverList.list(
-        children: [
-          if (!kDebugMode)
-            const ListTile(
-              title: Text('Most options are only available in debug mode.'),
-            ),
-          _buildFlag(
-            title: 'Paint Sizes',
-            subtitle: 'debugPaintSizeEnabled',
-            value: debugPaintSizeEnabled,
-            onChanged: (it) => debugPaintSizeEnabled = it,
+  Widget buildSliver(BuildContext context) {
+    return SliverList.list(
+      children: [
+        if (!kDebugMode)
+          const ListTile(
+            title: Text('Most options are only available in debug mode.'),
           ),
-          _buildFlag(
-            title: 'Paint Baselines',
-            subtitle: 'debugPaintBaselinesEnabled',
-            value: debugPaintBaselinesEnabled,
-            onChanged: (it) => debugPaintBaselinesEnabled = it,
-          ),
-          _buildFlag(
-            title: 'Paint Pointers',
-            subtitle: 'debugPaintPointersEnabled',
-            value: debugPaintPointersEnabled,
-            onChanged: (it) => debugPaintPointersEnabled = it,
-          ),
-          _buildFlag(
-            title: 'Repaint Rainbow',
-            subtitle: 'debugRepaintRainbowEnabled',
-            value: debugRepaintRainbowEnabled,
-            onChanged: (it) => debugRepaintRainbowEnabled = it,
-          ),
-          _buildPerformanceOverlay(),
-          _buildTimeDilation(),
-        ],
-      ),
+        _buildFlag(
+          title: 'Paint Sizes',
+          subtitle: 'debugPaintSizeEnabled',
+          value: debugPaintSizeEnabled,
+          onChanged: (it) => debugPaintSizeEnabled = it,
+        ),
+        _buildFlag(
+          title: 'Paint Baselines',
+          subtitle: 'debugPaintBaselinesEnabled',
+          value: debugPaintBaselinesEnabled,
+          onChanged: (it) => debugPaintBaselinesEnabled = it,
+        ),
+        _buildFlag(
+          title: 'Paint Pointers',
+          subtitle: 'debugPaintPointersEnabled',
+          value: debugPaintPointersEnabled,
+          onChanged: (it) => debugPaintPointersEnabled = it,
+        ),
+        _buildFlag(
+          title: 'Repaint Rainbow',
+          subtitle: 'debugRepaintRainbowEnabled',
+          value: debugRepaintRainbowEnabled,
+          onChanged: (it) => debugRepaintRainbowEnabled = it,
+        ),
+        _buildPerformanceOverlay(),
+        _buildTimeDilation(),
+      ],
     );
   }
 
@@ -110,13 +97,17 @@ class _RenderingDebugHelperState extends State<RenderingDebugHelper> {
         label: '${timeDilation.toStringAsFixed(1)}x',
         // Animations pick up the new value on the next frame, so no reassemble
         // is necessary.
-        onChanged: (it) => setState(() => timeDilation = it),
+        onChanged: (it) {
+          timeDilation = it;
+          notifyListeners();
+        },
       ),
     );
   }
 
   void _update(VoidCallback change) {
-    setState(change);
+    change();
+    notifyListeners();
     unawaited(WidgetsBinding.instance.reassembleApplication());
   }
 }

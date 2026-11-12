@@ -11,40 +11,20 @@ import 'package:material_ui/material_ui.dart';
 import 'file_preview.dart';
 import 'roots.dart';
 
-/// A [DebugHelper] that lists the files and directories of the app's private
+/// A [DebugTool] that lists the files and directories of the app's private
 /// storage areas.
+///
+/// If [roots] is `null`, the directories provided by `path_provider` that are
+/// available on the current platform are used.
 ///
 /// Files can be previewed as text, image, or hex dump. Entries can be deleted
 /// after confirming a dialog. This is not available on the web.
-class const FileBrowserDebugHelper({
-  super.key,
-  final List<FileBrowserRoot>? roots,
-}) extends StatefulWidget {
-  /// Creates a [DebugTool] for this helper.
-  ///
-  /// If [roots] is `null`, the directories provided by `path_provider` that are
-  /// available on the current platform are used.
-  static DebugTool tool({List<FileBrowserRoot>? roots}) {
-    return DebugTool(
-      icon: Icons.folder_open,
-      title: 'Files',
-      sliver: FileBrowserDebugHelper(roots: roots),
-    );
-  }
+class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
+    extends DebugTool {
+  this : super(icon: Icons.folder_open, title: 'Files');
 
-  @override
-  State<FileBrowserDebugHelper> createState() => _FileBrowserDebugHelperState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IterableProperty('roots', roots));
-  }
-}
-
-class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
-  late final _roots = widget.roots != null
-      ? Future.value(widget.roots)
+  late final _roots = roots != null
+      ? Future.value(roots)
       : FileBrowserRoot.loadDefaults();
 
   /// The directory being shown or `null` for the list of roots.
@@ -53,42 +33,43 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
   Future<int>? _size;
 
   @override
-  Widget build(BuildContext context) {
-    return DebugHelper(
-      actions: [
-        IconButton(
-          tooltip: 'Refresh',
-          onPressed: _refresh,
-          icon: const Icon(Icons.refresh),
-        ),
-      ],
-      contentPadding: EdgeInsets.zero,
-      sliver: FutureBuilder(
-        future: _roots,
-        builder: (context, snapshot) {
-          final roots = snapshot.data;
-          if (roots == null) {
-            return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (roots.isEmpty) {
-            return SliverToBoxAdapter(
-              child: Center(
-                child: Text(
-                  'No directories available on this platform.',
-                  style: context.textTheme.bodySmall,
-                ),
-              ),
-            );
-          }
-
-          final directory = _directory;
-          return directory == null
-              ? _buildRoots(roots)
-              : _buildDirectory(directory, roots);
-        },
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        tooltip: 'Refresh',
+        onPressed: _refresh,
+        icon: const Icon(Icons.refresh),
       ),
+    ];
+  }
+
+  @override
+  Widget buildSliver(BuildContext context) {
+    return FutureBuilder(
+      future: _roots,
+      builder: (context, snapshot) {
+        final roots = snapshot.data;
+        if (roots == null) {
+          return const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (roots.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                'No directories available on this platform.',
+                style: context.textTheme.bodySmall,
+              ),
+            ),
+          );
+        }
+
+        final directory = _directory;
+        return directory == null
+            ? _buildRoots(roots)
+            : _buildDirectory(context, directory, roots);
+      },
     );
   }
 
@@ -107,14 +88,18 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
     );
   }
 
-  Widget _buildDirectory(Directory directory, List<FileBrowserRoot> roots) {
+  Widget _buildDirectory(
+    BuildContext context,
+    Directory directory,
+    List<FileBrowserRoot> roots,
+  ) {
     return FutureBuilder(
       future: _entries,
       builder: (context, snapshot) {
         final entries = snapshot.data;
         return SliverList.list(
           children: [
-            _buildHeader(directory, entries?.length),
+            _buildHeader(context, directory, entries?.length),
             ListTile(
               leading: const Icon(Icons.arrow_upward),
               title: const Text('..'),
@@ -134,8 +119,8 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
                 _EntryTile(
                   key: ValueKey(entry.entity.path),
                   entry: entry,
-                  onTap: () => _onTap(entry),
-                  onDelete: () => _confirmDelete(entry),
+                  onTap: () => _onTap(context, entry),
+                  onDelete: () => _confirmDelete(context, entry),
                 ),
           ],
         );
@@ -143,7 +128,11 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
     );
   }
 
-  Widget _buildHeader(Directory directory, int? itemCount) {
+  Widget _buildHeader(
+    BuildContext context,
+    Directory directory,
+    int? itemCount,
+  ) {
     return Padding(
       padding: const .fromLTRB(16, 0, 16, 8),
       child: Column(
@@ -155,7 +144,7 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
               if (itemCount != null)
                 Text('$itemCount items', style: context.textTheme.bodySmall),
               const Spacer(),
-              _buildSize(directory),
+              _buildSize(context, directory),
             ],
           ),
         ],
@@ -163,12 +152,14 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
     );
   }
 
-  Widget _buildSize(Directory directory) {
+  Widget _buildSize(BuildContext context, Directory directory) {
     final size = _size;
     if (size == null) {
       return TextButton(
-        onPressed: () =>
-            setState(() => unawaited(_size = _computeSize(directory))),
+        onPressed: () {
+          unawaited(_size = _computeSize(directory));
+          notifyListeners();
+        },
         child: const Text('Calculate size'),
       );
     }
@@ -188,17 +179,17 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
   }
 
   void _open(Directory directory) {
-    setState(() {
-      _directory = directory;
-      _entries = _list(directory);
-      _size = null;
-    });
+    _directory = directory;
+    _entries = _list(directory);
+    _size = null;
+    notifyListeners();
   }
 
   void _up(Directory directory, List<FileBrowserRoot> roots) {
     final isRoot = roots.any((it) => it.directory.path == directory.path);
     if (isRoot) {
-      setState(() => _directory = null);
+      _directory = null;
+      notifyListeners();
     } else {
       _open(directory.parent);
     }
@@ -209,7 +200,7 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
     if (directory != null) _open(directory);
   }
 
-  Future<void> _onTap(_Entry entry) async {
+  Future<void> _onTap(BuildContext context, _Entry entry) async {
     final entity = entry.entity;
     if (entity is Directory) {
       _open(entity);
@@ -221,7 +212,7 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
     }
   }
 
-  Future<void> _confirmDelete(_Entry entry) async {
+  Future<void> _confirmDelete(BuildContext context, _Entry entry) async {
     final entity = entry.entity;
     final isDirectory = entity is Directory;
     final confirmed = await showDialog<bool>(
@@ -250,7 +241,7 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
     try {
       await entity.delete(recursive: true);
     } on FileSystemException catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
@@ -265,14 +256,7 @@ class _FileBrowserDebugHelperState extends State<FileBrowserDebugHelper> {
         ),
       );
     }
-    if (!mounted) return;
     _refresh();
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('directory', _directory?.path));
   }
 }
 

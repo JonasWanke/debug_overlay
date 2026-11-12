@@ -44,6 +44,7 @@ void main() {
         addTearDown(tester.view.reset);
 
         final tool = screenshot.tool();
+        addTearDown(tool.dispose);
         DebugOverlay.tools.value = [tool];
         final boundaryKey = GlobalKey();
         await tester.pumpWidget(
@@ -88,18 +89,18 @@ final _screenshots = [
   _Screenshot(
     'debug_overlay',
     'helpers-mediaQuery.png',
-    () => MediaQueryDebugHelper.tool,
+    MediaQueryDebugTool.new,
   ),
   _Screenshot(
     'debug_overlay',
     'helpers-logs.png',
-    () => LogsDebugHelper.tool(_sampleLogs()),
+    () => LogsDebugTool(_sampleLogs()),
     height: 360,
   ),
   _Screenshot(
     'debug_overlay',
     'helpers-mediaOverrides.png',
-    () => MediaOverrideDebugHelper.tool(
+    () => MediaOverrideDebugTool(
       ValueNotifier(MediaOverrideState()),
       supportedLocales: [
         const Locale('de'),
@@ -111,13 +112,13 @@ final _screenshots = [
   _Screenshot(
     'debug_overlay',
     'helpers-network.png',
-    () => NetworkDebugHelper.tool(_sampleRequests()),
+    () => NetworkDebugTool(_sampleRequests()),
     height: 400,
   ),
   _Screenshot(
     'debug_overlay',
     'helpers-rendering.png',
-    () => RenderingDebugHelper.tool,
+    RenderingDebugTool.new,
     height: 560,
   ),
 
@@ -127,7 +128,7 @@ final _screenshots = [
     _Screenshot(
       package,
       'helpers-network.png',
-      () => NetworkDebugHelper.tool(_sampleRequests()),
+      () => NetworkDebugTool(_sampleRequests()),
       height: 400,
     ),
 
@@ -271,7 +272,7 @@ class _FixedNetworkRequests extends NetworkRequestCollection {
 
 DebugTool _deviceInfoTool() {
   DeviceInfoPlatform.instance = _FakeDeviceInfoPlatform();
-  return DeviceInfoDebugHelper.tool;
+  return DeviceInfoDebugTool();
 }
 
 class _FakeDeviceInfoPlatform extends DeviceInfoPlatform {
@@ -300,7 +301,7 @@ DebugTool _packageInfoTool() {
     buildNumber: '42',
     buildSignature: '',
   );
-  return PackageInfoDebugHelper.tool;
+  return PackageInfoDebugTool();
 }
 
 DebugTool _sharedPreferencesTool() {
@@ -312,7 +313,7 @@ DebugTool _sharedPreferencesTool() {
         'theme_mode': 'dark',
         'ui_scale': 1.25,
       });
-  return SharedPreferencesDebugHelper.tool();
+  return SharedPreferencesDebugTool();
 }
 
 // The directory is shown in the screenshot, so it needs a stable path.
@@ -345,7 +346,7 @@ void _deleteFileBrowserFixture() {
 }
 
 DebugTool _fileBrowserTool() {
-  return FileBrowserDebugHelper.tool(
+  return FileBrowserDebugTool(
     roots: [
       FileBrowserRoot(
         name: 'Documents',

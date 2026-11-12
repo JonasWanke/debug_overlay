@@ -4,7 +4,7 @@ version: 1.0.0
 repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences
 resolution: workspace
 screenshots:
-  - description: SharedPreferencesDebugHelper
+  - description: SharedPreferencesDebugTool
     path: doc/helpers-sharedPreferences.png
 
 environment:

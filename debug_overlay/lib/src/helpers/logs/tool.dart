@@ -8,111 +8,96 @@ import 'package:implicitly_animated_list/implicitly_animated_list.dart';
 import 'package:json_view/json_view.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../debug_helper.dart';
 import '../../debug_tool.dart';
 import '../../utils/level_selector.dart';
 import 'data.dart';
 
-class const LogsDebugHelper(
+/// A [DebugTool] that lists the logs of a [LogCollection].
+class LogsDebugTool(
   final LogCollection logs, {
-  super.key,
-  final DiagnosticLevel initialMinLevel = .debug,
-}) extends StatefulWidget {
-  static DebugTool tool(
-    LogCollection logs, {
-    DiagnosticLevel initialMinLevel = .debug,
-  }) {
-    return DebugTool(
-      icon: Icons.list_alt,
-      title: 'Logs',
-      sliver: LogsDebugHelper(logs, initialMinLevel: initialMinLevel),
-    );
-  }
+  DiagnosticLevel initialMinLevel = .debug,
+}) extends DebugTool {
+  this
+    : _minLevel = initialMinLevel, super(icon: Icons.list_alt, title: 'Logs');
 
-  @override
-  State<LogsDebugHelper> createState() => _LogsDebugHelperState();
+  DiagnosticLevel _minLevel;
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('logs', logs))
-      ..add(EnumProperty('initialMinLevel', initialMinLevel));
-  }
-}
-
-class _LogsDebugHelperState extends State<LogsDebugHelper> {
-  late var _minLevel = widget.initialMinLevel;
   var _isOldestFirst = true;
 
   @override
-  Widget build(BuildContext context) {
+  List<Widget> buildActions(BuildContext context) {
     Widget sortIcon = const Icon(Icons.sort);
     if (!_isOldestFirst) {
       sortIcon = Transform.scale(scaleY: -1, child: sortIcon);
     }
-    final sortButton = IconButton(
-      tooltip: _isOldestFirst ? 'Show newest first' : 'Show oldest first',
-      onPressed: () => setState(() => _isOldestFirst = !_isOldestFirst),
-      icon: sortIcon,
-    );
 
-    return DebugHelper(
-      actions: [
-        IconButton(
-          tooltip: 'Copy logs',
-          onPressed: () => _copyLogsToClipboard(context, widget.logs.logs),
-          icon: const Icon(Icons.copy_outlined),
-        ),
-        IconButton(
-          tooltip: 'Clear logs',
-          onPressed: widget.logs.clear,
-          icon: const Icon(Icons.delete_outlined),
-        ),
-        sortButton,
-        DiagnosticLevelSelector(
-          value: _minLevel,
-          onSelected: (level) => setState(() => _minLevel = level),
-        ),
-      ],
-      contentPadding: EdgeInsets.zero,
-      sliver: ValueListenableBuilder(
-        valueListenable: widget.logs.listenable,
-        builder: (context, logs, _) {
-          if (logs.isEmpty) {
-            return SliverToBoxAdapter(
-              child: Center(
-                child: Text(
-                  'No logs available.',
-                  style: context.textTheme.bodySmall!.copyWith(
-                    color: context
-                        .theme
-                        .scaffoldBackgroundColor
-                        .mediumEmphasisOnColor,
-                  ),
-                ),
-              ),
-            );
-          }
-
-          var filteredLogs = logs
-              .where((it) => it.level.index >= _minLevel.index)
-              .toList();
-          if (!_isOldestFirst) {
-            filteredLogs = filteredLogs.reversed.toList();
-          }
-          return SliverImplicitlyAnimatedList(
-            itemData: filteredLogs,
-            itemBuilder: (context, data) => LogEntryWidget(data),
-          );
+    return [
+      IconButton(
+        tooltip: 'Copy logs',
+        onPressed: () => _copyLogsToClipboard(context, logs.logs),
+        icon: const Icon(Icons.copy_outlined),
+      ),
+      IconButton(
+        tooltip: 'Clear logs',
+        onPressed: logs.clear,
+        icon: const Icon(Icons.delete_outlined),
+      ),
+      IconButton(
+        tooltip: _isOldestFirst ? 'Show newest first' : 'Show oldest first',
+        onPressed: () {
+          _isOldestFirst = !_isOldestFirst;
+          notifyListeners();
+        },
+        icon: sortIcon,
+      ),
+      DiagnosticLevelSelector(
+        value: _minLevel,
+        onSelected: (level) {
+          _minLevel = level;
+          notifyListeners();
         },
       ),
+    ];
+  }
+
+  @override
+  Widget buildSliver(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: logs.listenable,
+      builder: (context, logs, _) {
+        if (logs.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                'No logs available.',
+                style: context.textTheme.bodySmall!.copyWith(
+                  color: context
+                      .theme
+                      .scaffoldBackgroundColor
+                      .mediumEmphasisOnColor,
+                ),
+              ),
+            ),
+          );
+        }
+
+        var filteredLogs = logs
+            .where((it) => it.level.index >= _minLevel.index)
+            .toList();
+        if (!_isOldestFirst) {
+          filteredLogs = filteredLogs.reversed.toList();
+        }
+        return SliverImplicitlyAnimatedList(
+          itemData: filteredLogs,
+          itemBuilder: (context, data) => _LogEntryWidget(data),
+        );
+      },
     );
   }
 }
 
 // ignore: prefer_const_constructors_in_immutables
-class LogEntryWidget(final Log log) extends StatelessWidget {
+class _LogEntryWidget(final Log log) extends StatelessWidget {
   this : super(key: ValueKey(log));
 
   @override
@@ -160,7 +145,7 @@ class LogEntryWidget(final Log log) extends StatelessWidget {
       title: title,
       isInitiallyExpanded: log.level.index >= DiagnosticLevel.error.index,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const .symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -356,7 +341,7 @@ class const _LogEntryLine({
       onTap: onTap,
       onLongPress: onLongPress,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const .symmetric(horizontal: 16, vertical: 4),
         child: child,
       ),
     );
@@ -489,7 +474,7 @@ class _ExpansionTileState extends State<_ExpansionTile>
       builder: (context, child) => DecoratedBox(
         decoration: ShapeDecoration(shape: _border.value!),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             header,
             ClipRect(

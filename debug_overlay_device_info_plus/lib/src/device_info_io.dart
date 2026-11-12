@@ -199,7 +199,7 @@ Future<List<DiagnosticsNode>> _getDiagnosticsMacOs() async {
     IntProperty('Active CPUs', info.activeCPUs),
     StringProperty(
       'Memory Size',
-      info.memorySize.formatByteSize(prefix: Prefix.binary),
+      info.memorySize.formatByteSize(prefix: .binary),
     ),
     StringProperty(
       'CPU Frequency',

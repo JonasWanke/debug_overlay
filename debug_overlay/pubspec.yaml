@@ -4,15 +4,15 @@ version: 3.0.0
 repository: https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay
 resolution: workspace
 screenshots:
-  - description: MediaQueryDebugHelper
+  - description: MediaQueryDebugTool
     path: doc/helpers-mediaQuery.png
-  - description: LogsDebugHelper
+  - description: LogsDebugTool
     path: doc/helpers-logs.png
-  - description: MediaOverridesDebugHelper
+  - description: MediaOverrideDebugTool
     path: doc/helpers-mediaOverrides.png
-  - description: NetworkDebugHelper
+  - description: NetworkDebugTool
     path: doc/helpers-network.png
-  - description: RenderingDebugHelper
+  - description: RenderingDebugTool
     path: doc/helpers-rendering.png
 
 environment:

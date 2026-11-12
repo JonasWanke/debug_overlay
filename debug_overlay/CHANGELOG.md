@@ -20,17 +20,28 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### ⚠️ BREAKING CHANGES
 
+- turn debug helpers into stateful tools and make their widgets private
+  - `DebugTool` is now an abstract `ChangeNotifier` with `buildActions` and `buildSliver` instead of a `sliver` widget; implement it for custom tools
+  - remove `DebugHelper`; actions are shown in the header of the overlay
+  - rename `*DebugHelper` to `*DebugTool` and replace the static `tool` getters/functions with constructors, e.g., `LogsDebugHelper.tool(logs)` -> `LogsDebugTool(logs)`
+  - rename `DiagnosticsBasedDebugHelper` to `DiagnosticsBasedDebugTool`, which is now abstract and implements `diagnosticsStream`
+  - remove `LogEntryWidget`, `NetworkRequestWidget`, and `DiagnosticLevelSelector` from the public API
 - move helpers with additional dependencies into separate packages in a pub workspace
-  - `DeviceInfoDebugHelper` -> `debug_overlay_device_info_plus`
-  - `PackageInfoDebugHelper` -> `debug_overlay_package_info_plus`
+  - `DeviceInfoDebugHelper` -> `DeviceInfoDebugTool` in `debug_overlay_device_info_plus`
+  - `PackageInfoDebugHelper` -> `PackageInfoDebugTool` in `debug_overlay_package_info_plus`
   - `DebugOverlay.tools` no longer contains them by default; add them via `DebugOverlay.appendTool(...)`
 
 ### 🎉 New Features
 
-- add `RenderingDebugHelper`
-- add `NetworkDebugHelper` and `NetworkRequestCollection`, with `debug_overlay_http` and `debug_overlay_dio` to record requests
-- add `debug_overlay_shared_preferences` with `SharedPreferencesDebugHelper`
-- add `debug_overlay_file_browser` with `FileBrowserDebugHelper`
+- add `RenderingDebugTool`
+- add `NetworkDebugTool` and `NetworkRequestCollection`, with `debug_overlay_http` and `debug_overlay_dio` to record requests
+- add `debug_overlay_shared_preferences` with `SharedPreferencesDebugTool`
+- add `debug_overlay_file_browser` with `FileBrowserDebugTool`
+
+### ⚡ Changes
+
+- replace the icon tab bar with a header that shows the active tool's title and opens a grid to switch tools; a tool's actions appear in that header instead of in a second row
+- tool state (filters, sort order, and so on) now survives switching tools
 
 ## 2.0.0 · 2026-08-26
 

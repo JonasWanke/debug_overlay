@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'debug_overlay_bubble.dart';
+import 'debug_overlay_header.dart';
 import 'debug_overlay_trigger.dart';
 import 'debug_tool.dart';
 import 'helpers/media_query.dart';
@@ -52,9 +53,9 @@ class const DebugOverlay({
 
   static final tools = ValueNotifier<List<DebugTool>>([
     // Only works in debug mode; see the documentation of
-    // [DiagnosticsBasedDebugHelper] for the explanation.
-    if (kDebugMode) MediaQueryDebugHelper.tool,
-    RenderingDebugHelper.tool,
+    // [DiagnosticsBasedDebugTool] for the explanation.
+    if (kDebugMode) MediaQueryDebugTool(),
+    RenderingDebugTool(),
   ]);
 
   static void prependTool(DebugTool tool) {
@@ -291,86 +292,51 @@ class _DebugOverlayContentState extends State<DebugOverlayContent> {
           final selectedIndex = tools.isEmpty
               ? null
               : widget.selectedToolIndex.clamp(0, tools.length - 1);
-          return CustomScrollView(
-            primary: false,
-            controller: widget.scrollController,
-            slivers: [
-              SliverPinnedHeader(
-                child: _buildHeader(context, tools, selectedIndex),
-              ),
-              if (selectedIndex == null)
-                const SliverToBoxAdapter(
-                  child: Center(child: Text('No debug tools registered')),
-                )
-              else
-                SliverPadding(
-                  padding: .fromLTRB(
-                    viewPadding.left,
-                    8,
-                    viewPadding.right,
-                    viewPadding.bottom + 16,
-                  ),
-                  sliver: tools[selectedIndex].sliver,
-                ),
-            ],
-          );
-        },
-      ),
-    );
-  }
+          final selectedTool = selectedIndex == null
+              ? null
+              : tools[selectedIndex];
 
-  Widget _buildHeader(
-    BuildContext context,
-    List<DebugTool> tools,
-    int? selectedIndex,
-  ) {
-    final viewPadding = context.mediaQuery.viewPadding;
-    // Sliver content is painted over the header's shadow, so we use a
-    // different background color and a divider to separate it from the
-    // content below.
-    return Material(
-      color: context.theme.colorScheme.surfaceContainerHigh,
-      child: Column(
-        mainAxisSize: .min,
-        children: [
-          Padding(
-            padding: .fromLTRB(
-              viewPadding.left + 8,
-              viewPadding.top + 4,
-              viewPadding.right + 8,
-              4,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: .horizontal,
-                    child: Row(
-                      children: [
-                        for (final (index, tool) in tools.indexed)
-                          (index == selectedIndex
-                              ? IconButton.filledTonal
-                              : IconButton.new)(
-                            icon: Icon(tool.icon),
-                            tooltip: tool.title,
-                            onPressed: () =>
-                                _select(tools, selectedIndex!, index),
-                          ),
-                      ],
-                    ),
+          // Tools notify their listeners when their state changes, which
+          // affects both the header (actions) and the content.
+          return ListenableBuilder(
+            listenable: Listenable.merge([selectedTool]),
+            builder: (context, _) => CustomScrollView(
+              primary: false,
+              controller: widget.scrollController,
+              slivers: [
+                SliverPinnedHeader(
+                  child: DebugOverlayHeader(
+                    tools: tools,
+                    selectedIndex: selectedIndex,
+                    onSelected: (index) =>
+                        _select(tools, selectedIndex!, index),
+                    actions: selectedTool?.buildActions(context) ?? const [],
+                    onCollapse: widget.onCollapse,
                   ),
                 ),
-                if (widget.onCollapse != null)
-                  IconButton(
-                    icon: const Icon(Icons.close_fullscreen),
-                    tooltip: 'Collapse',
-                    onPressed: widget.onCollapse,
+                if (selectedTool == null)
+                  const SliverToBoxAdapter(
+                    child: Center(child: Text('No debug tools registered')),
+                  )
+                else
+                  SliverPadding(
+                    padding: .fromLTRB(
+                      viewPadding.left,
+                      8,
+                      viewPadding.right,
+                      viewPadding.bottom + 16,
+                    ),
+                    // The key prevents element state from leaking between
+                    // tools whose slivers have the same type.
+                    sliver: KeyedSubtree(
+                      key: ObjectKey(selectedTool),
+                      child: selectedTool.buildSliver(context),
+                    ),
                   ),
               ],
             ),
-          ),
-          const Divider(height: 1),
-        ],
+          );
+        },
       ),
     );
   }

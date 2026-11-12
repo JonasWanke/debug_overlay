@@ -27,25 +27,28 @@ You can change or disable these triggers via `DebugOverlay.builder(trigger: ...)
 To control the overlay from code, use `DebugOverlay.expand()`, `DebugOverlay.collapse()`, and `DebugOverlay.close()`.
 You can read and listen to the current mode via `DebugOverlay.mode`, which is a `ValueNotifier` that you can also set before `runApp` to start in a different mode.
 
-By default, this overlay includes `MediaQueryDebugHelper` and `RenderingDebugHelper`.
+By default, this overlay includes `MediaQueryDebugTool` and `RenderingDebugTool`.
 More tools are available in the [additional packages](#additional-packages) below.
 
 ## Additional Packages
 
-Helpers that need additional dependencies live in separate packages, so you only pay for what you use:
+Tools that need additional dependencies live in separate packages, so you only pay for what you use:
 
 | Package                                                                                                                      | Contents                                                                                                           |
 | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)     | `DeviceInfoDebugHelper` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))            |
-| [`debug_overlay_file_browser`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_file_browser)             | `FileBrowserDebugHelper` (uses [<kbd>path_provider</kbd>](https://pub.dev/packages/path_provider))                 |
+| [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)     | `DeviceInfoDebugTool` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))            |
+| [`debug_overlay_file_browser`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_file_browser)             | `FileBrowserDebugTool` (uses [<kbd>path_provider</kbd>](https://pub.dev/packages/path_provider))                 |
 | [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http)                             | `DebugHttpClient` for the network inspector                                                                        |
 | [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio)                               | `DebugDioInterceptor` for the network inspector                                                                    |
-| [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus)   | `PackageInfoDebugHelper` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus))         |
-| [`debug_overlay_shared_preferences`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences) | `SharedPreferencesDebugHelper` (uses [<kbd>shared_preferences</kbd>](https://pub.dev/packages/shared_preferences)) |
+| [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus)   | `PackageInfoDebugTool` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus))         |
+| [`debug_overlay_shared_preferences`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences) | `SharedPreferencesDebugTool` (uses [<kbd>shared_preferences</kbd>](https://pub.dev/packages/shared_preferences)) |
 
-## Debug Tools & Helpers
+## Debug Tools
 
-Each tab of the expanded overlay is a `DebugTool`: an icon, a title (shown as tooltip), and a sliver widget with the content, usually a debug helper from below.
+Each entry in the tool picker of the expanded overlay is a `DebugTool`: an icon, a title, optional actions, and a sliver with the content.
+The header shows the active tool's icon and title; tap it to switch tools via a grid of all tools.
+The tool's actions appear in the header next to the title.
+
 To add a tool, register it by calling either of the following:
 
 - `DebugOverlay.prependTool(myDebugTool)` to add it to the front of the list
@@ -53,18 +56,18 @@ To add a tool, register it by calling either of the following:
 
 Or, if you want to override all currently registered tools, set `DebugOverlay.tools.value` to a list of `DebugTool`s.
 
-Every built-in helper below provides a ready-made tool via `tool`, e.g., `DebugOverlay.appendTool(LogsDebugHelper.tool(logs))`.
-The helper widgets themselves are public too, so you can, for example, use a different icon or title (`DebugTool(icon: ..., title: ..., sliver: LogsDebugHelper(logs))`) or combine several helpers in one tool.
+Every built-in tool below is a class that you instantiate, e.g., `DebugOverlay.appendTool(LogsDebugTool(logs))`.
+Tools own their state, so filters and similar settings survive switching to another tool or closing the overlay.
 
-### `MediaQueryDebugHelper`
+### `MediaQueryDebugTool`
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-mediaQuery.png?raw=true" width="400px" alt="´MediaQueryDebugHelper demo" />
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-mediaQuery.png?raw=true" width="400px" alt="´MediaQueryDebugTool demo" />
 
 Displays information obtained from [`MediaQuery`](https://api.flutter.dev/flutter/widgets/MediaQuery-class.html).
 
-### `LogsDebugHelper`
+### `LogsDebugTool`
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-logs.png?raw=true" width="400px" alt="´LogsDebugHelper demo" />
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-logs.png?raw=true" width="400px" alt="´LogsDebugTool demo" />
 
 Displays logs generated by your app. To use it, follow these steps:
 
@@ -78,12 +81,12 @@ Displays logs generated by your app. To use it, follow these steps:
    );
    ```
 
-2. Register the helper and supply its state, e.g., in `main()`:
+2. Register the tool and supply its state, e.g., in `main()`:
 
    ```dart
    void main() {
      if (kDebugMode) {
-       DebugOverlay.appendTool(LogsDebugHelper.tool(logs));
+       DebugOverlay.appendTool(LogsDebugTool(logs));
      }
 
      runApp(MyApp());
@@ -106,9 +109,9 @@ Displays logs generated by your app. To use it, follow these steps:
 The `error` field can also hold data for non-error logs.
 If it stores JSON data (on an object with a `toJson()` method), the data can be inspected using [<kbd>json_view</kbd>](https://pub.dev/packages/json_view).
 
-### `MediaOverridesDebugHelper`
+### `MediaOverrideDebugTool`
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-mediaOverrides.png?raw=true" width="400px" alt="´MediaOverridesDebugHelper demo" />
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-mediaOverrides.png?raw=true" width="400px" alt="´MediaOverrideDebugTool demo" />
 
 This allows you to override the theme mode and locale of your app. To use it, follow these steps:
 
@@ -118,12 +121,12 @@ This allows you to override the theme mode and locale of your app. To use it, fo
    final mediaOverrideState = ValueNotifier(MediaOverrideState());
    ```
 
-2. Register the helper and supply its state, e.g., in `main()`:
+2. Register the tool and supply its state, e.g., in `main()`:
 
    ```dart
    void main() {
      if (kDebugMode) {
-       DebugOverlay.prependTool(MediaOverrideDebugHelper.tool(
+       DebugOverlay.prependTool(MediaOverrideDebugTool(
          mediaOverrideState,
          // To support overriding locales, this value must be set and should
          // contain the same locales as passed to [MaterialApp.supportedLocales],
@@ -158,9 +161,9 @@ This allows you to override the theme mode and locale of your app. To use it, fo
 
 <!-- ![Button demo](https://github.com/JonasWanke/black_hole_flutter/raw/master/doc/widgets-buttons.gif?raw=true) -->
 
-### `NetworkDebugHelper`
+### `NetworkDebugTool`
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-network.png?raw=true" width="400px" alt="NetworkDebugHelper demo" />
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-network.png?raw=true" width="400px" alt="NetworkDebugTool demo" />
 
 Lists HTTP requests with their status, duration, headers, and bodies. To use it, follow these steps:
 
@@ -174,10 +177,10 @@ Lists HTTP requests with their status, duration, headers, and bodies. To use it,
    );
    ```
 
-2. Register the helper, e.g., in `main()`:
+2. Register the tool, e.g., in `main()`:
 
    ```dart
-   DebugOverlay.appendTool(NetworkDebugHelper.tool(networkRequests));
+   DebugOverlay.appendTool(NetworkDebugTool(networkRequests));
    ```
 
 3. Record requests using one of the following:
@@ -186,17 +189,47 @@ Lists HTTP requests with their status, duration, headers, and bodies. To use it,
    - [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio): `DebugDioInterceptor` for [`dio`](https://pub.dev/packages/dio)
    - Any other client: call `networkRequests.start(...)`, `complete(...)`, and `fail(...)` manually.
 
-### `RenderingDebugHelper`
+### `RenderingDebugTool`
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-rendering.png?raw=true" width="400px" alt="RenderingDebugHelper demo" />
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-rendering.png?raw=true" width="400px" alt="RenderingDebugTool demo" />
 
-Toggles Flutter's debug paint flags (sizes, baselines, pointers, repaint rainbow) and the performance overlay, and offers a slider for `timeDilation`. Register it via `DebugOverlay.appendTool(RenderingDebugHelper.tool)`.
+Toggles Flutter's debug paint flags (sizes, baselines, pointers, repaint rainbow) and the performance overlay, and offers a slider for `timeDilation`. Register it via `DebugOverlay.appendTool(RenderingDebugTool())`.
 
 Most options only work in debug mode.
 
 ### Custom
 
-To implement your own debug tool, wrap a sliver in a `DebugTool`. You can use the provided `DebugHelper` class for the layout.
+To implement your own debug tool, extend `DebugTool`.
+It is a [`ChangeNotifier`](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html) that owns its state, so call `notifyListeners()` after changing anything that affects its actions or content:
 
-If your information can be represented with Flutter's [`DiagnosticsNode`](https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html), you can use `DiagnosticsBasedDebugHelper` which automatically provides filtering.
-This is also used internally by `DeviceInfoDebugHelper` (from `debug_overlay_device_info_plus`), `MediaQueryDebugHelper`, and `PackageInfoDebugHelper` (from `debug_overlay_package_info_plus`).
+```dart
+class MyDebugTool extends DebugTool {
+  MyDebugTool() : super(icon: Icons.bolt, title: 'My Tool');
+
+  var _isEnabled = false;
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        tooltip: 'Toggle',
+        icon: const Icon(Icons.power_settings_new),
+        onPressed: () {
+          _isEnabled = !_isEnabled;
+          notifyListeners();
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildSliver(BuildContext context) {
+    return SliverToBoxAdapter(child: Text('Enabled: $_isEnabled'));
+  }
+}
+```
+
+The overlay never disposes tools; if you create them dynamically, call `dispose()` after removing them from `DebugOverlay.tools`.
+
+If your information can be represented with Flutter's [`DiagnosticsNode`](https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html), you can extend `DiagnosticsBasedDebugTool` which automatically provides filtering.
+This is also used internally by `DeviceInfoDebugTool` (from `debug_overlay_device_info_plus`), `MediaQueryDebugTool`, and `PackageInfoDebugTool` (from `debug_overlay_package_info_plus`).

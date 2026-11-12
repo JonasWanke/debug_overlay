@@ -1,21 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../debug_helper.dart';
-import '../debug_tool.dart';
+import '../diagnostics_based_debug_tool.dart';
 
-class const MediaQueryDebugHelper({super.key}) extends StatelessWidget {
-  static const tool = DebugTool(
-    icon: Icons.aspect_ratio,
-    title: 'MediaQuery',
-    sliver: MediaQueryDebugHelper(),
-  );
+class MediaQueryDebugTool() extends DiagnosticsBasedDebugTool {
+  this : super(icon: Icons.aspect_ratio, title: 'MediaQuery');
 
   @override
-  Widget build(BuildContext context) {
-    return DiagnosticsBasedDebugHelper(
-      diagnosticsStream: _getDiagnostics(context).asStream(),
-    );
+  Stream<List<DiagnosticsNode>> diagnosticsStream(BuildContext context) {
+    return _getDiagnostics(context).asStream();
   }
 
   Future<List<DiagnosticsNode>> _getDiagnostics(BuildContext context) async {

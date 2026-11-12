@@ -6,100 +6,79 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// A [DebugHelper] that lists all entries of [SharedPreferencesAsync] and
-/// allows to add, edit, and delete them.
+/// A [DebugTool] that lists all entries of [SharedPreferencesAsync] and allows
+/// to add, edit, and delete them.
+///
+/// If [preferences] is `null`, a default [SharedPreferencesAsync] is used.
 ///
 /// Entries written by the legacy `SharedPreferences` API use a `flutter.`
 /// prefix on some platforms and are only visible here if they're stored in the
 /// same location as the one used by [SharedPreferencesAsync].
-class const SharedPreferencesDebugHelper({
-  super.key,
-  final SharedPreferencesAsync? preferences,
-}) extends StatefulWidget {
-  /// Creates a [DebugTool] for this helper.
-  ///
-  /// If [preferences] is `null`, a default [SharedPreferencesAsync] is used.
-  static DebugTool tool({SharedPreferencesAsync? preferences}) {
-    return DebugTool(
-      icon: Icons.storage,
-      title: 'Shared Preferences',
-      sliver: SharedPreferencesDebugHelper(preferences: preferences),
-    );
-  }
+class SharedPreferencesDebugTool({final SharedPreferencesAsync? preferences})
+    extends DebugTool {
+  this : super(icon: Icons.storage, title: 'Shared Preferences');
 
-  @override
-  State<SharedPreferencesDebugHelper> createState() =>
-      _SharedPreferencesDebugHelperState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('preferences', preferences));
-  }
-}
-
-class _SharedPreferencesDebugHelperState
-    extends State<SharedPreferencesDebugHelper> {
-  late final _preferences = widget.preferences ?? SharedPreferencesAsync();
+  late final _preferences = preferences ?? SharedPreferencesAsync();
   late var _entries = _loadEntries();
 
   @override
-  Widget build(BuildContext context) {
-    return DebugHelper(
-      actions: [
-        IconButton(
-          tooltip: 'Add entry',
-          onPressed: () => _showEditor(context),
-          icon: const Icon(Icons.add),
-        ),
-        IconButton(
-          tooltip: 'Refresh',
-          onPressed: _refresh,
-          icon: const Icon(Icons.refresh),
-        ),
-      ],
-      contentPadding: .zero,
-      sliver: FutureBuilder(
-        future: _entries,
-        builder: (context, snapshot) {
-          final error = snapshot.error;
-          if (error != null) {
-            return SliverToBoxAdapter(
-              child: Center(child: Text('$error\n${snapshot.stackTrace!}')),
-            );
-          }
-
-          final entries = snapshot.data;
-          if (entries == null) {
-            return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (entries.isEmpty) {
-            return SliverToBoxAdapter(
-              child: Center(
-                child: Text(
-                  'No entries available.',
-                  style: context.textTheme.bodySmall,
-                ),
-              ),
-            );
-          }
-
-          return SliverList.builder(
-            itemCount: entries.length,
-            itemBuilder: (context, index) {
-              final entry = entries[index];
-              return _EntryTile(
-                key: ValueKey(entry.key),
-                entry: entry,
-                onEdit: () => _showEditor(context, entry),
-                onDelete: () => _confirmAndDelete(context, entry.key),
-              );
-            },
-          );
-        },
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        tooltip: 'Add entry',
+        onPressed: () => _showEditor(context),
+        icon: const Icon(Icons.add),
       ),
+      IconButton(
+        tooltip: 'Refresh',
+        onPressed: _refresh,
+        icon: const Icon(Icons.refresh),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildSliver(BuildContext context) {
+    return FutureBuilder(
+      future: _entries,
+      builder: (context, snapshot) {
+        final error = snapshot.error;
+        if (error != null) {
+          return SliverToBoxAdapter(
+            child: Center(child: Text('$error\n${snapshot.stackTrace!}')),
+          );
+        }
+
+        final entries = snapshot.data;
+        if (entries == null) {
+          return const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (entries.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                'No entries available.',
+                style: context.textTheme.bodySmall,
+              ),
+            ),
+          );
+        }
+
+        return SliverList.builder(
+          itemCount: entries.length,
+          itemBuilder: (context, index) {
+            final entry = entries[index];
+            return _EntryTile(
+              key: ValueKey(entry.key),
+              entry: entry,
+              onEdit: () => _showEditor(context, entry),
+              onDelete: () => _confirmAndDelete(context, entry.key),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -108,7 +87,10 @@ class _SharedPreferencesDebugHelperState
     return all.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
   }
 
-  void _refresh() => setState(() => unawaited(_entries = _loadEntries()));
+  void _refresh() {
+    unawaited(_entries = _loadEntries());
+    notifyListeners();
+  }
 
   Future<void> _showEditor(
     BuildContext context, [
@@ -122,7 +104,6 @@ class _SharedPreferencesDebugHelperState
     if (result == null) return;
 
     await _write(result.key, result.value);
-    if (!mounted) return;
     _refresh();
   }
 
@@ -156,14 +137,7 @@ class _SharedPreferencesDebugHelperState
     if (confirmed != true) return;
 
     await _preferences.remove(key);
-    if (!mounted) return;
     _refresh();
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('preferences', _preferences));
   }
 }
 
@@ -293,7 +267,7 @@ class _EntryDialogState extends State<_EntryDialog> {
   Widget _buildValueEditor(Object? parsedValue) {
     if (_type == .boolean) {
       return SwitchListTile(
-        contentPadding: EdgeInsets.zero,
+        contentPadding: .zero,
         title: const Text('Value'),
         value: _bool,
         onChanged: (value) => setState(() => _bool = value),
@@ -303,12 +277,9 @@ class _EntryDialogState extends State<_EntryDialog> {
     return TextField(
       controller: _valueController,
       keyboardType: switch (_type) {
-        .integer => const TextInputType.numberWithOptions(signed: true),
-        .decimal => const TextInputType.numberWithOptions(
-          signed: true,
-          decimal: true,
-        ),
-        _ => TextInputType.multiline,
+        .integer => const .numberWithOptions(signed: true),
+        .decimal => const .numberWithOptions(signed: true, decimal: true),
+        _ => .multiline,
       },
       minLines: _type == .string || _type == .stringList ? 1 : null,
       maxLines: _type == .string || _type == .stringList ? 8 : 1,

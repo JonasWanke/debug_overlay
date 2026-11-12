@@ -2,12 +2,12 @@
 
 Displays information obtained from [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus) in the `debug_overlay`.
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay_device_info_plus/doc/helpers-deviceInfo.png?raw=true" width="400px" alt="DeviceInfoDebugHelper demo" />
+<img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay_device_info_plus/doc/helpers-deviceInfo.png?raw=true" width="400px" alt="DeviceInfoDebugTool demo" />
 
 Part of [<kbd>debug_overlay</kbd>](https://pub.dev/packages/debug_overlay).
 
 ## Usage
 
 ```dart
-DebugOverlay.appendTool(DeviceInfoDebugHelper.tool);
+DebugOverlay.appendTool(DeviceInfoDebugTool());
 ```

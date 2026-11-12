@@ -3,18 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class const PackageInfoDebugHelper({super.key}) extends StatelessWidget {
-  static const tool = DebugTool(
-    icon: Icons.inventory_2,
-    title: 'Package Info',
-    sliver: PackageInfoDebugHelper(),
-  );
+class PackageInfoDebugTool() extends DiagnosticsBasedDebugTool {
+  this : super(icon: Icons.inventory_2, title: 'Package Info');
+
+  late final _diagnostics = _getDiagnostics();
 
   @override
-  Widget build(BuildContext context) {
-    return DiagnosticsBasedDebugHelper(
-      diagnosticsStream: _getDiagnostics().asStream(),
-    );
+  Stream<List<DiagnosticsNode>> diagnosticsStream(BuildContext context) {
+    return _diagnostics.asStream();
   }
 
   Future<List<DiagnosticsNode>> _getDiagnostics() async {

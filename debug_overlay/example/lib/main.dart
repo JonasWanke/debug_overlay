@@ -33,7 +33,7 @@ final supportedLocales = kMaterialSupportedLanguages
 void main() {
   if (kDebugMode) {
     DebugOverlay.prependTool(
-      MediaOverrideDebugHelper.tool(
+      MediaOverrideDebugTool(
         mediaOverrideState,
         // To support overriding locales, this value must be set and should
         // contain the same locales as passed to [MaterialApp.supportedLocales],
@@ -41,12 +41,12 @@ void main() {
         supportedLocales: supportedLocales,
       ),
     );
-    DebugOverlay.appendTool(LogsDebugHelper.tool(logs));
-    DebugOverlay.appendTool(NetworkDebugHelper.tool(networkRequests));
-    DebugOverlay.appendTool(SharedPreferencesDebugHelper.tool());
-    DebugOverlay.appendTool(FileBrowserDebugHelper.tool());
-    DebugOverlay.appendTool(PackageInfoDebugHelper.tool);
-    DebugOverlay.appendTool(DeviceInfoDebugHelper.tool);
+    DebugOverlay.appendTool(LogsDebugTool(logs));
+    DebugOverlay.appendTool(NetworkDebugTool(networkRequests));
+    DebugOverlay.appendTool(SharedPreferencesDebugTool());
+    DebugOverlay.appendTool(FileBrowserDebugTool());
+    DebugOverlay.appendTool(PackageInfoDebugTool());
+    DebugOverlay.appendTool(DeviceInfoDebugTool());
   }
 
   runApp(const MyApp());
@@ -55,7 +55,7 @@ void main() {
 class const MyApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // To use the [MediaOverrideDebugHelper], wrap your app in a
+    // To use the [MediaOverrideDebugTool], wrap your app in a
     // [ValueListenableBuilder] to access the overridden values:
     return ValueListenableBuilder(
       valueListenable: mediaOverrideState,
