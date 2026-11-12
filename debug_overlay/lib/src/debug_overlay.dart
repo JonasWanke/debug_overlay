@@ -296,8 +296,6 @@ class _DebugOverlayContentState extends State<DebugOverlayContent> {
               ? null
               : tools[selectedIndex];
 
-          // Tools notify their listeners when their state changes, which
-          // affects both the header (actions) and the content.
           return ListenableBuilder(
             listenable: Listenable.merge([selectedTool]),
             builder: (context, _) => CustomScrollView(

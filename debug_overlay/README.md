@@ -34,12 +34,12 @@ More tools are available in the [additional packages](#additional-packages) belo
 
 Tools that need additional dependencies live in separate packages, so you only pay for what you use:
 
-| Package                                                                                                                      | Contents                                                                                                           |
-| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Package                                                                                                                      | Contents                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)     | `DeviceInfoDebugTool` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))            |
 | [`debug_overlay_file_browser`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_file_browser)             | `FileBrowserDebugTool` (uses [<kbd>path_provider</kbd>](https://pub.dev/packages/path_provider))                 |
-| [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http)                             | `DebugHttpClient` for the network inspector                                                                        |
-| [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio)                               | `DebugDioInterceptor` for the network inspector                                                                    |
+| [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http)                             | `DebugHttpClient` for the network inspector                                                                      |
+| [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio)                               | `DebugDioInterceptor` for the network inspector                                                                  |
 | [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus)   | `PackageInfoDebugTool` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus))         |
 | [`debug_overlay_shared_preferences`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences) | `SharedPreferencesDebugTool` (uses [<kbd>shared_preferences</kbd>](https://pub.dev/packages/shared_preferences)) |
 
@@ -228,6 +228,9 @@ class MyDebugTool extends DebugTool {
   }
 }
 ```
+
+To make your tool searchable, override `isSearchable` to return `true` and only show entries for which `matchesSearch(text)` is `true` in `buildSliver`.
+The header then shows a search button and field, and the query is stored in the tool (`searchQuery`).
 
 The overlay never disposes tools; if you create them dynamically, call `dispose()` after removing them from `DebugOverlay.tools`.
 

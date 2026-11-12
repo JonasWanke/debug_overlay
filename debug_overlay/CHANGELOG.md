@@ -37,6 +37,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - add `NetworkDebugTool` and `NetworkRequestCollection`, with `debug_overlay_http` and `debug_overlay_dio` to record requests
 - add `debug_overlay_shared_preferences` with `SharedPreferencesDebugTool`
 - add `debug_overlay_file_browser` with `FileBrowserDebugTool`
+- add a shared search field to the header for logs, network requests, diagnostics-based tools, shared preferences, and files; custom tools opt in via `DebugTool.isSearchable` and `matchesSearch`
 
 ### ⚡ Changes
 

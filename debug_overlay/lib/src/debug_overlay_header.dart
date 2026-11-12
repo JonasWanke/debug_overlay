@@ -21,6 +21,10 @@ class const DebugOverlayHeader({
   @override
   Widget build(BuildContext context) {
     final viewPadding = context.mediaQuery.viewPadding;
+    final selectedTool = selectedIndex == null ? null : tools[selectedIndex!];
+    final searchTool = selectedTool != null && selectedTool.isSearchable
+        ? selectedTool
+        : null;
     // Sliver content is painted over the header's shadow, so we use a
     // different background color and a divider to separate it from the
     // content below.
@@ -51,6 +55,17 @@ class const DebugOverlayHeader({
                   ),
                 ),
                 ...actions,
+                if (searchTool != null)
+                  (searchTool.isSearchOpen
+                      ? IconButton.filledTonal
+                      : IconButton.new)(
+                    icon: const Icon(Icons.search),
+                    tooltip: searchTool.isSearchOpen
+                        ? 'Close search'
+                        : 'Search',
+                    onPressed: () =>
+                        searchTool.isSearchOpen = !searchTool.isSearchOpen,
+                  ),
                 if (onCollapse != null)
                   IconButton(
                     icon: const Icon(Icons.close_fullscreen),
@@ -60,6 +75,18 @@ class const DebugOverlayHeader({
               ],
             ),
           ),
+          if (searchTool != null && searchTool.isSearchOpen)
+            _SearchField(
+              // A new field per tool, so the text isn't carried over.
+              key: ObjectKey(searchTool),
+              tool: searchTool,
+              padding: .fromLTRB(
+                viewPadding.left + 16,
+                0,
+                viewPadding.right + 16,
+                8,
+              ),
+            ),
           const Divider(height: 1),
         ],
       ),
@@ -75,6 +102,65 @@ class const DebugOverlayHeader({
       ..add(ObjectFlagProperty.has('onSelected', onSelected))
       ..add(IterableProperty('actions', actions))
       ..add(ObjectFlagProperty<VoidCallback?>.has('onCollapse', onCollapse));
+  }
+}
+
+class const _SearchField({
+  super.key,
+  required final DebugTool tool,
+  required final EdgeInsets padding,
+}) extends StatefulWidget {
+  @override
+  State<_SearchField> createState() => _SearchFieldState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('tool', tool))
+      ..add(DiagnosticsProperty('padding', padding));
+  }
+}
+
+class _SearchFieldState extends State<_SearchField> {
+  late final _controller = TextEditingController(text: widget.tool.searchQuery);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: widget.padding,
+      child: TextField(
+        controller: _controller,
+        autofocus: true,
+        textInputAction: .search,
+        onChanged: (it) => widget.tool.searchQuery = it,
+        decoration: InputDecoration(
+          isDense: true,
+          hintText: 'Search',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: ListenableBuilder(
+            listenable: _controller,
+            builder: (context, _) => _controller.text.isEmpty
+                ? const SizedBox.shrink()
+                : IconButton(
+                    tooltip: 'Clear',
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _controller.clear();
+                      widget.tool.searchQuery = '';
+                    },
+                  ),
+          ),
+          border: const OutlineInputBorder(borderRadius: .all(.circular(24))),
+        ),
+      ),
+    );
   }
 }
 

@@ -14,6 +14,9 @@ class NetworkDebugTool(final NetworkRequestCollection requests)
   var _onlyErrors = false;
 
   @override
+  bool get isSearchable => true;
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       (_onlyErrors ? IconButton.filledTonal : IconButton.new)(
@@ -40,7 +43,8 @@ class NetworkDebugTool(final NetworkRequestCollection requests)
         // Newest first.
         final visible = [
           for (final request in requests.reversed)
-            if (!_onlyErrors || _isError(request)) request,
+            if ((!_onlyErrors || _isError(request)) && _matches(request))
+              request,
         ];
         if (visible.isEmpty) {
           return SliverToBoxAdapter(
@@ -48,7 +52,7 @@ class NetworkDebugTool(final NetworkRequestCollection requests)
               child: Text(
                 requests.isEmpty
                     ? 'No requests available.'
-                    : 'No failed requests.',
+                    : 'No matching requests.',
                 style: context.textTheme.bodySmall!.copyWith(
                   color: context
                       .theme
@@ -67,6 +71,20 @@ class NetworkDebugTool(final NetworkRequestCollection requests)
         );
       },
     );
+  }
+
+  bool _matches(NetworkRequest request) {
+    if (searchQuery.isEmpty) return true;
+
+    return matchesSearch([
+      '${request.method} ${request.url}',
+      if (request.statusCode != null) '${request.statusCode}',
+      _headersText(request.requestHeaders),
+      ?request.requestBody,
+      _headersText(request.responseHeaders),
+      ?request.responseBody,
+      ?request.error?.toString(),
+    ]);
   }
 
   /// Whether the request failed or received an error status code.

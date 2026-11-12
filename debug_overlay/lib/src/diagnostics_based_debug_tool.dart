@@ -15,6 +15,9 @@ abstract class DiagnosticsBasedDebugTool({
 }) extends DebugTool {
   var _minLevel = DiagnosticLevel.debug;
 
+  @override
+  bool get isSearchable => true;
+
   /// The diagnostics to display.
   ///
   /// This is called whenever the content is rebuilt, so expensive results
@@ -63,7 +66,9 @@ abstract class DiagnosticsBasedDebugTool({
 
           final entries = nodes
               .where((it) => it.level.index >= _minLevel.index)
-              .map((it) => Text(it.toStringDeep(minLevel: _minLevel)))
+              .map((it) => it.toStringDeep(minLevel: _minLevel))
+              .where((it) => matchesSearch([it]))
+              .map(Text.new)
               .toList();
           if (entries.isEmpty) {
             return SliverToBoxAdapter(

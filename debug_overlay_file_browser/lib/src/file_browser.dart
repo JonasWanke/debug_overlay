@@ -33,6 +33,9 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
   Future<int>? _size;
 
   @override
+  bool get isSearchable => true;
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
@@ -68,7 +71,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
         final directory = _directory;
         return directory == null
             ? _buildRoots(roots)
-            : _buildDirectory(context, directory, roots);
+            : _buildDirectory(directory, roots);
       },
     );
   }
@@ -88,15 +91,14 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
     );
   }
 
-  Widget _buildDirectory(
-    BuildContext context,
-    Directory directory,
-    List<FileBrowserRoot> roots,
-  ) {
+  Widget _buildDirectory(Directory directory, List<FileBrowserRoot> roots) {
     return FutureBuilder(
       future: _entries,
       builder: (context, snapshot) {
-        final entries = snapshot.data;
+        final allEntries = snapshot.data;
+        final entries = allEntries
+            ?.where((it) => matchesSearch([it.name]))
+            .toList();
         return SliverList.list(
           children: [
             _buildHeader(context, directory, entries?.length),
@@ -112,7 +114,10 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
             else if (entries.isEmpty)
               Padding(
                 padding: const .all(16),
-                child: Text('Empty.', style: context.textTheme.bodySmall),
+                child: Text(
+                  allEntries!.isEmpty ? 'Empty.' : 'No matching entries.',
+                  style: context.textTheme.bodySmall,
+                ),
               )
             else
               for (final entry in entries)
@@ -144,7 +149,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
               if (itemCount != null)
                 Text('$itemCount items', style: context.textTheme.bodySmall),
               const Spacer(),
-              _buildSize(context, directory),
+              _buildSize(directory),
             ],
           ),
         ],
@@ -152,7 +157,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
     );
   }
 
-  Widget _buildSize(BuildContext context, Directory directory) {
+  Widget _buildSize(Directory directory) {
     final size = _size;
     if (size == null) {
       return TextButton(

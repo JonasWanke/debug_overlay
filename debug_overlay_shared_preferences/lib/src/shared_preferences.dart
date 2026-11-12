@@ -22,6 +22,9 @@ class SharedPreferencesDebugTool({final SharedPreferencesAsync? preferences})
   late var _entries = _loadEntries();
 
   @override
+  bool get isSearchable => true;
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
@@ -49,17 +52,22 @@ class SharedPreferencesDebugTool({final SharedPreferencesAsync? preferences})
           );
         }
 
-        final entries = snapshot.data;
-        if (entries == null) {
+        final allEntries = snapshot.data;
+        if (allEntries == null) {
           return const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator()),
           );
         }
+        final entries = allEntries
+            .where((it) => matchesSearch([it.key, _valueToText(it.value)]))
+            .toList();
         if (entries.isEmpty) {
           return SliverToBoxAdapter(
             child: Center(
               child: Text(
-                'No entries available.',
+                allEntries.isEmpty
+                    ? 'No entries available.'
+                    : 'No matching entries.',
                 style: context.textTheme.bodySmall,
               ),
             ),

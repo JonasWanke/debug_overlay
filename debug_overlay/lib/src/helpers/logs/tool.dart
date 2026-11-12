@@ -25,6 +25,9 @@ class LogsDebugTool(
   var _isOldestFirst = true;
 
   @override
+  bool get isSearchable => true;
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     Widget sortIcon = const Icon(Icons.sort);
     if (!_isOldestFirst) {
@@ -82,8 +85,23 @@ class LogsDebugTool(
         }
 
         var filteredLogs = logs
-            .where((it) => it.level.index >= _minLevel.index)
+            .where((it) => it.level.index >= _minLevel.index && _matches(it))
             .toList();
+        if (filteredLogs.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                'No matching logs.',
+                style: context.textTheme.bodySmall!.copyWith(
+                  color: context
+                      .theme
+                      .scaffoldBackgroundColor
+                      .mediumEmphasisOnColor,
+                ),
+              ),
+            ),
+          );
+        }
         if (!_isOldestFirst) {
           filteredLogs = filteredLogs.reversed.toList();
         }
@@ -93,6 +111,16 @@ class LogsDebugTool(
         );
       },
     );
+  }
+
+  bool _matches(Log log) {
+    if (searchQuery.isEmpty) return true;
+
+    return matchesSearch([
+      log.message,
+      if (log.error != null) _stringify(log.error as Object),
+      if (log.stackTrace != null) '${log.stackTrace}',
+    ]);
   }
 }
 
