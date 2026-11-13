@@ -33,6 +33,9 @@ jobs:
 
       - run: flutter analyze
 
+      - run: flutter test
+        working-directory: debug_overlay
+
   build-example:
     name: Build example
     runs-on: ubuntu-latest
