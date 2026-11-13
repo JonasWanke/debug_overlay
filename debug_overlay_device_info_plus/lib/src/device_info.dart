@@ -1,7 +1,8 @@
 import 'package:debug_overlay/debug_overlay.dart';
 import 'package:material_ui/material_ui.dart';
 
-import 'device_info_io.dart' if (dart.library.js) 'device_info_html.dart';
+import 'device_info_io.dart'
+    if (dart.library.js_interop) 'device_info_html.dart';
 
 class DeviceInfoDebugTool() extends DiagnosticsBasedDebugTool {
   this : super(icon: Icons.smartphone, title: 'Device Info');
