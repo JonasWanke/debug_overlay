@@ -2,8 +2,6 @@
 
 🐛 View debug infos and change settings via a central overlay for your app.
 
-<img src="https://github.com/JonasWanke/debug_overlay/raw/main/doc/demo.webp?raw=true" width="400px" alt="debug_overlay demo" />
-
 To add a debug overlay to your app, pass `DebugOverlay.builder()` to `MaterialApp`/`CupertinoApp`/`WidgetsApp.builder`:
 
 ```dart
