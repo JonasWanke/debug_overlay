@@ -93,20 +93,28 @@ class MediaOverrideDebugTool(
     BuildContext context,
     MediaOverrideState currentState,
   ) {
-    _locale ??= context.locale;
+    _locale ??=
+        _closestSupportedLocale(context.locale) ??
+        supportedLocales!.firstOrNull;
+    final selectedLocale = currentState.locale == null
+        ? _locale
+        : _closestSupportedLocale(currentState.locale!);
 
     return CheckboxListTile(
       title: const Text('Locale'),
       controlAffinity: .leading,
       value: currentState.locale != null,
-      onChanged: (value) {
-        state.value = currentState.copyWith(
-          clearLocale: !value!,
-          locale: value ? _locale! : null,
-        );
-      },
+      // Without any supported locale, there is nothing to override.
+      onChanged: _locale == null
+          ? null
+          : (value) {
+              state.value = currentState.copyWith(
+                clearLocale: !value!,
+                locale: value ? _locale! : null,
+              );
+            },
       secondary: DropdownButton(
-        value: currentState.locale ?? _locale!,
+        value: selectedLocale,
         onChanged: (locale) {
           _locale = locale!;
           state.value = currentState.copyWith(locale: locale);
@@ -120,5 +128,18 @@ class MediaOverrideDebugTool(
         ],
       ),
     );
+  }
+
+  /// Returns [locale] if it's supported, otherwise the first supported locale
+  /// with the same language, or `null`.
+  ///
+  /// The dropdown requires its value to be one of its items.
+  Locale? _closestSupportedLocale(Locale locale) {
+    final supportedLocales = this.supportedLocales!;
+    if (supportedLocales.contains(locale)) return locale;
+
+    return supportedLocales
+        .where((it) => it.languageCode == locale.languageCode)
+        .firstOrNull;
   }
 }
