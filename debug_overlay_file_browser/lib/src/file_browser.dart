@@ -101,7 +101,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
             .toList();
         return SliverList.list(
           children: [
-            _buildHeader(context, directory, entries?.length),
+            _buildHeader(context, directory, allEntries, entries?.length),
             ListTile(
               leading: const Icon(Icons.arrow_upward),
               title: const Text('..'),
@@ -136,6 +136,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
   Widget _buildHeader(
     BuildContext context,
     Directory directory,
+    List<_Entry>? allEntries,
     int? itemCount,
   ) {
     return Padding(
@@ -149,7 +150,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
               if (itemCount != null)
                 Text('$itemCount items', style: context.textTheme.bodySmall),
               const Spacer(),
-              _buildSize(directory),
+              _buildSize(context, directory, allEntries),
             ],
           ),
         ],
@@ -157,9 +158,26 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
     );
   }
 
-  Widget _buildSize(Directory directory) {
+  Widget _buildSize(
+    BuildContext context,
+    Directory directory,
+    List<_Entry>? allEntries,
+  ) {
+    Widget build(int? bytes) => Text(
+      bytes == null
+          ? 'Calculating…'
+          : 'Total: ${bytes.formatByteSize(prefix: .binary)}',
+      style: context.textTheme.bodySmall,
+    );
+
     final size = _size;
     if (size == null) {
+      // Without subdirectories, the size is already known from the stats.
+      if (allEntries != null && allEntries.every((it) => it.entity is File)) {
+        final bytes = allEntries.fold(0, (sum, it) => sum + it.stat.size);
+        return build(bytes);
+      }
+
       return TextButton(
         onPressed: () {
           unawaited(_size = _computeSize(directory));
@@ -171,15 +189,7 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
 
     return FutureBuilder(
       future: size,
-      builder: (context, snapshot) {
-        final bytes = snapshot.data;
-        return Text(
-          bytes == null
-              ? 'Calculating…'
-              : 'Total: ${bytes.formatByteSize(prefix: .binary)}',
-          style: context.textTheme.bodySmall,
-        );
-      },
+      builder: (context, snapshot) => build(snapshot.data),
     );
   }
 
