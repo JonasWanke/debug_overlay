@@ -49,7 +49,7 @@ abstract class DebugTool({
     if (value == _isSearchOpen) return;
 
     _isSearchOpen = value;
-    if (!value) _searchQuery = '';
+    if (!value) _setSearchQuery('');
     notifyListeners();
   }
 
@@ -62,9 +62,15 @@ abstract class DebugTool({
   set searchQuery(String query) {
     if (query == _searchQuery) return;
 
-    _searchQuery = query;
-    _searchTerms = query.trim().toLowerCase().split(RegExp(r'\s+')).toSet();
+    _setSearchQuery(query);
     notifyListeners();
+  }
+
+  void _setSearchQuery(String query) {
+    _searchQuery = query;
+    _searchTerms = query.trim().isEmpty
+        ? {}
+        : query.trim().toLowerCase().split(RegExp(r'\s+')).toSet();
   }
 
   /// Whether [texts] contains [searchQuery]'s terms, ignoring case.
