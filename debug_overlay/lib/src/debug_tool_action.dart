@@ -43,6 +43,7 @@ final class const DebugToolChoice<T>({
 }) extends DebugToolAction {
   /// The options in a form that doesn't depend on [T], so that code handling
   /// any [DebugToolAction] doesn't have to deal with the type argument.
+  @internal
   List<DebugToolChoiceEntry> get entries {
     return [
       for (final option in options)
@@ -55,6 +56,7 @@ final class const DebugToolChoice<T>({
   }
 }
 
+@internal
 typedef DebugToolChoiceEntry = ({
   String label,
   bool isSelected,

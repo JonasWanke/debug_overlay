@@ -10,6 +10,10 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:debug_overlay/debug_overlay.dart';
+// The content widget is internal, but needed to render a tool without the
+// draggable sheet.
+// ignore: invalid_use_of_internal_member
+import 'package:debug_overlay/src/debug_overlay.dart' show DebugOverlayContent;
 import 'package:debug_overlay_device_info_plus/debug_overlay_device_info_plus.dart';
 import 'package:debug_overlay_file_browser/debug_overlay_file_browser.dart';
 import 'package:debug_overlay_package_info_plus/debug_overlay_package_info_plus.dart';

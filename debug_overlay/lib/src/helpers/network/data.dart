@@ -37,6 +37,7 @@ class NetworkRequest({
 
   bool get hasFailed => error != null;
 
+  @internal
   NetworkRequest withResponse({
     required int statusCode,
     String? reasonPhrase,
@@ -59,6 +60,7 @@ class NetworkRequest({
     );
   }
 
+  @internal
   NetworkRequest withError({
     required Object error,
     StackTrace? stackTrace,

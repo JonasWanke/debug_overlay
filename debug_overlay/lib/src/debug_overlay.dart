@@ -252,6 +252,7 @@ class _SheetRoute({super.settings, required super.pageBuilder})
   Widget buildModalBarrier() => const SizedBox.shrink();
 }
 
+@internal
 class const DebugOverlayContent({
   super.key,
   final ScrollController? scrollController,
