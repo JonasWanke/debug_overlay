@@ -25,17 +25,17 @@ class SharedPreferencesDebugTool({final SharedPreferencesAsync? preferences})
   bool get isSearchable => true;
 
   @override
-  List<Widget> buildActions(BuildContext context) {
+  List<DebugToolAction> buildActions(BuildContext context) {
     return [
-      IconButton(
-        tooltip: 'Add entry',
+      DebugToolButton(
+        icon: Icons.add,
+        label: 'Add entry',
         onPressed: () => _showEditor(context),
-        icon: const Icon(Icons.add),
       ),
-      IconButton(
-        tooltip: 'Refresh',
+      DebugToolButton(
+        icon: Icons.refresh,
+        label: 'Refresh',
         onPressed: _refresh,
-        icon: const Icon(Icons.refresh),
       ),
     ];
   }

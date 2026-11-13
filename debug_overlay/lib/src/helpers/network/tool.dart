@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../debug_tool.dart';
+import '../../debug_tool_action.dart';
 import 'data.dart';
 
 /// A [DebugTool] that lists the requests of a [NetworkRequestCollection].
@@ -17,20 +18,21 @@ class NetworkDebugTool(final NetworkRequestCollection requests)
   bool get isSearchable => true;
 
   @override
-  List<Widget> buildActions(BuildContext context) {
+  List<DebugToolAction> buildActions(BuildContext context) {
     return [
-      (_onlyErrors ? IconButton.filledTonal : IconButton.new)(
-        tooltip: _onlyErrors ? 'Show all requests' : 'Only show errors',
+      DebugToolButton(
+        icon: Icons.error_outline,
+        label: 'Only show errors',
+        isSelected: _onlyErrors,
         onPressed: () {
           _onlyErrors = !_onlyErrors;
           notifyListeners();
         },
-        icon: const Icon(Icons.error_outline),
       ),
-      IconButton(
-        tooltip: 'Clear requests',
+      DebugToolButton(
+        icon: Icons.delete_outlined,
+        label: 'Clear requests',
         onPressed: requests.clear,
-        icon: const Icon(Icons.delete_outlined),
       ),
     ];
   }

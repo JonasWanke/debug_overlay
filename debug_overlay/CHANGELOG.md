@@ -22,6 +22,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - turn debug helpers into stateful tools and make their widgets private
   - `DebugTool` is now an abstract `ChangeNotifier` with `buildActions` and `buildSliver` instead of a `sliver` widget; implement it for custom tools
+  - `buildActions` returns `DebugToolAction`s (`DebugToolButton` and `DebugToolChoice`) instead of widgets; actions that don't fit move into an overflow menu
   - remove `DebugHelper`; actions are shown in the header of the overlay
   - rename `*DebugHelper` to `*DebugTool` and replace the static `tool` getters/functions with constructors, e.g., `LogsDebugHelper.tool(logs)` -> `LogsDebugTool(logs)`
   - rename `DiagnosticsBasedDebugHelper` to `DiagnosticsBasedDebugTool`, which is now abstract and implements `diagnosticsStream`

@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import 'debug_overlay.dart';
+import 'debug_tool_action.dart';
 
 /// An entry in the tool picker of the expanded [DebugOverlay].
 ///
@@ -21,8 +22,11 @@ abstract class DebugTool({
   /// A short name that is shown in the header and the tool picker.
   required final String title,
 }) extends ChangeNotifier {
-  /// Buttons shown in the header of the overlay, next to [title].
-  List<Widget> buildActions(BuildContext context) => const [];
+  /// Actions shown in the header of the overlay, next to [title].
+  ///
+  /// Put the most important actions first; the last ones move into an overflow
+  /// menu if the header is too narrow.
+  List<DebugToolAction> buildActions(BuildContext context) => const [];
 
   /// The content of the tool, which has to be a sliver.
   Widget buildSliver(BuildContext context);
@@ -41,6 +45,7 @@ abstract class DebugTool({
   bool get isSearchOpen => _isSearchOpen;
   var _isSearchOpen = false;
   set isSearchOpen(bool value) {
+    assert(isSearchable);
     if (value == _isSearchOpen) return;
 
     _isSearchOpen = value;

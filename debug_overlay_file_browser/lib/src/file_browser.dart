@@ -36,12 +36,12 @@ class FileBrowserDebugTool({final List<FileBrowserRoot>? roots})
   bool get isSearchable => true;
 
   @override
-  List<Widget> buildActions(BuildContext context) {
+  List<DebugToolAction> buildActions(BuildContext context) {
     return [
-      IconButton(
-        tooltip: 'Refresh',
+      DebugToolButton(
+        icon: Icons.refresh,
+        label: 'Refresh',
         onPressed: _refresh,
-        icon: const Icon(Icons.refresh),
       ),
     ];
   }

@@ -1,45 +1,33 @@
-import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
-class const DiagnosticLevelSelector({
-  super.key,
-  required final DiagnosticLevel value,
-  required final ValueSetter<DiagnosticLevel> onSelected,
-}) extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      initialValue: value,
-      tooltip: 'Select the minimum diagnostics level to display',
-      onSelected: onSelected,
-      itemBuilder: (context) => [
-        for (final level in DiagnosticLevel.values)
-          PopupMenuItem(value: level, child: Text(level.title)),
-      ],
-      icon: const Icon(Icons.filter_alt_outlined),
-    );
-  }
+import '../debug_tool_action.dart';
 
-  static IconData levelToIcon(DiagnosticLevel level) => switch (level) {
-    .hidden => Icons.all_inclusive_outlined,
-    .fine => Icons.bubble_chart_outlined,
-    .debug => Icons.bug_report_outlined,
-    .info => Icons.info_outline,
-    .warning => Icons.warning_outlined,
-    .hint => Icons.privacy_tip_outlined,
-    .summary => Icons.subject,
-    .error => Icons.error_outlined,
-    .off => Icons.not_interested_outlined,
-  };
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(EnumProperty('value', value))
-      ..add(ObjectFlagProperty.has('onSelected', onSelected));
-  }
+/// An action to select the minimum [DiagnosticLevel] to display.
+DebugToolChoice<DiagnosticLevel> diagnosticLevelChoice({
+  required DiagnosticLevel value,
+  required ValueSetter<DiagnosticLevel> onSelected,
+}) {
+  return DebugToolChoice(
+    icon: Icons.filter_alt_outlined,
+    label: 'Minimum level',
+    options: DiagnosticLevel.values,
+    value: value,
+    onSelected: onSelected,
+    optionLabel: (level) => level.title,
+  );
 }
+
+IconData diagnosticLevelToIcon(DiagnosticLevel level) => switch (level) {
+  .hidden => Icons.all_inclusive_outlined,
+  .fine => Icons.bubble_chart_outlined,
+  .debug => Icons.bug_report_outlined,
+  .info => Icons.info_outline,
+  .warning => Icons.warning_outlined,
+  .hint => Icons.privacy_tip_outlined,
+  .summary => Icons.subject,
+  .error => Icons.error_outlined,
+  .off => Icons.not_interested_outlined,
+};
 
 extension on DiagnosticLevel {
   String get title => switch (this) {

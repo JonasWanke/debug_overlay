@@ -209,11 +209,12 @@ class MyDebugTool extends DebugTool {
   var _isEnabled = false;
 
   @override
-  List<Widget> buildActions(BuildContext context) {
+  List<DebugToolAction> buildActions(BuildContext context) {
     return [
-      IconButton(
-        tooltip: 'Toggle',
-        icon: const Icon(Icons.power_settings_new),
+      DebugToolButton(
+        icon: Icons.power_settings_new,
+        label: 'Toggle',
+        isSelected: _isEnabled,
         onPressed: () {
           _isEnabled = !_isEnabled;
           notifyListeners();
@@ -228,6 +229,9 @@ class MyDebugTool extends DebugTool {
   }
 }
 ```
+
+Actions are `DebugToolButton`s (optionally a toggle via `isSelected`) or `DebugToolChoice`s that let the user pick one of several options.
+They are icon buttons in the header; if there isn't enough space, the last ones move into an overflow menu that shows their labels, so put the most important actions first.
 
 To make your tool searchable, override `isSearchable` to return `true` and only show entries for which `matchesSearch(text)` is `true` in `buildSliver`.
 The header then shows a search button and field, and the query is stored in the tool (`searchQuery`).

@@ -2,6 +2,7 @@ import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'debug_tool.dart';
+import 'debug_tool_action.dart';
 import 'utils/level_selector.dart';
 
 /// A [DebugTool] that displays a [Stream] of [DiagnosticsNode]s and allows the
@@ -25,9 +26,9 @@ abstract class DiagnosticsBasedDebugTool({
   Stream<List<DiagnosticsNode>> diagnosticsStream(BuildContext context);
 
   @override
-  List<Widget> buildActions(BuildContext context) {
+  List<DebugToolAction> buildActions(BuildContext context) {
     return [
-      DiagnosticLevelSelector(
+      diagnosticLevelChoice(
         value: _minLevel,
         onSelected: (level) {
           _minLevel = level;

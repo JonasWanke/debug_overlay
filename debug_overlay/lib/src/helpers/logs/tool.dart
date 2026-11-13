@@ -9,6 +9,7 @@ import 'package:json_view/json_view.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../debug_tool.dart';
+import '../../debug_tool_action.dart';
 import '../../utils/level_selector.dart';
 import 'data.dart';
 
@@ -28,37 +29,33 @@ class LogsDebugTool(
   bool get isSearchable => true;
 
   @override
-  List<Widget> buildActions(BuildContext context) {
-    Widget sortIcon = const Icon(Icons.sort);
-    if (!_isOldestFirst) {
-      sortIcon = Transform.scale(scaleY: -1, child: sortIcon);
-    }
-
+  List<DebugToolAction> buildActions(BuildContext context) {
+    // The most important actions come first.
     return [
-      IconButton(
-        tooltip: 'Copy logs',
-        onPressed: () => _copyLogsToClipboard(context, logs.logs),
-        icon: const Icon(Icons.copy_outlined),
-      ),
-      IconButton(
-        tooltip: 'Clear logs',
-        onPressed: logs.clear,
-        icon: const Icon(Icons.delete_outlined),
-      ),
-      IconButton(
-        tooltip: _isOldestFirst ? 'Show newest first' : 'Show oldest first',
-        onPressed: () {
-          _isOldestFirst = !_isOldestFirst;
-          notifyListeners();
-        },
-        icon: sortIcon,
-      ),
-      DiagnosticLevelSelector(
+      diagnosticLevelChoice(
         value: _minLevel,
         onSelected: (level) {
           _minLevel = level;
           notifyListeners();
         },
+      ),
+      DebugToolButton(
+        icon: _isOldestFirst ? Icons.arrow_downward : Icons.arrow_upward,
+        label: _isOldestFirst ? 'Show oldest first' : 'Show newest first',
+        onPressed: () {
+          _isOldestFirst = !_isOldestFirst;
+          notifyListeners();
+        },
+      ),
+      DebugToolButton(
+        icon: Icons.copy_outlined,
+        label: 'Copy logs',
+        onPressed: () => _copyLogsToClipboard(context, logs.logs),
+      ),
+      DebugToolButton(
+        icon: Icons.delete_outlined,
+        label: 'Clear logs',
+        onPressed: logs.clear,
       ),
     ];
   }
@@ -137,10 +134,7 @@ class _LogEntryWidget(final Log log) extends StatelessWidget {
 
     final color = _getTextColor(context);
 
-    final icon = Icon(
-      DiagnosticLevelSelector.levelToIcon(log.level),
-      color: color,
-    );
+    final icon = Icon(diagnosticLevelToIcon(log.level), color: color);
 
     final textStyle = TextStyle(color: color);
     final title = Text.rich(
