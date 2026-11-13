@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -11,6 +9,7 @@ import 'debug_overlay_trigger.dart';
 import 'debug_tool.dart';
 import 'helpers/media_query.dart';
 import 'helpers/rendering.dart';
+import 'utils/top_inset_progress.dart';
 
 /// How much of the [DebugOverlay] is visible.
 enum DebugOverlayMode {
@@ -224,7 +223,7 @@ class _ExpandedSheetState extends State<_ExpandedSheet> {
         // its route once.
         return ValueListenableBuilder(
           valueListenable: _extent,
-          builder: (context, extent, _) => _ScaledTopViewPadding(
+          builder: (context, extent, _) => TopInsetProgress(
             progress: const Interval(
               0.7,
               1,
@@ -355,29 +354,5 @@ class _DebugOverlayContentState extends State<DebugOverlayContent> {
       final offset = _scrollOffsets[tools[newIndex]] ?? 0;
       controller.jumpTo(offset.clamp(0, controller.position.maxScrollExtent));
     });
-  }
-}
-
-class const _ScaledTopViewPadding({
-  required final double progress,
-  required final Widget child,
-}) extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final data = context.mediaQuery;
-    return MediaQuery(
-      data: data.copyWith(
-        viewPadding: data.viewPadding.copyWith(
-          top: lerpDouble(0, data.viewPadding.top, progress)!,
-        ),
-      ),
-      child: child,
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DoubleProperty('progress', progress));
   }
 }

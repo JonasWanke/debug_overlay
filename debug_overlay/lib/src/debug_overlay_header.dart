@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'debug_tool.dart';
 import 'debug_tool_action.dart';
+import 'utils/top_inset_progress.dart';
 
 /// The pinned header of the expanded overlay.
 ///
@@ -43,7 +44,7 @@ class const DebugOverlayHeader({
           Padding(
             padding: .fromLTRB(
               viewPadding.left + 8,
-              viewPadding.top,
+              viewPadding.top * TopInsetProgress.of(context),
               viewPadding.right + 8,
               0,
             ),
