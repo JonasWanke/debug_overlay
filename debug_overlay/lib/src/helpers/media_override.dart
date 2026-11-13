@@ -3,7 +3,13 @@ import 'package:material_ui/material_ui.dart';
 
 import '../debug_tool.dart';
 
+/// The overrides chosen in a [MediaOverrideDebugTool].
+///
+/// A `null` value means that the app's own setting is used.
 class MediaOverrideState({final ThemeMode? themeMode, final Locale? locale}) {
+  /// Returns a copy with the given values replaced.
+  ///
+  /// Pass `clearThemeMode` or `clearLocale` to reset a value to `null`.
   MediaOverrideState copyWith({
     ThemeMode? themeMode,
     bool clearThemeMode = false,
@@ -25,6 +31,10 @@ class MediaOverrideState({final ThemeMode? themeMode, final Locale? locale}) {
 /// Wrap your app in a widget that listens to [state] and applies the overrides.
 class MediaOverrideDebugTool(
   final ValueNotifier<MediaOverrideState> state, {
+
+  /// The locales the user can choose from; they should match your app's.
+  ///
+  /// The locale override is hidden if this is `null`.
   final List<Locale>? supportedLocales,
 }) extends DebugTool {
   this : super(icon: Icons.tune, title: 'Media Overrides');

@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+/// A [DiagnosticsBasedDebugTool] that shows the app's name, package name,
+/// version, and build number.
 class PackageInfoDebugTool() extends DiagnosticsBasedDebugTool {
   this : super(icon: Icons.inventory_2, title: 'Package Info');
 

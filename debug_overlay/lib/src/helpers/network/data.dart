@@ -10,7 +10,10 @@ import 'package:flutter/foundation.dart';
 /// to record requests from other clients.
 @immutable
 class NetworkRequest({
+  /// Identifies the request within its [NetworkRequestCollection].
   required final int id,
+
+  /// The uppercase HTTP method.
   required final String method,
   required final Uri url,
   final Map<String, String> requestHeaders = const {},
@@ -35,8 +38,10 @@ class NetworkRequest({
   /// Whether the request has neither completed nor failed yet.
   bool get isInFlight => duration == null;
 
+  /// Whether the request ended with an [error] instead of a response.
   bool get hasFailed => error != null;
 
+  /// Returns a copy that has received a response.
   @internal
   NetworkRequest withResponse({
     required int statusCode,
@@ -60,6 +65,7 @@ class NetworkRequest({
     );
   }
 
+  /// Returns a copy that failed without a response.
   @internal
   NetworkRequest withError({
     required Object error,
@@ -93,6 +99,9 @@ class NetworkRequest({
   }
 }
 
+/// A bounded list of [NetworkRequest]s that a `NetworkDebugTool` displays.
+///
+/// Share one instance between the code that records requests and the tool.
 class NetworkRequestCollection({
   this._maximumSize = 200,
 
@@ -100,6 +109,8 @@ class NetworkRequestCollection({
   final bool onlyStoreRequestsInDebugMode = true,
 }) {
   final _requests = ValueNotifier(<NetworkRequest>[]);
+
+  /// Notifies whenever a request is added, updated, or removed.
   ValueListenable<List<NetworkRequest>> get listenable => _requests;
 
   /// All stored requests, ordered from oldest to newest.
@@ -185,6 +196,7 @@ class NetworkRequestCollection({
     );
   }
 
+  /// Removes all stored requests.
   void clear() => _requests.value = [];
 
   void _update(

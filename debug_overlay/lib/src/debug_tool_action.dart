@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:meta/meta.dart';
 
 import 'debug_overlay.dart';
 import 'debug_tool.dart';
@@ -24,6 +25,8 @@ sealed class const DebugToolAction({
 final class const DebugToolButton({
   required super.icon,
   required super.label,
+
+  /// Called when the button is tapped; `null` disables it.
   required final VoidCallback? onPressed,
   final bool isSelected = false,
 }) extends DebugToolAction;
@@ -34,8 +37,14 @@ final class const DebugToolButton({
 final class const DebugToolChoice<T>({
   required super.icon,
   required super.label,
+
+  /// The values the user can pick from.
   required final List<T> options,
+
+  /// The currently selected option; highlighted in the popup.
   required final T value,
+
+  /// Called with the option the user picked.
   required final ValueChanged<T> onSelected,
 
   /// Returns the text of an option, defaulting to `toString()`.

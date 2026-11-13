@@ -16,6 +16,8 @@ import 'data.dart';
 /// A [DebugTool] that lists the logs of a [LogCollection].
 class LogsDebugTool(
   final LogCollection logs, {
+
+  /// The minimum level of the logs that are shown initially.
   DiagnosticLevel initialMinLevel = .debug,
 }) extends DebugTool {
   this

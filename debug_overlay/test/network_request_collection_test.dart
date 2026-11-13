@@ -6,7 +6,7 @@ void main() {
       requests.start(method: 'get', url: Uri.parse('https://example.com$path'));
 
   group('NetworkRequestCollection', () {
-    test('start records an in-flight request with an upper-case method', () {
+    test('start records an in-flight request with an uppercase method', () {
       final requests = NetworkRequestCollection();
       final id = start(requests);
 

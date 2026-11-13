@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../diagnostics_based_debug_tool.dart';
 
+/// A [DiagnosticsBasedDebugTool] that shows the app's [MediaQueryData].
 class MediaQueryDebugTool() extends DiagnosticsBasedDebugTool {
   this : super(icon: Icons.aspect_ratio, title: 'MediaQuery');
 

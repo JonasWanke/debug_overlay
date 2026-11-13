@@ -1,10 +1,19 @@
 import 'package:flutter/foundation.dart';
 
+/// A single entry of a [LogCollection].
 @immutable
 class Log({
+  /// The severity; must not be [DiagnosticLevel.off].
   final DiagnosticLevel level = .info,
+
+  /// When the log was created; defaults to now and must be in local time.
   DateTime? timestamp,
   required final String message,
+
+  /// An error or arbitrary data attached to the log.
+  ///
+  /// If it can be represented as JSON (e.g., via `toJson()`), it can be
+  /// inspected as a tree.
   final dynamic error,
   final StackTrace? stackTrace,
 }) with Diagnosticable {
@@ -43,6 +52,10 @@ class Log({
   }
 }
 
+/// A bounded list of [Log]s that a `LogsDebugTool` displays, ordered by
+/// [Log.timestamp].
+///
+/// Share one instance between your logging code and the tool.
 class LogCollection({
   this._maximumSize = 500,
 
@@ -50,7 +63,11 @@ class LogCollection({
   final bool onlyStoreLogsInDebugMode = true,
 }) {
   final _logs = ValueNotifier(<Log>[]);
+
+  /// Notifies whenever a log is added or removed.
   ValueListenable<List<Log>> get listenable => _logs;
+
+  /// All stored logs, ordered from oldest to newest.
   List<Log> get logs => listenable.value;
 
   int? _maximumSize;
@@ -68,6 +85,8 @@ class LogCollection({
     }
   }
 
+  /// Adds [log] at the position given by its timestamp, evicting the oldest
+  /// log if [maximumSize] is exceeded.
   void add(Log log) {
     if (onlyStoreLogsInDebugMode && !kDebugMode) return;
 
@@ -104,5 +123,6 @@ class LogCollection({
     ];
   }
 
+  /// Removes all stored logs.
   void clear() => _logs.value = [];
 }

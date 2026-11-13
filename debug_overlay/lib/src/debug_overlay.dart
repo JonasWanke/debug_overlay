@@ -28,10 +28,18 @@ enum DebugOverlayMode {
   expanded,
 }
 
+/// Adds the debug overlay on top of [child].
+///
+/// You usually don't use this widget directly, but pass [DebugOverlay.builder]
+/// to your app.
 class const DebugOverlay({
   super.key,
   required final Widget? child,
+
+  /// How the user can open the overlay without code.
   final DebugOverlayTrigger trigger = const DebugOverlayTrigger(),
+
+  /// Whether the overlay is only added in debug mode.
   final bool enableOnlyInDebugMode = true,
 }) extends StatefulWidget {
   /// The current mode of the overlay.
@@ -46,10 +54,22 @@ class const DebugOverlay({
   /// overlay does).
   static final _selectedToolIndex = ValueNotifier(0);
 
+  /// Hides the overlay completely; sets [mode] to [DebugOverlayMode.closed].
   static void close() => mode.value = .closed;
+
+  /// Shows only the draggable bubble; sets [mode] to
+  /// [DebugOverlayMode.collapsed].
   static void collapse() => mode.value = .collapsed;
+
+  /// Shows the sheet with all tools; sets [mode] to
+  /// [DebugOverlayMode.expanded].
   static void expand() => mode.value = .expanded;
 
+  /// The tools shown in the expanded overlay, in the order of the tool picker.
+  ///
+  /// Contains [MediaQueryDebugTool] (debug mode only) and
+  /// [RenderingDebugTool] by default. Replace the value to change the tools,
+  /// or use [prependTool] and [appendTool].
   static final tools = ValueNotifier<List<DebugTool>>([
     // Only works in debug mode; see the documentation of
     // [DiagnosticsBasedDebugTool] for the explanation.
@@ -57,10 +77,12 @@ class const DebugOverlay({
     RenderingDebugTool(),
   ]);
 
+  /// Adds [tool] to the front of [tools].
   static void prependTool(DebugTool tool) {
     tools.value = [tool, ...tools.value];
   }
 
+  /// Adds [tool] to the end of [tools].
   static void appendTool(DebugTool tool) {
     tools.value = [...tools.value, tool];
   }
@@ -252,6 +274,7 @@ class _SheetRoute({super.settings, required super.pageBuilder})
   Widget buildModalBarrier() => const SizedBox.shrink();
 }
 
+/// The content of the expanded overlay: the header and the selected tool.
 @internal
 class const DebugOverlayContent({
   super.key,
