@@ -61,7 +61,7 @@ class LogCollection({
   /// be removed.
   int? get maximumSize => _maximumSize;
   set maximumSize(int? value) {
-    _maximumSize = maximumSize;
+    _maximumSize = value;
 
     if (value != null && logs.length > value) {
       _logs.value = logs.sublist(logs.length - value, logs.length);
