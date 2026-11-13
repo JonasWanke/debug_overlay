@@ -18,10 +18,3 @@ dependencies:
   flutter:
     sdk: flutter
   material_ui: ^1.8.0
-
-dev_dependencies:
-  supernova_lints:
-    git:
-      url: https://github.com/JonasWanke/supernova.git
-      path: supernova_lints
-      ref: 88ffdb5c434ea2d1012c0f98f478b9240c2aedbf
