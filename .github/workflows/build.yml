@@ -19,12 +19,12 @@ jobs:
       matrix:
         flutter-channel: [stable, beta]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@v4.4.0
+      - uses: actions/setup-java@v6.1.0
         with:
           distribution: zulu
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.23.0
         with:
           channel: ${{ matrix.flutter-channel }}
       - run: flutter --version
@@ -43,12 +43,12 @@ jobs:
       matrix:
         flutter-channel: [stable, beta]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@v4.4.0
+      - uses: actions/setup-java@v6.1.0
         with:
           distribution: zulu
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.23.0
         with:
           channel: ${{ matrix.flutter-channel }}
       - run: flutter --version
@@ -60,7 +60,7 @@ jobs:
         working-directory: debug_overlay/example
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: example-apk-flutter-${{ matrix.flutter-channel }}
           path: debug_overlay/example/build/app/outputs/apk/release/app-release.apk
