@@ -36,6 +36,16 @@ jobs:
       - run: flutter test
         working-directory: debug_overlay
 
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.4.0
+      - uses: subosito/flutter-action@v2.23.0
+        with:
+          channel: stable
+      - run: dart format --output=none --set-exit-if-changed .
+
   build-example:
     name: Build example
     runs-on: ubuntu-latest
