@@ -9,7 +9,7 @@ workflows:
         - 'actions/upload-artifact@v4.6.2'
         - 'subosito/flutter-action@v2.23.0'
     '.github/workflows/pr.yml':
-        - 'dependabot/fetch-metadata@v2.2.0'
+        - 'dependabot/fetch-metadata@v3.1.0'
         - 'samspills/assign-pr-to-author@v1.0.2'
 dependencies:
     'actions/cache@v5':
@@ -32,9 +32,9 @@ dependencies:
         commit: 'sha1-ea165f8d65b6e75b540449e92b4886f43607fa02'
         owner_id: 44036562
         repo_id: 192625955
-    'dependabot/fetch-metadata@v2.2.0':
-        ref: 'v2.2.0'
-        commit: 'sha1-dbb049abf0d677abbd7f7eee0375145b417fdd34'
+    'dependabot/fetch-metadata@v3.1.0':
+        ref: 'v3.1.0'
+        commit: 'sha1-25dd0e34f4fe68f24cc83900b1fe3fe149efef98'
         owner_id: 27347476
         repo_id: 371068214
     'samspills/assign-pr-to-author@v1.0.2':
