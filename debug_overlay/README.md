@@ -191,7 +191,7 @@ Lists HTTP requests with their status, duration, headers, and bodies. To use it,
 
 <img src="https://github.com/JonasWanke/debug_overlay/raw/main/debug_overlay/doc/helpers-rendering.png?raw=true" width="400px" alt="RenderingDebugTool demo" />
 
-Toggles Flutter's debug paint flags (sizes, baselines, pointers, repaint rainbow) and the performance overlay, and offers a slider for `timeDilation`. Register it via `DebugOverlay.appendTool(RenderingDebugTool())`.
+Toggles Flutter's debug paint flags (sizes, baselines, pointers, repaint rainbow) and the performance overlay, offers a slider for `timeDilation`, and controls the system UI (status bar, navigation bar, and `SystemUiMode`). Register it via `DebugOverlay.appendTool(RenderingDebugTool())`.
 
 Most options only work in debug mode.
 

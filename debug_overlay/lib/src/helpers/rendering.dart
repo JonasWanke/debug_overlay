@@ -1,19 +1,23 @@
 import 'dart:async';
 
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../debug_tool.dart';
 
 /// A [DebugTool] with switches for Flutter's debug rendering flags (e.g.,
 /// [debugPaintSizeEnabled]), a slider for [timeDilation], and a switch for the
-/// performance overlay.
+/// performance overlay, and controls for the system UI (status and navigation
+/// bar visibility and [SystemUiMode]).
 ///
 /// The debug flags only have an effect in debug mode. In other modes, the
 /// corresponding controls are disabled. The performance overlay is also
-/// unavailable on the web.
+/// unavailable on the web, and the system UI controls only work on Android and
+/// iOS.
 ///
 /// Changing a flag reassembles the whole application (see
 /// [BindingBase.reassembleApplication]), so that already painted frames pick
@@ -21,8 +25,37 @@ import '../debug_tool.dart';
 class RenderingDebugTool() extends DebugTool {
   this : super(icon: Icons.brush, title: 'Rendering');
 
+  // The platform offers no way to read the current system UI state, so we track
+  // what we set. `null` means that we haven't changed anything yet.
+  SystemUiMode? _systemUiMode;
+  Set<SystemUiOverlay> _systemUiOverlays = {...SystemUiOverlay.values};
+
   @override
   Widget buildSliver(BuildContext context) {
+    final isSystemUiSupported =
+        !kIsWeb &&
+        (defaultTargetPlatform == .android || defaultTargetPlatform == .iOS);
+    final systemUiMode = MenuAnchor(
+      menuChildren: [
+        for (final mode in SystemUiMode.values)
+          if (mode != SystemUiMode.manual)
+            MenuItemButton(
+              onPressed: () => _setSystemUiMode(mode),
+              trailingIcon: mode == _systemUiMode
+                  ? const Icon(Icons.check)
+                  : null,
+              child: Text(mode.name),
+            ),
+      ],
+      builder: (context, controller, _) => ListTile(
+        enabled: isSystemUiSupported,
+        title: const Text('System UI Mode'),
+        subtitle: Text(_systemUiMode?.name ?? 'Not changed'),
+        trailing: const Icon(Icons.arrow_drop_down),
+        onTap: controller.toggle,
+      ),
+    );
+
     return SliverList.list(
       children: [
         if (!kDebugMode)
@@ -55,6 +88,25 @@ class RenderingDebugTool() extends DebugTool {
         ),
         _buildPerformanceOverlay(),
         _buildTimeDilation(),
+        ListTile(
+          title: const Text('System UI'),
+          subtitle: isSystemUiSupported
+              ? null
+              : const Text('Only supported on Android and iOS'),
+        ),
+        for (final overlay in SystemUiOverlay.values)
+          SwitchListTile(
+            title: Text(switch (overlay) {
+              .top => 'Status Bar',
+              .bottom => 'Navigation Bar',
+            }),
+            subtitle: Text('SystemUiOverlay.${overlay.name}'),
+            value: _systemUiOverlays.contains(overlay),
+            onChanged: isSystemUiSupported
+                ? (it) => _setSystemUiOverlay(overlay, isVisible: it)
+                : null,
+          ),
+        systemUiMode,
       ],
     );
   }
@@ -103,6 +155,28 @@ class RenderingDebugTool() extends DebugTool {
         },
       ),
     );
+  }
+
+  void _setSystemUiOverlay(SystemUiOverlay overlay, {required bool isVisible}) {
+    _systemUiOverlays = {
+      for (final it in SystemUiOverlay.values)
+        if (it == overlay ? isVisible : _systemUiOverlays.contains(it)) it,
+    };
+    _systemUiMode = .manual;
+    notifyListeners();
+    unawaited(
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: _systemUiOverlays.toList(),
+      ),
+    );
+  }
+
+  void _setSystemUiMode(SystemUiMode mode) {
+    _systemUiMode = mode;
+    _systemUiOverlays = {...SystemUiOverlay.values};
+    notifyListeners();
+    unawaited(SystemChrome.setEnabledSystemUIMode(mode));
   }
 
   void _update(VoidCallback change) {
