@@ -411,7 +411,7 @@ enum _CopyOption(final String label) {
   requestHeaders('Request headers'),
   requestBody('Request body'),
   responseHeaders('Response headers'),
-  responseBody('Response body');
+  responseBody('Response body'),
 }
 
 String _headersText(Map<String, String> headers) =>

@@ -1,7 +1,7 @@
 {
   inputs = {
-    # https://github.com/NixOS/nixpkgs/pull/556426
-    nixpkgs.url = "github:nixos/nixpkgs?ref=376b94add7951eb8c87c6670e72ac4f35a1368d3";
+    # https://github.com/NixOS/nixpkgs/pull/587442
+    nixpkgs.url = "github:nixos/nixpkgs?ref=fdc28e399b28c24e279274962fe452f0c82d5bd8";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -22,7 +22,7 @@
           };
         };
 
-        flutter = pkgs.flutterPackages.v3_47;
+        flutter = pkgs.flutterPackages.v3_50;
 
         # Android
         androidSdkArgs = {
