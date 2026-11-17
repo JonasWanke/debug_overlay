@@ -46,6 +46,29 @@ jobs:
           channel: stable
       - run: dart format --output=none --set-exit-if-changed .
 
+  publish-dry-run:
+    name: Publish dry run (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - debug_overlay
+          - debug_overlay_device_info_plus
+          - debug_overlay_dio
+          - debug_overlay_file_browser
+          - debug_overlay_http
+          - debug_overlay_package_info_plus
+          - debug_overlay_shared_preferences
+    steps:
+      - uses: actions/checkout@v4.4.0
+      - uses: subosito/flutter-action@v2.23.0
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter pub publish --dry-run
+        working-directory: ${{ matrix.package }}
+
   build-example:
     name: Build example
     runs-on: ubuntu-latest
