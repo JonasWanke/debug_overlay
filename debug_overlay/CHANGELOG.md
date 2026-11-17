@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- Template:
-## NEW · 2024-xx-xx
+## NEW · YYYY-MM-DD
 
 ### ⚠️ BREAKING CHANGES
 ### 🎉 New Features
@@ -16,34 +16,42 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
-## NEXT
+## 3.0.0 · 2026-11-17
 
 ### ⚠️ BREAKING CHANGES
 
-- turn debug helpers into stateful tools and make their widgets private
-  - `DebugTool` is now an abstract `ChangeNotifier` with `buildActions` and `buildSliver` instead of a `sliver` widget; implement it for custom tools
-  - `buildActions` returns `DebugToolAction`s (`DebugToolButton` and `DebugToolChoice`) instead of widgets; actions that don't fit move into an overflow menu
-  - remove `DebugHelper`; actions are shown in the header of the overlay
-  - rename `*DebugHelper` to `*DebugTool` and replace the static `tool` getters/functions with constructors, e.g., `LogsDebugHelper.tool(logs)` -> `LogsDebugTool(logs)`
-  - rename `DiagnosticsBasedDebugHelper` to `DiagnosticsBasedDebugTool`, which is now abstract and implements `diagnosticsStream`
-  - remove `LogEntryWidget`, `NetworkRequestWidget`, and `DiagnosticLevelSelector` from the public API
-- move helpers with additional dependencies into separate packages in a pub workspace
+- replace the `DebugHelper` widgets with `DebugTool`s, which are `ChangeNotifier`s instead of widgets ([`59805b1`](https://github.com/JonasWanke/debug_overlay/commit/59805b16043925757a6912bc06f3c75a94193ce3))
+  - remove `DebugHelper`; custom helpers (previously any `Widget` in the list) now extend `DebugTool` and implement `buildSliver` (see the README)
+  - rename `*DebugHelper` to `*DebugTool`, e.g., `LogsDebugHelper(logs)` -> `LogsDebugTool(logs)`; they're no longer widgets, so the `key` parameters are gone ([`59805b1`](https://github.com/JonasWanke/debug_overlay/commit/59805b16043925757a6912bc06f3c75a94193ce3))
+  - replace the `DiagnosticsBasedDebugHelper` widget, which took a `title` and a `diagnosticsStream`, with the abstract `DiagnosticsBasedDebugTool`; extend it and implement `diagnosticsStream(context)` ([`59805b1`](https://github.com/JonasWanke/debug_overlay/commit/59805b16043925757a6912bc06f3c75a94193ce3))
+  - rename `DebugOverlay.helpers`, `prependHelper`, and `appendHelper` to `tools`, `prependTool`, and `appendTool` ([`50ab1ec`](https://github.com/JonasWanke/debug_overlay/commit/50ab1eca5637d2a79f06f4c5c27a64c65b505a97))
+  - replace `DebugOverlay.show()` and `hide()` with `expand()` and `close()` ([`f6da7f5`](https://github.com/JonasWanke/debug_overlay/commit/f6da7f5df54fddad64aa7aaddb746e8e924a8d58))
+  - remove `DebugOverlayState`, `DebugOverlayContent`, `LogEntryWidget`, and `DiagnosticLevelSelector` from the public API ([`59805b1`](https://github.com/JonasWanke/debug_overlay/commit/59805b16043925757a6912bc06f3c75a94193ce3))
+- move tools with additional dependencies into separate packages in a pub workspace ([`e62ae00`](https://github.com/JonasWanke/debug_overlay/commit/e62ae0018b482249b3a186af292584013ee0c354), [`0a22073`](https://github.com/JonasWanke/debug_overlay/commit/0a22073466b212f1629a56dbe52044ae5ff98522))
   - `DeviceInfoDebugHelper` -> `DeviceInfoDebugTool` in `debug_overlay_device_info_plus`
   - `PackageInfoDebugHelper` -> `PackageInfoDebugTool` in `debug_overlay_package_info_plus`
   - `DebugOverlay.tools` no longer contains them by default; add them via `DebugOverlay.appendTool(...)`
 
 ### 🎉 New Features
 
-- add `RenderingDebugTool`
-- add `NetworkDebugTool` and `NetworkRequestCollection`, with `debug_overlay_http` and `debug_overlay_dio` to record requests
-- add `debug_overlay_shared_preferences` with `SharedPreferencesDebugTool`
-- add `debug_overlay_file_browser` with `FileBrowserDebugTool`
-- add a shared search field to the header for logs, network requests, diagnostics-based tools, shared preferences, and files; custom tools opt in via `DebugTool.isSearchable` and `matchesSearch`
+- add a collapsed mode that shows a draggable bubble; dragging the sheet down collapses it, and dropping the bubble onto the dismiss target closes the overlay ([`f6da7f5`](https://github.com/JonasWanke/debug_overlay/commit/f6da7f5df54fddad64aa7aaddb746e8e924a8d58), [`c3e665a`](https://github.com/JonasWanke/debug_overlay/commit/c3e665ac81e785575f34dc56978795b3f927339c))
+  - control the overlay via `DebugOverlay.mode` (`DebugOverlayMode`), `expand()`, `collapse()`, and `close()`
+- add `DebugOverlayTrigger` to open the overlay with a two-finger hold or <kbd>Alt</kbd> + <kbd>F12</kbd>; configure it via `DebugOverlay.builder(trigger: ...)` ([`f6da7f5`](https://github.com/JonasWanke/debug_overlay/commit/f6da7f5df54fddad64aa7aaddb746e8e924a8d58))
+- add `RenderingDebugTool` ([`edc187a`](https://github.com/JonasWanke/debug_overlay/commit/edc187ae9d37fae7a40ff00b95107b7011312faf))
+- add `NetworkDebugTool` and `NetworkRequestCollection`, with `debug_overlay_http` and `debug_overlay_dio` to record requests ([`909d94c`](https://github.com/JonasWanke/debug_overlay/commit/909d94c55ae8c364eb9dc7f7f0e36437e30f886a), [`80a55d9`](https://github.com/JonasWanke/debug_overlay/commit/80a55d908bf7630d386e14df19a946153fb3088e))
+- add `debug_overlay_shared_preferences` with `SharedPreferencesDebugTool` ([`7a954ad`](https://github.com/JonasWanke/debug_overlay/commit/7a954ad55dfaef13b59065b47cf4051d9e05a8a0))
+- add `debug_overlay_file_browser` with `FileBrowserDebugTool` ([`eac8b12`](https://github.com/JonasWanke/debug_overlay/commit/eac8b1235850c3d0b096f0fc92f1f3fc4add6438))
+- add a search field for logs, network requests, diagnostics-based tools, shared preferences, and files; custom tools opt in via `DebugTool.isSearchable` and `matchesSearch` ([`f5259c4`](https://github.com/JonasWanke/debug_overlay/commit/f5259c4840c02534bb1fe9de25b7f40e84128cc6))
 
 ### ⚡ Changes
 
-- replace the icon tab bar with a header that shows the active tool's title and opens a grid to switch tools; a tool's actions appear in that header instead of in a second row
-- tool state (filters, sort order, and so on) now survives switching tools
+- show one tool at a time instead of all helpers in a single list; a header with the active tool's title opens a grid to switch tools, and a tool's actions appear in that header ([`50ab1ec`](https://github.com/JonasWanke/debug_overlay/commit/50ab1eca5637d2a79f06f4c5c27a64c65b505a97), [`59805b1`](https://github.com/JonasWanke/debug_overlay/commit/59805b16043925757a6912bc06f3c75a94193ce3))
+- tool state (filters, sort order, and so on) survives switching tools and closing the overlay ([`59805b1`](https://github.com/JonasWanke/debug_overlay/commit/59805b16043925757a6912bc06f3c75a94193ce3))
+- update to Flutter `>=3.50.0` and Dart `^3.14.0` ([`0d54d1f`](https://github.com/JonasWanke/debug_overlay/commit/0d54d1f77a8be23074a18758352bd5450c9994b5))
+
+### 🐛 Bug Fixes
+
+- `LogCollection.maximumSize`: the setter didn't store the new value ([`82a9fd7`](https://github.com/JonasWanke/debug_overlay/commit/82a9fd7a510763074157ec93a82bef755c1c5f11))
 
 ## 2.0.0 · 2026-08-26
 
