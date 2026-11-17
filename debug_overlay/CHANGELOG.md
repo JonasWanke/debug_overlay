@@ -16,6 +16,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### 📦 Build & CI
 -->
 
+## 3.0.1 · 2026-11-17
+
+### 📜 Documentation updates
+
+- Link directly to Pub sites of companion packages ([`3ebcaed`](https://github.com/JonasWanke/debug_overlay/commit/3ebcaed22dae7fc00099464a73f49051c869c137))
+
 ## 3.0.0 · 2026-11-17
 
 ### ⚠️ BREAKING CHANGES
