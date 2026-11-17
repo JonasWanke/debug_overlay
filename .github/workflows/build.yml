@@ -19,7 +19,7 @@ jobs:
       matrix:
         flutter-channel: [stable, beta]
     steps:
-      - uses: actions/checkout@v4.4.0
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-java@v6.1.0
         with:
           distribution: zulu
@@ -40,7 +40,7 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.4.0
+      - uses: actions/checkout@v7.0.1
       - uses: subosito/flutter-action@v2.23.0
         with:
           channel: stable
@@ -62,7 +62,7 @@ jobs:
           - debug_overlay_package_info_plus
           - debug_overlay_shared_preferences
     steps:
-      - uses: actions/checkout@v4.4.0
+      - uses: actions/checkout@v7.0.1
       - uses: subosito/flutter-action@v2.23.0
         with:
           channel: stable
@@ -77,7 +77,7 @@ jobs:
       matrix:
         flutter-channel: [stable, beta]
     steps:
-      - uses: actions/checkout@v4.4.0
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-java@v6.1.0
         with:
           distribution: zulu
