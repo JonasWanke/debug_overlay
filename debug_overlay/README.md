@@ -30,14 +30,14 @@ More tools are available in the [additional packages](#additional-packages) belo
 
 ## Additional Packages
 
-Tools that need additional dependencies live in separate packages, so you only pay for what you use:
+Tools that need additional dependencies live in separate packages:
 
 | Package                                                                                                                      | Contents                                                                                                         |
 | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | [`debug_overlay_device_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_device_info_plus)     | `DeviceInfoDebugTool` (uses [<kbd>device_info_plus</kbd>](https://pub.dev/packages/device_info_plus))            |
 | [`debug_overlay_file_browser`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_file_browser)             | `FileBrowserDebugTool` (uses [<kbd>path_provider</kbd>](https://pub.dev/packages/path_provider))                 |
-| [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http)                             | `DebugHttpClient` for the network inspector                                                                      |
-| [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio)                               | `DebugDioInterceptor` for the network inspector                                                                  |
+| [`debug_overlay_http`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_http)                             | `DebugHttpClient` for the network inspector (uses [<kbd>http</kbd>](https://pub.dev/packages/http))              |
+| [`debug_overlay_dio`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_dio)                               | `DebugDioInterceptor` for the network inspector (uses [<kbd>dio</kbd>](https://pub.dev/packages/dio))            |
 | [`debug_overlay_package_info_plus`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_package_info_plus)   | `PackageInfoDebugTool` (uses [<kbd>package_info_plus</kbd>](https://pub.dev/packages/package_info_plus))         |
 | [`debug_overlay_shared_preferences`](https://github.com/JonasWanke/debug_overlay/tree/main/debug_overlay_shared_preferences) | `SharedPreferencesDebugTool` (uses [<kbd>shared_preferences</kbd>](https://pub.dev/packages/shared_preferences)) |
 
